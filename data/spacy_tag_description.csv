@@ -1,0 +1,56 @@
+﻿AFX,affix
+JJ,adjective
+JJR,"adjective, comparative"
+JJS,"adjective, superlative"
+PDT,predeterminer
+PRP$,"pronoun, possessive"
+WDT,wh-determiner
+WP$,"wh-pronoun, possessive"
+IN,"conjunction, subordinating or preposition"
+EX,existential there
+RB,adverb
+RBR,"adverb, comparative"
+RBS,"adverb, superlative"
+WRB,wh-adverb
+CC,"conjunction, coordinating"
+DT,determiner
+UH,interjection
+NN,"noun, singular or mass"
+NNS,"noun, plural"
+WP,"wh-pronoun, personal"
+CD,cardinal number
+POS,possessive ending
+RP,"adverb, particle"
+TO,infinitival to
+PRP,"pronoun, personal"
+NNP,"noun, proper singular"
+NNPS,"noun, proper plural"
+-LRB-,left round bracket
+-RRB-,right round bracket
+",","punctuation mark, comma"
+:,"punctuation mark, colon or ellipsis"
+.,"punctuation mark, sentence closer"
+”,closing quotation mark
+“”,closing quotation mark
+“,opening quotation mark
+HYPH,"punctuation mark, hyphen"
+LS,list item marker
+NFP,superfluous punctuation
+#,"symbol, number sign"
+$,"symbol, currency"
+SYM,symbol
+BES,auxiliary “be”
+HVS,forms of “have”
+MD,"verb, modal auxiliary"
+VB,"verb, base form"
+VBD,"verb, past tense"
+VBG,"verb, gerund or present participle"
+VBN,"verb, past participle"
+VBP,"verb, non-3rd person singular present"
+VBZ,"verb, 3rd person singular present"
+ADD,email
+FW,foreign word
+GW,additional word in multi-word expression
+XX,unknown
+_SP,space
+missing tag,
