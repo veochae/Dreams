@@ -167,7 +167,6 @@ def data_collection():
         secret_key = secret_key
 
         auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
-        st.write("something is wrong 2")
         data = {
             'grant_type': 'password',
             'username': username,
@@ -180,14 +179,11 @@ def data_collection():
                             auth = auth, 
                             data = data,
                             headers = headers)
-        st.write("something is wrong again")
         token = res.json()['access_token']
 
         headers['Authorization'] = f'bearer {token}'    
-        st.write("ugh")
 
         reddit, json_file = reddit_data(time_wanted, headers)
-        st.write("Something is wrong")
 
         my_bar = st.progress(0, text="Initiating Data Preprocessing")
         time.sleep(3)
