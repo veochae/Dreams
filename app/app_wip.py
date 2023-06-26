@@ -183,7 +183,9 @@ def data_collection():
                             auth = auth, 
                             data = data,
                             headers = headers)
-
+    except:
+        st.write("something is wrong again")
+    try:
         token = res.json()['access_token']
 
         headers['Authorization'] = f'bearer {token}'    
