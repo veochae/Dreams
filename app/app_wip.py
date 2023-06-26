@@ -170,7 +170,7 @@ def data_collection():
         auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
     except:
         st.write("something is wrong 2")
-
+    try:
         data = {
             'grant_type': 'password',
             'username': username,
