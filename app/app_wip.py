@@ -162,15 +162,12 @@ def data_collection():
         password = st.text_input("Reddit Password")
     
     time_wanted = datetime(2023, 1, 20, 00, 00, 00, 342380)
-
     try:
         client_id = client_id
         secret_key = secret_key
 
         auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
-    except:
         st.write("something is wrong 2")
-    try:
         data = {
             'grant_type': 'password',
             'username': username,
@@ -183,21 +180,15 @@ def data_collection():
                             auth = auth, 
                             data = data,
                             headers = headers)
-    except:
         st.write("something is wrong again")
-    try:
         token = res.json()['access_token']
 
         headers['Authorization'] = f'bearer {token}'    
-    except:
         st.write("ugh")
 
-    try:
         reddit, json_file = reddit_data(time_wanted, headers)
-    except:
         st.write("Something is wrong")
 
-    try:
         my_bar = st.progress(0, text="Initiating Data Preprocessing")
         time.sleep(3)
 
