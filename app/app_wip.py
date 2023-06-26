@@ -159,7 +159,7 @@ def data_collection():
         username = st.text_input("Reddit User Name")
         password = st.text_input("Reddit Password")
     
-    submitted = st.form_submit_button("Submit")
+        submitted = st.form_submit_button("Submit")
     if submitted:
         time_wanted = datetime(2023, 1, 20, 00, 00, 00, 342380)
         try:
