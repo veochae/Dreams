@@ -11,6 +11,12 @@
 ########################################################################################
 #############################       Package Requirements   #############################
 ########################################################################################
+import subprocess
+
+@st.cache_resource
+def download_en_core_web_sm():
+    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
+
 #python native packages
 import requests
 import re
