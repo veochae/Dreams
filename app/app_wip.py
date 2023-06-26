@@ -168,6 +168,8 @@ def data_collection():
         secret_key = secret_key
 
         auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
+    except:
+        st.write("something is wrong 2")
 
         data = {
             'grant_type': 'password',
