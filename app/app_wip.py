@@ -187,7 +187,10 @@ def data_collection():
         headers['Authorization'] = f'bearer {token}'    
 
         reddit, json_file = reddit_data(time_wanted, headers)
+    except:
+        st.write("Something is wrong")
 
+    try:
         my_bar = st.progress(0, text="Initiating Data Preprocessing")
         time.sleep(3)
 
