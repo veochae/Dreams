@@ -109,7 +109,7 @@ def reddit_data(time_wanted, headers):
             else:
                 my_bar.progress(100, text = f"{df.shape[0]} Dreams Collected")
 
-            if len(df) >= 988:
+            if len(df) >= 985:
                 latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
                 print("Data Collection Target Reached")
                 print(f'{len(df)} rows collected')
@@ -160,8 +160,10 @@ def data_collection():
         password = st.text_input("Reddit Password")
     
         submitted = st.form_submit_button("Submit")
+
     if submitted:
         time_wanted = datetime(2023, 1, 20, 00, 00, 00, 342380)
+
         try:
             client_id = client_id
             secret_key = secret_key
