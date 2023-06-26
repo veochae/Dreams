@@ -73,16 +73,14 @@ def reddit_data(time_wanted, headers):
     #initial set collection
     res = requests.get('https://oauth.reddit.com/r/Dreams/new',
                     headers = headers, params={'limit': '100', 'no_profanity':True})
-    
+
     df = pd.DataFrame()
 
     for post in res.json()['data']['children']:
-        df = df.append({
-            'subreddit': post['data']['subreddit'],
-            'title': post['data']['title'],
-            'text': post['data']['selftext'],
-            'date': post['data']['created']
-        }, ignore_index = True)
+        df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
+                                                    'title': post['data']['title'],
+                                                    'text': post['data']['selftext'],
+                                                    'date': post['data']['created']},index=[0])],ignore_index=True )
     
     #further back collection
     latest_key = post['kind'] + '_' + post['data']['id']
@@ -99,12 +97,10 @@ def reddit_data(time_wanted, headers):
                                 params={'limit': '100', 'after': latest_key, 'no_profanity':True})
             
             for post in res.json()['data']['children']:
-                df = df.append({
-                    'subreddit': post['data']['subreddit'],
-                    'title': post['data']['title'],
-                    'text': post['data']['selftext'],
-                    'date': post['data']['created']
-                }, ignore_index = True)
+                df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
+                                                    'title': post['data']['title'],
+                                                    'text': post['data']['selftext'],
+                                                    'date': post['data']['created']},index=[0])], ignore_index= True)
 
             latest_key = post['kind'] + '_' + post['data']['id']
 
