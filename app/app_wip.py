@@ -150,76 +150,67 @@ def data_collection():
     st.write("2. With the correct credentials approved by Reddit, now we start collecting the Dreams. Majority of the major platform APIs prevent users from extracting large quantites of data at once. This is in order to prevent injection of malware viruses into the system, as well as to prevent data mining using a data bot. In order to constrain such possibilities, Reddit has placed a maximum number of data that can be collected at each run of request for data. Thus, to not manually rerun and append data each and every run, the script embeded in this app will take short 'time-off' after each run in order to not be restricted by Reddit data collection regulations. For each run, the amount of collected data will be displayed in the progress bar.")
     st.write("3. Contrary to what users may believe, the raw data that is collected from Reddit is in json format. For clarity, json file is a nested dictionary format, where all infromation is stored like a hierarchical tree, not a dataframe. Thus, we select only portions of the json data that is required for this anlaysis and create a dataframe.")
     st.write("4. After the intial raw data collection process, the embedded script performs initial cleaning on the dataset. This process includes the rudimentary process such as dropping Null values and profanity checks.")
+
     
-    col1,col2,col3,col4 = st.columns([1,1,1,1])
-    with col1:
+
+    with st.form("reddit_cred"):
         client_id = st.text_input("Reddit Client Id")
-    with col2:
         secret_key = st.text_input("Reddit Secret Key")
-    with col3:
         username = st.text_input("Reddit User Name")
-    with col4:
         password = st.text_input("Reddit Password")
     
-    time_wanted = datetime(2023, 1, 20, 00, 00, 00, 342380)
-    try:
-        client_id = client_id
-        secret_key = secret_key
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        time_wanted = datetime(2023, 1, 20, 00, 00, 00, 342380)
+        try:
+            client_id = client_id
+            secret_key = secret_key
 
-        auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
-        data = {
-            'grant_type': 'password',
-            'username': username,
-            'password': password
-        }
+            auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
+            data = {
+                'grant_type': 'password',
+                'username': username,
+                'password': password
+            }
 
-        headers = {'User-Agent': 'MyAPI/0.0.1'}
+            headers = {'User-Agent': 'MyAPI/0.0.1'}
 
-        res = requests.post('https://www.reddit.com/api/v1/access_token', 
-                            auth = auth, 
-                            data = data,
-                            headers = headers)
-        token = res.json()['access_token']
+            res = requests.post('https://www.reddit.com/api/v1/access_token', 
+                                auth = auth, 
+                                data = data,
+                                headers = headers)
+            token = res.json()['access_token']
 
-        headers['Authorization'] = f'bearer {token}'    
+            headers['Authorization'] = f'bearer {token}'    
 
-        reddit, json_file = reddit_data(time_wanted, headers)
+            reddit, json_file = reddit_data(time_wanted, headers)
 
-        my_bar = st.progress(0, text="Initiating Data Preprocessing")
-        time.sleep(3)
+            my_bar = st.progress(0, text="Initiating Data Preprocessing")
+            time.sleep(3)
 
-        my_bar.progress(40, "Dropping Empty Observations") 
-        st.session_state['reddit'] = reddit.dropna()
-        time.sleep(3)
+            my_bar.progress(40, "Dropping Empty Observations") 
+            st.session_state['reddit'] = reddit.dropna()
+            time.sleep(3)
 
-        # reddit['text'] = [profanity.censor(i) for i in reddit['text']]
+            # reddit['text'] = [profanity.censor(i) for i in reddit['text']]
 
-        my_bar.progress(80, "Converting pandas dataframe to CSV")
-        csv = convert_df(reddit)
+            my_bar.progress(80, "Converting pandas dataframe to CSV")
 
-        time.sleep(3)
-        my_bar.progress(90, "Generating Previews")
-        time.sleep(3)
-        my_bar.progress(100, "Job Complete")
+            time.sleep(3)
+            my_bar.progress(90, "Generating Previews")
+            time.sleep(3)
+            my_bar.progress(100, "Job Complete")
 
-        st.write("As mentioned in the process of collecting data from Reddit API, the inital format of the data collected is in json. The below is a sample look at what the raw data looks like. To best understand how json works, think of the folder directories in your local computers. Within your Desktop folder, the reader would have a folder for each class the reader takes. And within each class folder, the reader would have different assignment folders, containing assignments completed. As such json divides information in a hierarchical order: the deeper nested values are specific information pertaining to the encompassing information. Please press on the rotated green triangle below to assess the json file.")
-        st.json(json_file, expanded= False)
+            st.write("As mentioned in the process of collecting data from Reddit API, the inital format of the data collected is in json. The below is a sample look at what the raw data looks like. To best understand how json works, think of the folder directories in your local computers. Within your Desktop folder, the reader would have a folder for each class the reader takes. And within each class folder, the reader would have different assignment folders, containing assignments completed. As such json divides information in a hierarchical order: the deeper nested values are specific information pertaining to the encompassing information. Please press on the rotated green triangle below to assess the json file.")
+            st.json(json_file, expanded= False)
 
-        st.write("Finally, the below is the dataframe of the extracted json file. From the json file, subreddit thread name, the title of the post, the dream, and the date at which the post was made in unicode text is extracted.")
-        st.dataframe(reddit.head(30))
+            st.write("Finally, the below is the dataframe of the extracted json file. From the json file, subreddit thread name, the title of the post, the dream, and the date at which the post was made in unicode text is extracted.")
+            st.dataframe(reddit.head(30))
 
-        st.write("As one can see, the dataframe is a much cleaner table look at the data that is easier for the readers to injest. With such thought in mind, one might wonder, 'Why do we ever use json file then?'. And yes, there are obvious pros and cons to the different file formats. For instance, as mentioned before, dataframe is extremeley effective when it comes to its structures. The data can be accessed by its row and column index and it is easier to manipulate. However, because of its structured nature, the file size can become exponetially large as the number of observations or features increase. Further, pandas dataframe stores various meta data about the data, such as the data type, index, class, etc. However, the json format only stores the text values of the data. Therefore, it is a structured word file that can be interpreted in hierarchical order when imported into an IDE. This saves tremendous amount of space when it comes to storing large datasets. And because most of the times the data in APIs are extremely large, json format is often chosen.")
-
-        # st.download_button(
-        # "Press to Download",
-        # csv,
-        # "raw_data.csv",
-        # "text/csv",
-        # key='download-csv'
-        # )
-    
-    except KeyError:
-        st.warning("Please enter correct Reddit Credentials", icon="⚠️")
+            st.write("As one can see, the dataframe is a much cleaner table look at the data that is easier for the readers to injest. With such thought in mind, one might wonder, 'Why do we ever use json file then?'. And yes, there are obvious pros and cons to the different file formats. For instance, as mentioned before, dataframe is extremeley effective when it comes to its structures. The data can be accessed by its row and column index and it is easier to manipulate. However, because of its structured nature, the file size can become exponetially large as the number of observations or features increase. Further, pandas dataframe stores various meta data about the data, such as the data type, index, class, etc. However, the json format only stores the text values of the data. Therefore, it is a structured word file that can be interpreted in hierarchical order when imported into an IDE. This saves tremendous amount of space when it comes to storing large datasets. And because most of the times the data in APIs are extremely large, json format is often chosen.")
+        
+        except KeyError:
+            st.warning("Please enter correct Reddit Credentials", icon="⚠️")
 
 ########################################################################################
 #############################       data cleaning  page      ###########################
