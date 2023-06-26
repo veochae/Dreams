@@ -189,7 +189,10 @@ def data_collection():
         token = res.json()['access_token']
 
         headers['Authorization'] = f'bearer {token}'    
+    except:
+        st.write("ugh")
 
+    try:
         reddit, json_file = reddit_data(time_wanted, headers)
     except:
         st.write("Something is wrong")
