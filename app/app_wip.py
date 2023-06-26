@@ -13,10 +13,6 @@
 ########################################################################################
 import subprocess
 
-@st.cache_resource
-def download_en_core_web_sm():
-    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
-
 #python native packages
 import requests
 import re
@@ -41,6 +37,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 #streamlit
 import spacy_streamlit
 import streamlit as st
+
+@st.cache_resource
+def download_en_core_web_sm():
+    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
 
 #plotly
 from plotly.subplots import make_subplots
