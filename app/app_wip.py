@@ -61,7 +61,7 @@ from transformers import pipeline
 import openai
 
 #tensorflow
-import tensorflow as tf
+# import tensorflow as tf
 
 ########################################################################################
 #############################       required functions     #############################
