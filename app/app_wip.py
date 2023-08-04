@@ -54,6 +54,12 @@ import pyLDAvis
 #other pacakges
 from better_profanity import profanity
 
+#huggingface
+from transformers import pipeline
+
+#openai
+import openai
+
 ########################################################################################
 #############################       required functions     #############################
 ########################################################################################
@@ -834,9 +840,63 @@ def tf_idf():
     except:
         print("")
 
+########################################################################################
+#############################       Dream Summarization + Continuation      #################################
+######################################################################################## 
+        
+def summary_continue():
+    st.title("Dream Summarization and Continuation Using GPT3: Davinci 003")
+    openai.api_key = st.text_input("OpenAI API Key")
+    
+    def summarize_dream(prompt):
+        response = openai.Completion.create(
+            engine="text-davinci-003",                  #most advanced version of text related algo in open ai
+            prompt=prompt,                              #what is being inputted to gpt
+            max_tokens=280,                            #maximum number of words
+            n=1,                                        #number of outputs
+            stop=None,                                  #stop when
+            temperature=0.5,                            #how much "risk" do you want the gpt to take
+        )
 
-        
-        
+        text = response.choices[0].text.strip()
+        return text
+
+
+
+    dream = st.session_state['clean_text'].iloc[st.session_state['row_n'],:]
+    summary = summarize_dream(x+ "\n\nTl;dr")
+    continuation = x = summarize_dream("What happend after this story from the storyteller's perspective? \n" + dream + "\n [insert]")
+
+    st.write("Dream Summary")
+    st.write(summary)
+
+    classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', return_all_scores=True)
+    prediction = classifier(summary)
+    emotion = [x['label'] for x in prediction[0]]
+    score = [y['score'] for y in prediction[0]]
+
+    fig = make_subplots(rows=1, cols=1)
+
+    fig.add_trace(go.Bar(x = emotion,
+                            y = score,
+                            name = f"Dream {1}"))
+
+    fig.update_layout(
+                        title="Sentiment Classification Results",
+                        xaxis_title="Criteria",
+                        yaxis_title="Sentiment Scores",
+                        legend_title="Dreams"
+                        # font=dict(
+                        #     family="Courier New, monospace",
+                        #     size=18,
+                        #     color="RebeccaPurple"
+                        # )
+                    )    
+
+
+    st.write("Dream Continuation")
+    st.write(continuation)
+
 
 ########################################################################################
 #############################       Data Download      #################################
