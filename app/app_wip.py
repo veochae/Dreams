@@ -868,11 +868,13 @@ def summary_continue():
         return text
 
 
+    with st.form("open_ai_cred"):
+        dream = st.session_state['cleaned_text']
+        st.write(dream)
 
-    with st.form("dreams"):
-        dream  = st.text_input("somethingf")
+        dream_submit = st.form_submit_button("Submit") 
 
-        dream_submit = st.form_submit_button("Submit")         
+         
     if dream_submit:            
         summary = summarize_dream(dream+ "\n\nTl;dr")
         continuation = summarize_dream("What happend after this story from the storyteller's perspective? \n" + dream + "\n [insert]")
@@ -970,7 +972,7 @@ page_names_to_funcs = {
     # "Name Identity Recognition": name_identity_recognition,
     "Latency Discriminant Analysis (LDA)": lda,
     "TF-IDF": tf_idf,
-    "Dream Summary and Continuation": summary_continue(),
+    "Dream Summary and Continuation": summary_continue,
     "Data Download": data_download
 }
 
