@@ -868,18 +868,20 @@ def summary_continue():
         return text
 
 
+
     with st.form("asdf"):
+        st.header("Original Text")
         dream = st.session_state['clean_text'][st.session_state['row_n']]
         st.write(dream)
 
-        dream_submit = st.form_submit_button("Submit") 
+        dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
 
          
     if dream_submit:            
         summary = summarize_dream(dream+ "\n\nTl;dr")
         continuation = summarize_dream("What happend after this story from the storyteller's perspective? \n" + dream + "\n [insert]")
 
-        st.write("Dream Summary")
+        st.header("Dream Summary")
         st.write(summary)
 
         # classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', return_all_scores=True)
@@ -906,7 +908,7 @@ def summary_continue():
         #                 )    
 
 
-        st.write("Dream Continuation")
+        st.header("Dream Continuation")
         st.write(continuation)
 
 
