@@ -869,7 +869,7 @@ def summary_continue():
 
 
     with st.form("asdf"):
-        dream = st.session_state['cleaned_text']
+        dream = st.session_state['clean_text']
         st.write(dream)
 
         dream_submit = st.form_submit_button("Submit") 
@@ -969,8 +969,7 @@ page_names_to_funcs = {
     "Data Cleaning": data_cleaning,
     "Data Visualization": data_visualization,
     "POS and NER": part_of_speech_tag,
-    # "Name Identity Recognition": name_identity_recognition,
-    "Latency Discriminant Analysis (LDA)": lda,
+    # "Latency Discriminant Analysis (LDA)": lda,
     "TF-IDF": tf_idf,
     "Dream Summary and Continuation": summary_continue,
     "Data Download": data_download
