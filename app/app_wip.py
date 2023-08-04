@@ -869,7 +869,7 @@ def summary_continue():
 
 
     with st.form("asdf"):
-        dream = st.session_state['clean_text']['text'][st.session_state['row_n']]
+        dream = st.session_state['clean_text'][st.session_state['row_n']]
         st.write(dream)
 
         dream_submit = st.form_submit_button("Submit") 
