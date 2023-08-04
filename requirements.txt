@@ -14,6 +14,7 @@ better_profanity == 0.7.0
 openai == 0.27.8
 transformers == 4.28.1  
 torch == 2.0.0
+-f https://data.pyg.org/whl/torch-2.0.0+cpu.html
 torchvision == 0.15.1
 spacy == 3.5.0 
 en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz
