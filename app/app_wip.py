@@ -884,28 +884,28 @@ def summary_continue():
         st.header("Dream Summary")
         st.write(summary)
 
-        # classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', return_all_scores=True)
-        # prediction = classifier(summary)
-        # emotion = [x['label'] for x in prediction[0]]
-        # score = [y['score'] for y in prediction[0]]
+        classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
+        prediction = classifier(summary)
+        emotion = [x['label'] for x in prediction[0]]
+        score = [y['score'] for y in prediction[0]]
 
-        # fig = make_subplots(rows=1, cols=1)
+        fig = make_subplots(rows=1, cols=1)
 
-        # fig.add_trace(go.Bar(x = emotion,
-        #                         y = score,
-        #                         name = f"Dream {1}"))
+        fig.add_trace(go.Bar(x = emotion,
+                                y = score,
+                                name = f"Dream {1}"))
 
-        # fig.update_layout(
-        #                     title="Sentiment Classification Results",
-        #                     xaxis_title="Criteria",
-        #                     yaxis_title="Sentiment Scores",
-        #                     legend_title="Dreams"
-        #                     # font=dict(
-        #                     #     family="Courier New, monospace",
-        #                     #     size=18,
-        #                     #     color="RebeccaPurple"
-        #                     # )
-        #                 )    
+        fig.update_layout(
+                            title="Sentiment Classification Results",
+                            xaxis_title="Criteria",
+                            yaxis_title="Sentiment Scores",
+                            legend_title="Dreams"
+                            # font=dict(
+                            #     family="Courier New, monospace",
+                            #     size=18,
+                            #     color="RebeccaPurple"
+                            # )
+                        )    
 
 
         st.header("Dream Continuation")
