@@ -61,7 +61,7 @@ from transformers import pipeline
 import openai
 
 #pytorch
-import torch
+# import torch
 
 ########################################################################################
 #############################       required functions     #############################
