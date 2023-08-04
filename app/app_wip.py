@@ -60,8 +60,8 @@ from transformers import pipeline
 #openai
 import openai
 
-#pytorch
-import torch
+#tensorflow
+import tensorflow
 
 ########################################################################################
 #############################       required functions     #############################
