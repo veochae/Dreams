@@ -868,45 +868,44 @@ def summary_continue():
         return text
 
 
-    if submitted:
-        # dream = pd.DataFrame(st.session_state['clean_text']).iloc[st.session_state['row_n'],:]
-        with st.form("dreams"):
-            dream  = st.text_input("somethingf")
 
-            dream_submit = st.form_submit_button("Submit")         
-        if dream_submit:            
-            summary = summarize_dream(dream+ "\n\nTl;dr")
-            continuation = summarize_dream("What happend after this story from the storyteller's perspective? \n" + dream + "\n [insert]")
+    with st.form("dreams"):
+        dream  = st.text_input("somethingf")
 
-            st.write("Dream Summary")
-            st.write(summary)
+        dream_submit = st.form_submit_button("Submit")         
+    if dream_submit:            
+        summary = summarize_dream(dream+ "\n\nTl;dr")
+        continuation = summarize_dream("What happend after this story from the storyteller's perspective? \n" + dream + "\n [insert]")
 
-            # classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', return_all_scores=True)
-            # prediction = classifier(summary)
-            # emotion = [x['label'] for x in prediction[0]]
-            # score = [y['score'] for y in prediction[0]]
+        st.write("Dream Summary")
+        st.write(summary)
 
-            # fig = make_subplots(rows=1, cols=1)
+        # classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', return_all_scores=True)
+        # prediction = classifier(summary)
+        # emotion = [x['label'] for x in prediction[0]]
+        # score = [y['score'] for y in prediction[0]]
 
-            # fig.add_trace(go.Bar(x = emotion,
-            #                         y = score,
-            #                         name = f"Dream {1}"))
+        # fig = make_subplots(rows=1, cols=1)
 
-            # fig.update_layout(
-            #                     title="Sentiment Classification Results",
-            #                     xaxis_title="Criteria",
-            #                     yaxis_title="Sentiment Scores",
-            #                     legend_title="Dreams"
-            #                     # font=dict(
-            #                     #     family="Courier New, monospace",
-            #                     #     size=18,
-            #                     #     color="RebeccaPurple"
-            #                     # )
-            #                 )    
+        # fig.add_trace(go.Bar(x = emotion,
+        #                         y = score,
+        #                         name = f"Dream {1}"))
+
+        # fig.update_layout(
+        #                     title="Sentiment Classification Results",
+        #                     xaxis_title="Criteria",
+        #                     yaxis_title="Sentiment Scores",
+        #                     legend_title="Dreams"
+        #                     # font=dict(
+        #                     #     family="Courier New, monospace",
+        #                     #     size=18,
+        #                     #     color="RebeccaPurple"
+        #                     # )
+        #                 )    
 
 
-            st.write("Dream Continuation")
-            st.write(continuation)
+        st.write("Dream Continuation")
+        st.write(continuation)
 
 
 ########################################################################################
