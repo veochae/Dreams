@@ -960,6 +960,7 @@ page_names_to_funcs = {
     # "Name Identity Recognition": name_identity_recognition,
     "Latency Discriminant Analysis (LDA)": lda,
     "TF-IDF": tf_idf,
+    "Dream Summary and Continuation": summary_continue(),
     "Data Download": data_download
 }
 
