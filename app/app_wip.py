@@ -914,7 +914,7 @@ def summary_continue():
         response = openai.Image.create(
                     prompt=summary,
                     n=1,
-                    size="1024×1024")
+                    size="1024x1024")
         
         st.image(response['data'][0]['url'])
 
