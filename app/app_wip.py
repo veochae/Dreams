@@ -912,7 +912,7 @@ def summary_continue():
         st.write(continuation)
         st.header("Dream Visualization")
         response = openai.Image.create(
-                    prompt=summary,
+                    prompt="I dreamed about a cat that was hugging me all the time",
                     n=1,
                     size="256x256")
         
