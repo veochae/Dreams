@@ -863,7 +863,7 @@ def summary_continue():
 
 
 
-    dream = st.session_state['clean_text'].iloc[st.session_state['row_n'],:]
+    dream = pd.DataFrame(st.session_state['clean_text']).iloc[st.session_state['row_n'],:]
     summary = summarize_dream(x+ "\n\nTl;dr")
     continuation = x = summarize_dream("What happend after this story from the storyteller's perspective? \n" + dream + "\n [insert]")
 
