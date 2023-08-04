@@ -878,7 +878,7 @@ def summary_continue():
 
          
     if dream_submit:            
-        summary = summarize_dream(dream+ "\n\nTl;dr")
+        summary = summarize_dream("Summarize this dream to less than 280 words \n" + "Dream: " + dream)
         continuation = summarize_dream("What happend after this story from the storyteller's perspective? \n" + dream + "\n [insert]")
 
         st.header("Dream Summary")
