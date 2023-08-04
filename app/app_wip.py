@@ -910,6 +910,13 @@ def summary_continue():
 
         st.header("Dream Continuation")
         st.write(continuation)
+        st.header("Dream Visualization")
+        response = openai.Image.create(
+                    prompt=summary,
+                    n=1,
+                    size="256x256")
+        
+        st.image(response['data'][0]['url'])
 
 
 ########################################################################################
