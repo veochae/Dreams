@@ -61,7 +61,8 @@ from transformers import pipeline
 import openai
 
 #tensorflow
-# import torch
+import torchvision
+import torch
 ########################################################################################
 #############################       required functions     #############################
 ########################################################################################
@@ -869,46 +870,50 @@ def summary_continue():
 
 
     with st.form("asdf"):
-        st.header("Original Text")
-        dream = st.session_state['clean_text'][st.session_state['row_n']]
-        st.write(dream)
+        try:
+            st.header("Original Text")
+            dream = st.session_state['clean_text'][st.session_state['row_n']]
+            st.write(dream)
 
-        dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
+            dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
+        except:
+            st.warning("Please select a dream")
 
          
     if dream_submit:            
         summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream)
-        continuation = summarize_dream("What happend after this story from the storyteller's perspective? \n" + dream + "\n [insert]")
+        continuation = summarize_dream("Tell me what happens after this story as if you are the storyteller \n" + dream + "\n [insert]")
 
         st.header("Dream Summary")
         st.write(summary)
 
-        # classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
-        # prediction = classifier(summary)
-        # emotion = [x['label'] for x in prediction[0]]
-        # score = [y['score'] for y in prediction[0]]
+        classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
+        prediction = classifier(summary)
+        emotion = [x['label'] for x in prediction[0]]
+        score = [y['score'] for y in prediction[0]]
 
-        # fig = make_subplots(rows=1, cols=1)
+        fig = make_subplots(rows=1, cols=1)
 
-        # fig.add_trace(go.Bar(x = emotion,
-        #                         y = score,
-        #                         name = f"Dream {1}"))
+        fig.add_trace(go.Bar(x = emotion,
+                                y = score,
+                                name = f"Dream {1}"))
 
-        # fig.update_layout(
-        #                     title="Sentiment Classification Results",
-        #                     xaxis_title="Criteria",
-        #                     yaxis_title="Sentiment Scores",
-        #                     legend_title="Dreams"
-        #                     # font=dict(
-        #                     #     family="Courier New, monospace",
-        #                     #     size=18,
-        #                     #     color="RebeccaPurple"
-        #                     # )
-        #                 )    
+        fig.update_layout(
+                            title="Sentiment Classification Results",
+                            xaxis_title="Criteria",
+                            yaxis_title="Sentiment Scores",
+                            legend_title="Dreams"
+                            # font=dict(
+                            #     family="Courier New, monospace",
+                            #     size=18,
+                            #     color="RebeccaPurple"
+                            # )
+                        )    
 
 
         st.header("Dream Continuation")
         st.write(continuation)
+
         st.header("Dream Visualization")
         response = openai.Image.create(
                     prompt=summary,
