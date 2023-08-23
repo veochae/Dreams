@@ -35,6 +35,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 #streamlit
 import spacy_streamlit
 import streamlit as st
+from streamlit_lottie import st_lottie
 
 #plotly
 from plotly.subplots import make_subplots
@@ -138,6 +139,8 @@ def reddit_data(time_wanted, headers):
 ########################################################################################
 
 def introduction():
+    l1 = load_lottieurl("https://lottie.host/0e7f8667-876c-4470-9509-1938d325dbc7/1z7IT8acx2.json")
+    st.lottie(l1, key = "l1", height = 200, width = 400)
     st.title("Analyzing Dreams using NLP")
 
 ########################################################################################
@@ -854,11 +857,11 @@ def summary_continue():
 
         submitted = st.form_submit_button("Submit")    
     
-    def summarize_dream(prompt):
+    def summarize_dream(prompt, length):
         response = openai.Completion.create(
             engine="text-davinci-003",                  #most advanced version of text related algo in open ai
             prompt=prompt,                              #what is being inputted to gpt
-            max_tokens=280,                            #maximum number of words
+            max_tokens=length,                            #maximum number of words
             n=1,                                        #number of outputs
             stop=None,                                  #stop when
             temperature=0.5,                            #how much "risk" do you want the gpt to take
@@ -880,9 +883,13 @@ def summary_continue():
             st.warning("Please select a dream")
 
          
-    if dream_submit:            
-        summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream)
-        continuation = summarize_dream("Tell me what happens after this story as if you are the storyteller \n" + dream + "\n [insert]")
+    if dream_submit: 
+        if len(dream) <= 280:
+            length = len(dream) * 0.6 
+        else:
+            length = 280          
+        summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
+        continuation = summarize_dream("Tell me what happens after this story as if you are the storyteller \n" + dream + "\n [insert]", length = 280)
 
         st.header("Dream Summary")
         st.write(summary)
