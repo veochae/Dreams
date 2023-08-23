@@ -153,7 +153,7 @@ def introduction():
         st.title("Analyzing Dreams using NLP")
 
     with col2:
-        st_lottie(l1, key = "l1", height = 100, width = 200)
+        st_lottie(l1, key = "l1", height = 100, width = 150)
 
 ########################################################################################
 #############################       data collection page      ##########################
