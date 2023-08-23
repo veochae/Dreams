@@ -374,7 +374,7 @@ def data_cleaning():
 
                 return col_names
             
-            @st.cache_data
+            @st.cache_data(experimental_allow_widgets=True)
             def extract_array(df,ind):
                 my_bar = st.progress(0, text="Initializing Text Cleaning")
                 with st.form("Original Text"):
