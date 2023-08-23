@@ -35,6 +35,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 #streamlit
 import spacy_streamlit
 import streamlit as st
+import streamlit_lottie
 from streamlit_lottie import st_lottie
 
 #plotly
