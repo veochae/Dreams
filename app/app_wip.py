@@ -71,6 +71,13 @@ warnings.filterwarnings('ignore')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('brown')
 
+###################### lottie file extraction
+def load_lottieurl(url):
+    r  = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
 ###################### dataframe to csv conversion
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
