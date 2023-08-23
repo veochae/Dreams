@@ -377,11 +377,19 @@ def data_cleaning():
             @st.cache_data
             def extract_array(df,ind):
                 my_bar = st.progress(0, text="Initializing Text Cleaning")
+                with st.form("Original Text"):
+                    st.write(df['text'][ind])
+
+                    submit_1 = st.form_submit_button("Continue to Initial Cleaning Process")    
                 time.sleep(2)
 
                 clean_text = df['text'].apply(lambda x:clean(x.lower()))         #first clean the text on lower cased list of dreams
                 clean_text.dropna()
-                st.write(clean_text[ind])
+                with st.form("Initial Data Cleaning"):
+                    st.write(clean_text[ind])
+
+                    submit_2 = st.form_submit_button("Continue to Tokenization")                    
+                
                 my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
                 time.sleep(2)
 
@@ -389,19 +397,31 @@ def data_cleaning():
                 clean_text = tokenized.apply(lambda x: " ".join(x))              #rejoin the words (just in case white space still present)
                 clean_text.dropna()
                 tokenized.dropna()
-                st.write(tokenized[ind])
+                
+                with st.form("Tokenization"):
+                    st.write(tokenized[ind])
+
+                    submit_3 = st.form_submit_button("Continue to Stopwords Removal")                  
                 my_bar.progress(30, text = "Dreams Tokenization Complete")
                 time.sleep(2)
 
                 x_stopwords = tokenized.apply(lambda x: remove_stopwords(x))     #remove stopwords from tokenized list
                 x_stopwords.dropna()
-                st.write(x_stopwords[ind])
+                
+                with st.form("Stopwords Removal"):
+                    st.write(x_stopwords[ind])
+
+                    submit_4 = st.form_submit_button("Continue to Lemmatization")                 
                 my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
                 time.sleep(2)
 
                 lemmatized = x_stopwords.apply(lambda x: lemmatizer(x))          #lemmatize the removed stopwords word list
                 lemmatized.dropna()
-                st.write(lemmatized[ind])
+                
+                with st.form("Lemmatization"):
+                    st.write(lemmatized[ind])
+
+                    submit_5 = st.form_submit_button("Create Corpus")                    
                 my_bar.progress(70, text = "Dreams Lemmatization Complete")
                 time.sleep(2)
 
