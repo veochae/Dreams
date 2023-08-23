@@ -12,9 +12,9 @@ gensim == 4.3.0
 better_profanity == 0.7.0
 openai == 0.27.8
 transformers == 4.28.1  
-streamlit-lottie==0.0.3
 torch == 2.0.0
 torchvision == 0.15.1
 -f https://data.pyg.org/whl/torch-2.0.0+cpu.html
 spacy == 3.5.0 
 en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz
+streamlit-lottie==0.0.3
