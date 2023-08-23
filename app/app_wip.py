@@ -581,7 +581,7 @@ def part_of_speech_tag():
             # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
 
     except ValueError:
-        st.write("Please Upload the CSV file")    
+        st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
 
 ########################################################################################
 #############################       lda  page      #################################
@@ -892,13 +892,13 @@ def summary_continue():
         emotion = [x['label'] for x in prediction[0]]
         score = [y['score'] for y in prediction[0]]
 
-        fig = make_subplots(rows=1, cols=1)
+        fig10 = make_subplots(rows=1, cols=1)
 
-        fig.add_trace(go.Bar(x = emotion,
+        fig10.add_trace(go.Bar(x = emotion,
                                 y = score,
                                 name = f"Dream {1}"))
 
-        fig.update_layout(
+        fig10.update_layout(
                             title="Sentiment Classification Results",
                             xaxis_title="Criteria",
                             yaxis_title="Sentiment Scores",
@@ -909,6 +909,8 @@ def summary_continue():
                             #     color="RebeccaPurple"
                             # )
                         )    
+        
+        st.plotly_chart(fig10,theme="streamlit", use_container_width=True)  
 
 
         st.header("Dream Continuation")
