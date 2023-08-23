@@ -48,8 +48,8 @@ import gensim.corpora as corpora
 from gensim.models.coherencemodel import CoherenceModel
 
 #ldavis
-import pyLDAvis.gensim
-import pyLDAvis
+# import pyLDAvis.gensim
+# import pyLDAvis
 
 #other pacakges
 from better_profanity import profanity
@@ -586,94 +586,94 @@ def part_of_speech_tag():
 #############################       lda  page      #################################
 ########################################################################################
 
-def lda():
-    st.title("Latency Discriminant Analysis")
+# def lda():
+#     st.title("Latency Discriminant Analysis")
 
 
-    token = st.session_state['lemmatized']   
-    #put the lemmatized dreams into list
-    tokenized = [li for li in token]
+#     token = st.session_state['lemmatized']   
+#     #put the lemmatized dreams into list
+#     tokenized = [li for li in token]
 
-    # Create Dictionary
-    id2word = corpora.Dictionary(tokenized)
+#     # Create Dictionary
+#     id2word = corpora.Dictionary(tokenized)
 
-    # Create Corpus
-    texts = tokenized
+#     # Create Corpus
+#     texts = tokenized
 
-    # Term Document Frequency
-    corpus = [id2word.doc2bow(text) for text in texts]     
+#     # Term Document Frequency
+#     corpus = [id2word.doc2bow(text) for text in texts]     
 
-    st.write("Calculating the Optimal Number of Topics for LDA model")
-    try:
-        maximum = int(st.text_input("Choose Maximum Number of Topics of Observance"))
+#     st.write("Calculating the Optimal Number of Topics for LDA model")
+#     try:
+#         maximum = int(st.text_input("Choose Maximum Number of Topics of Observance"))
 
-        @st.cache_data
-        def coherence_tuning(max_topics):
-            # number of topics
-            coherence = []
-            my_bar = st.progress(0, "Start of Coherence Measurement")
-            time.sleep(3)
+#         @st.cache_data
+#         def coherence_tuning(max_topics):
+#             # number of topics
+#             coherence = []
+#             my_bar = st.progress(0, "Start of Coherence Measurement")
+#             time.sleep(3)
 
-            for topic in range(3,max_topics+1):
-                # Build LDA model
-                lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
-                                                            id2word=id2word,
-                                                            num_topics=topic, 
-                                                            random_state=100,
-                                                            update_every=1,
-                                                            chunksize=10,
-                                                            passes=2,
-                                                            alpha='auto',
-                                                            per_word_topics=True)
+#             for topic in range(3,max_topics+1):
+#                 # Build LDA model
+#                 lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
+#                                                             id2word=id2word,
+#                                                             num_topics=topic, 
+#                                                             random_state=100,
+#                                                             update_every=1,
+#                                                             chunksize=10,
+#                                                             passes=2,
+#                                                             alpha='auto',
+#                                                             per_word_topics=True)
 
-                cm = gensim.models.coherencemodel.CoherenceModel(
-                                                                model=lda_model, 
-                                                                corpus = corpus, 
-                                                                coherence='u_mass')  
+#                 cm = gensim.models.coherencemodel.CoherenceModel(
+#                                                                 model=lda_model, 
+#                                                                 corpus = corpus, 
+#                                                                 coherence='u_mass')  
                 
-                coherence.append(cm.get_coherence())
-                my_bar.progress((1/(max_topics - 2))*(topic-2) ,f"Model with Topic Count {topic} complete")
-                time.sleep(1)
+#                 coherence.append(cm.get_coherence())
+#                 my_bar.progress((1/(max_topics - 2))*(topic-2) ,f"Model with Topic Count {topic} complete")
+#                 time.sleep(1)
 
             
 
-            fig = px.line(x=range(3,max_topics+1), 
-                            y=coherence, 
-                            title='Coherence Measure for Each Number of Topic',
-                            labels = dict(x = "Topic Count", y = 'U-Mass Coherence Measure'))
-            st.plotly_chart(fig,theme="streamlit", use_container_width=True)  
+#             fig = px.line(x=range(3,max_topics+1), 
+#                             y=coherence, 
+#                             title='Coherence Measure for Each Number of Topic',
+#                             labels = dict(x = "Topic Count", y = 'U-Mass Coherence Measure'))
+#             st.plotly_chart(fig,theme="streamlit", use_container_width=True)  
 
-            return min(coherence), coherence.index(min(coherence))
+#             return min(coherence), coherence.index(min(coherence))
 
-        minimum, min_indx = coherence_tuning(maximum)
+#         minimum, min_indx = coherence_tuning(maximum)
 
-        st.write(f"The best model with the lowest U-MASS Coherence Measure of {round(minimum,3)} is {3+min_indx} Topics")
+#         st.write(f"The best model with the lowest U-MASS Coherence Measure of {round(minimum,3)} is {3+min_indx} Topics")
 
-        visual_top = int(st.text_input("Choose the Final Number of Topics for Visualization"))
+#         visual_top = int(st.text_input("Choose the Final Number of Topics for Visualization"))
 
-        lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
-                                            id2word=id2word,
-                                            num_topics=visual_top, 
-                                            random_state=100,
-                                            update_every=1,
-                                            chunksize=10,
-                                            passes=2,
-                                            alpha='auto',                                                
-                                            per_word_topics=True)
+#         lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
+#                                             id2word=id2word,
+#                                             num_topics=visual_top, 
+#                                             random_state=100,
+#                                             update_every=1,
+#                                             chunksize=10,
+#                                             passes=2,
+#                                             alpha='auto',                                                
+#                                             per_word_topics=True)
 
-        # pyLDAvis.enable_notebook()
-        vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word,  mds='mmds')
+#         # pyLDAvis.enable_notebook()
+#         vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word,  mds='mmds')
 
-        pyLDAvis.save_html(vis, 'lda.html')
+#         pyLDAvis.save_html(vis, 'lda.html')
 
-        st.title("LDA Model Visualization")
-        from streamlit import components
-        with open('./lda.html', 'r') as f:
-            html_string = f.read()
-        components.v1.html(html_string, width=1700, height=1000, scrolling=True)
+#         st.title("LDA Model Visualization")
+#         from streamlit import components
+#         with open('./lda.html', 'r') as f:
+#             html_string = f.read()
+#         components.v1.html(html_string, width=1700, height=1000, scrolling=True)
     
-    except:
-        print("Input a Valid Number for Number of Topics")
+#     except:
+#         print("Input a Valid Number for Number of Topics")
 
 
 
