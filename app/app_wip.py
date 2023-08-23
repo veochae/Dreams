@@ -148,8 +148,12 @@ def reddit_data(time_wanted, headers):
 
 def introduction():
     l1 = load_lottieurl("https://lottie.host/0e7f8667-876c-4470-9509-1938d325dbc7/1z7IT8acx2.json")
-    st_lottie(l1, key = "l1", height = 200, width = 600)
-    st.title("Analyzing Dreams using NLP")
+    col1, col2 = st.columns([3,1])
+    with col1:
+        st.title("Analyzing Dreams using NLP")
+
+    with col2:
+        st_lottie(l1, key = "l1", height = 200, width = 600)
 
 ########################################################################################
 #############################       data collection page      ##########################
