@@ -294,6 +294,9 @@ def data_cleaning():
             
             df, semi = preprocess(st.session_state['reddit'])
 
+            st.dataframe(semi)
+            st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
+
             def clean(text):
                 text = re.sub('https?://\S+|www\.\S+', '', text) #replace website urls
                 text = re.sub(r"@\S+", '', text) #replace anything that follows @
@@ -372,12 +375,13 @@ def data_cleaning():
                 return col_names
             
             @st.cache_data
-            def extract_array(df):
+            def extract_array(df,ind):
                 my_bar = st.progress(0, text="Initializing Text Cleaning")
                 time.sleep(2)
 
                 clean_text = df['text'].apply(lambda x:clean(x.lower()))         #first clean the text on lower cased list of dreams
                 clean_text.dropna()
+                st.write(clean_text[ind])
                 my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
                 time.sleep(2)
 
@@ -385,16 +389,19 @@ def data_cleaning():
                 clean_text = tokenized.apply(lambda x: " ".join(x))              #rejoin the words (just in case white space still present)
                 clean_text.dropna()
                 tokenized.dropna()
+                st.write(tokenized[ind])
                 my_bar.progress(30, text = "Dreams Tokenization Complete")
                 time.sleep(2)
 
                 x_stopwords = tokenized.apply(lambda x: remove_stopwords(x))     #remove stopwords from tokenized list
                 x_stopwords.dropna()
+                st.write(x_stopwords[ind])
                 my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
                 time.sleep(2)
 
                 lemmatized = x_stopwords.apply(lambda x: lemmatizer(x))          #lemmatize the removed stopwords word list
                 lemmatized.dropna()
+                st.write(lemmatized[ind])
                 my_bar.progress(70, text = "Dreams Lemmatization Complete")
                 time.sleep(2)
 
@@ -409,7 +416,7 @@ def data_cleaning():
 
                 return clean_text, tokenized, x_stopwords, lemmatized, complete, mapx
 
-            clean_text, tokenized, x_stopwords, lemmatized, complete, corpus = extract_array(semi)
+            clean_text, tokenized, x_stopwords, lemmatized, complete, corpus = extract_array(semi, st.session_state['row_n'])
 
             titles = ['clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete', 'corpus']
 
