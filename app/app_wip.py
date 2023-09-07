@@ -378,7 +378,7 @@ def data_cleaning():
                     st.session_state['submit_1'] = st.form_submit_button("Continue to Initial Cleaning Process")    
                 time.sleep(2)
 
-                if st.session_state['submit_1']:
+                while st.session_state['submit_1']:
                     clean_text = df['text'].apply(lambda x:clean(x.lower()))         #first clean the text on lower cased list of dreams
                     clean_text.dropna()
                     with st.form("Initial Data Cleaning"):
@@ -386,7 +386,7 @@ def data_cleaning():
 
                         st.session_state['submit_2'] = st.form_submit_button("Continue to Tokenization")           
 
-                    if st.session_state['submit_2']:
+                    while st.session_state['submit_2']:
                         my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
                         time.sleep(2)
 
