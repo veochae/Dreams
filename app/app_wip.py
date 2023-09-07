@@ -117,7 +117,7 @@ def reddit_data(time_wanted, headers):
             for post in res.json()['data']['children']:
                 df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
                                                     'title': post['data']['title'],
-                                                    'text': post['data']['selftext'],
+                                                    'text': profanity.censor(post['data']['selftext']).replace("*",""),
                                                     'date': post['data']['created']},index=[0])], ignore_index= True)
 
             latest_key = post['kind'] + '_' + post['data']['id']
