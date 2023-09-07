@@ -508,6 +508,18 @@ def data_visualization():
     st.title("Data Visualization")
     st.write("Before we jump into the more advanced text analysis, it is always important to perform basic anlaysis as the following. At the end of this endeavor, the end goal is always 'understand the data'. Thus, we go throug the inital phases of getting to know the data before moving onto more detailed analysis.")
     st.write("**POS Tagging**")
+ 
+        
+
+########################################################################################
+###############       POS Tagging / NER Visualization  page      #######################
+########################################################################################
+
+def part_of_speech_tag():
+    st.title("Part of Speech Tagging Visualization")
+
+    nlp = spacy.load("en_core_web_sm")
+
     st.write(f"In order to understand the sentence compositions in Dreams, we first take a look at the different part of speech that were utilized in the text and their frequencies. Using the `Spacy` pacakge, we go through each lines of Dream and tag each word for its POS. To briefly mention the methodology behind this tagging process, Spacy has a dictionary that has preset tags for each word. Then, depending on the position of the word within each sentence cross refrenced with the Spacy dictionary, the POS is determined. The below is the same result of what POS tagging looks like.")
 
     nlp = spacy.load("en_core_web_sm")
@@ -567,42 +579,8 @@ def data_visualization():
                 st.write("Next with the full list of POS Tags throughout all the Dreams that we have collected, we plot a barplot to see which prepositions were heavily uitilized in the Dreams. As one can see from the barplot, Nouns were mostly utilized since Dreams have objects that have to be described in detail. Then, Adverbs and different tenses of verbs were heavily utilized in describing the Dreamers' actions during the dream.")
                 barplot(tag_df['tag'])
 
-            def wordcloud(x, lim):
-                text = " ".join(x)
-                cloud = WordCloud(collocations = False, max_words = lim).generate(text)
-                fig = plt.figure(figsize=(5,5))
-                ax = fig.add_subplot()
-                ax.imshow(cloud, interpolation='bilinear')
-                ax.axis("off")
-                st.pyplot(fig) 
-
-            with st.container():
-                st.write("WORDCLOUD DESCRIPTION WILL BE COMPLETED WHEN ADAPTING TO PLOTLY")
-                tab1, tab2, tab3 = st.tabs(list(np.unique(tag_df['tag']))[3:6])
-
-                for q, i in enumerate(list(np.unique(tag_df['tag'])[3:6])):
-                    with vars()[f'tab{q+1}']:
-                        temp = list(tag_df.loc[tag_df['tag'] == i , 'word'])
-                        try:
-                            wordcloud(temp, lim = 100)
-                        except ValueError:
-                            print("Word Cloud ValueError \n")
-                            pass 
-                # temp = list(tag_df.loc[tag_df['tag'] == "NN" , 'word'])
-                # wordcloud(temp, lim = 100)
-
     except ValueError:
         print("")    
-        
-
-########################################################################################
-###############       POS Tagging / NER Visualization  page      #######################
-########################################################################################
-
-def part_of_speech_tag():
-    st.title("Part of Speech Tagging Visualization")
-
-    nlp = spacy.load("en_core_web_sm")
 
     try:
         df = st.session_state['semi']
