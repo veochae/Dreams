@@ -387,6 +387,7 @@ def data_cleaning():
                         submit_2 = st.form_submit_button("Continue to Tokenization")           
 
                     if submit_2:
+                        submit_1 = True
                         my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
                         time.sleep(2)
 
