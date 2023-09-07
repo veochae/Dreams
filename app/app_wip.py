@@ -969,6 +969,7 @@ def summary_continue():
                     size="1024x1024")
         
         st.image(response['data'][0]['url'])
+        dream_submit = False
 
 
 ########################################################################################
