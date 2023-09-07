@@ -97,7 +97,7 @@ def reddit_data(time_wanted, headers):
     for post in res.json()['data']['children']:
         df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
                                                     'title': post['data']['title'],
-                                                    'text': post['data']['selftext'],
+                                                    'text': profanity.censor(post['data']['selftext']).replace("*",""),
                                                     'date': post['data']['created']},index=[0])],ignore_index=True )
     
     #further back collection
@@ -963,8 +963,10 @@ def summary_continue():
         st.write(continuation)
 
         st.header("Dream Visualization")
+        dalle = summarize_dream("Summarize this dream into one sentence so DALLE could visualize \n"+dream)
+        st.write(dalle)
         response = openai.Image.create(
-                    prompt=summary,
+                    prompt="Give me a figurative image of the dream: " + dalle,
                     n=1,
                     size="1024x1024")
         
