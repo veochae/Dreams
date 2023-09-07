@@ -403,7 +403,9 @@ def data_cleaning():
                     with st.form("Tokenization"):
                         st.write(tokenized[ind])
 
-                        st.session_state['submit_3'] = st.form_submit_button("Continue to Stopwords Removal")         
+                        submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
+                        if submit_3:
+                            st.session_state['submit_3'] = True
 
                 if st.session_state['submit_3']:         
                     my_bar.progress(30, text = "Dreams Tokenization Complete")
@@ -415,7 +417,9 @@ def data_cleaning():
                     with st.form("Stopwords Removal"):
                         st.write(x_stopwords[ind])
 
-                        st.session_state['submit_4'] = st.form_submit_button("Continue to Lemmatization")  
+                        submit_4 = st.form_submit_button("Continue to Lemmatization")  
+                        if submit_4:
+                            st.session_state['submit_4']
 
                 if st.session_state['submit_4']:               
                     my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
@@ -427,7 +431,9 @@ def data_cleaning():
                     with st.form("Lemmatization"):
                         st.write(lemmatized[ind])
 
-                        st.session_state['submit_5'] = st.form_submit_button("Create Corpus")  
+                        submit_5 = st.form_submit_button("Create Corpus")  
+                        if submit_5:
+                            st.session_state['submit_5'] = True
 
                 if st.session_state['submit_5']:                  
                     my_bar.progress(70, text = "Dreams Lemmatization Complete")
