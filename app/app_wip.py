@@ -103,9 +103,7 @@ def reddit_data(time_wanted, headers):
     #further back collection
     latest_key = post['kind'] + '_' + post['data']['id']
 
-    time.sleep(4)
     my_bar.progress(3, text = "Credentials Validated!")
-    time.sleep(4)
     my_bar.progress(5, text = "Initizlizing Data Collection From Reddit")
     while df.tail(1)['date'][df.tail(1)['date'].index[0]] > datetime.timestamp(time_wanted):
         for req in range(100):
@@ -134,7 +132,6 @@ def reddit_data(time_wanted, headers):
                 print(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
                 return df, res.json()['data']['children'][1]
 
-            time.sleep(2)
     else: 
         print("Date Limit Reached")
         print(f'{len(df)} rows collected')
@@ -212,11 +209,9 @@ def data_collection():
             reddit, json_file = reddit_data(time_wanted, headers)
 
             my_bar = st.progress(0, text="Initiating Data Preprocessing")
-            time.sleep(3)
 
             my_bar.progress(40, "Dropping Empty Observations") 
             st.session_state['reddit'] = reddit.dropna()
-            time.sleep(3)
 
             # reddit['text'] = [profanity.censor(i) for i in reddit['text']]
 
@@ -287,7 +282,7 @@ def data_cleaning():
                 my_bar.progress(90, text = "Making Deep Copy of Semi")
                 time.sleep(2)
                 #only keep t_f == True rows
-                semi = df.loc[df['t_f'] == True, :].__deepcopy__()
+                semi = df.loc[df['t_f'] == True, :].reset_index(drop = True).__deepcopy__()
                 my_bar.progress(100, text = "Complete!")
 
                 return df, semi
@@ -824,7 +819,7 @@ def tf_idf():
 
 
             def barplot(tf_idf_df, number_of_words):
-                rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
+                rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'+1],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
                 words = rendered_dream.index.tolist()
                 rendered_dream['words'] = words
 
@@ -840,11 +835,11 @@ def tf_idf():
 
             if change == 2:
                 def barplot_2(tf_idf_df, number_of_words):
-                    rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
+                    rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n']+1,:].sort_values(axis = 0, ascending = False)[:number_of_words]})
                     words = rendered_dream.index.tolist()
                     rendered_dream['words'] = words
 
-                    rendered_dream_2 = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n_2'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
+                    rendered_dream_2 = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n_2']+1,:].sort_values(axis = 0, ascending = False)[:number_of_words]})
                     words_2 = rendered_dream_2.index.tolist()
                     rendered_dream_2['words'] = words_2          
 
@@ -914,7 +909,7 @@ def summary_continue():
     with st.form("asdf"):
         try:
             st.header("Original Text")
-            dream = st.session_state['clean_text'][st.session_state['row_n']]
+            dream = st.session_state['semi'][st.session_state['row_n']]
             st.write(dream)
 
             dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
@@ -963,8 +958,9 @@ def summary_continue():
         st.write(continuation)
 
         st.header("Dream Visualization")
-        dalle = summarize_dream("Summarize this dream into one sentence so DALLE could visualize \n"+dream)
+        dalle = summarize_dream("Summarize this dream into one sentence so DALLE could visualize \n"+dream, length = 30)
         st.write(dalle)
+        time.sleep(30)
         response = openai.Image.create(
                     prompt="Give me a figurative image of the dream: " + dalle,
                     n=1,
