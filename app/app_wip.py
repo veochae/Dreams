@@ -419,7 +419,7 @@ def data_cleaning():
 
                         submit_4 = st.form_submit_button("Continue to Lemmatization")  
                         if submit_4:
-                            st.session_state['submit_4']
+                            st.session_state['submit_4'] = True
 
                 if st.session_state['submit_4']:               
                     my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
