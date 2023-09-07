@@ -958,7 +958,7 @@ def summary_continue():
         st.write(continuation)
 
         st.header("Dream Visualization")
-        dalle = summarize_dream("Summarize this dream into one sentence so DALLE could visualize \n"+dream, length = 30)
+        dalle = summarize_dream("As if you are the writer, summarize this dream into one sentence so DALLE could visualize \n"+dream, length = 30)
         st.write(dalle)
         time.sleep(30)
         response = openai.Image.create(
