@@ -962,7 +962,7 @@ def summary_continue():
         st.write(dalle)
         time.sleep(30)
         response = openai.Image.create(
-                    prompt="Give me a figurative image of the dream: " + dalle,
+                    prompt="Give me a realistic image of the dream: " + dalle,
                     n=1,
                     size="1024x1024")
         
