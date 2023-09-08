@@ -429,7 +429,7 @@ def data_cleaning():
                 time.sleep(2)
 
                 lemmatized = x_stopwords.__deepcopy__ 
-                lemmatized = [lemmatizer(x).split(" ") for x in lemmatized]
+                lemmatized = [lemmatizer(x) for x in lemmatized]
                 lemmatized.dropna()
                 
                 with st.form("Lemmatization"):
