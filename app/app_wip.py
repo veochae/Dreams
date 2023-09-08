@@ -376,6 +376,7 @@ def data_cleaning():
         def extract_array(df,ind):
             my_bar = st.progress(0, text="Initializing Text Cleaning")
             with st.form("Original Text"):
+                st.header("Original Text")
                 st.write(df['text'][ind])
 
                 submit_1 = st.form_submit_button("Continue to Initial Cleaning Process")   
@@ -388,6 +389,7 @@ def data_cleaning():
                 clean_text = df['text'].apply(lambda x:clean(x.lower()))         #first clean the text on lower cased list of dreams
                 clean_text.dropna()
                 with st.form("Initial Data Cleaning"):
+                    st.header("Simple Text Cleaning")
                     st.write(clean_text[ind])
 
                     submit_2 = st.form_submit_button("Continue to Tokenization")           
@@ -404,6 +406,7 @@ def data_cleaning():
                 tokenized.dropna()
                 
                 with st.form("Tokenization"):
+                    st.header("Tokenization")
                     st.write(" , ".join(tokenized[ind]))
 
                     submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
@@ -418,6 +421,7 @@ def data_cleaning():
                 x_stopwords.dropna()
                 
                 with st.form("Stopwords Removal"):
+                    st.header("Removing Stopwords")
                     st.write(" ".join(x_stopwords[ind]))
 
                     submit_4 = st.form_submit_button("Continue to Lemmatization")  
@@ -432,6 +436,7 @@ def data_cleaning():
                 lemmatized = [lemmatizer(x) for x in lemmatized]
                 
                 with st.form("Lemmatization"):
+                    st.header("Lemmatization")
                     st.write(" ".join(lemmatized[ind]))
 
                     submit_5 = st.form_submit_button("Create Corpus")  
