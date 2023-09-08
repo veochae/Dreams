@@ -418,7 +418,7 @@ def data_cleaning():
                 
                 with st.form("Stopwords Removal"):
                     st.write(" ".join(x_stopwords[ind]))
-                    st.write(x_stopwords[ind])
+                    st.write(x_stopwords)
 
                     submit_4 = st.form_submit_button("Continue to Lemmatization")  
                     if submit_4:
