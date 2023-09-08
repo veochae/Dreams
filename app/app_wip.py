@@ -446,7 +446,7 @@ def data_cleaning():
                         my_bar.progress(70, text = "Dreams Lemmatization Complete")
                         time.sleep(2)
 
-                        complete = pd.DataFrame([" ".join(x) for x in lemmatized])               #rejoin the words so it will look like a sentence
+                        complete = [" ".join(x) for x in lemmatized]               #rejoin the words so it will look like a sentence
                         mapx = vectorization(complete)                                   #start of mapping to corpus
                         name = get_column_name(complete)
                         mapx = pd.DataFrame(mapx, columns = name)
@@ -537,7 +537,7 @@ def part_of_speech_tag():
                 for j in sent:
                     tag_dict['word'].append(j.text)
                     tag_dict['tag'].append(j.tag_)
-                    my_bar.progress((1/df.shape[0])*(e+1), text = f"{e+1} acquired POS Tags")
+                    my_bar.progress((1/len(df))*(e+1), text = f"{e+1} acquired POS Tags")
 
 
             tag_df  = pd.DataFrame(tag_dict)
