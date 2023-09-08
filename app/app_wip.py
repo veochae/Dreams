@@ -402,7 +402,7 @@ def data_cleaning():
                         tokenized.dropna()
                         
                         with st.form("Tokenization"):
-                            st.write(tokenized[ind])
+                            st.write(tokenized[ind].join(" , "))
 
                             submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
                             if submit_3:
@@ -416,7 +416,7 @@ def data_cleaning():
                         x_stopwords.dropna()
                         
                         with st.form("Stopwords Removal"):
-                            st.write(x_stopwords[ind])
+                            st.write(x_stopwords[ind].join(" "))
 
                             submit_4 = st.form_submit_button("Continue to Lemmatization")  
                             if submit_4:
@@ -430,7 +430,7 @@ def data_cleaning():
                         lemmatized.dropna()
                         
                         with st.form("Lemmatization"):
-                            st.write(lemmatized[ind])
+                            st.write(lemmatized[ind].join(" "))
 
                             submit_5 = st.form_submit_button("Create Corpus")  
                             if submit_5:
