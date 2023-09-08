@@ -570,8 +570,8 @@ def part_of_speech_tag():
                 st.write("Next with the full list of POS Tags throughout all the Dreams that we have collected, we plot a barplot to see which prepositions were heavily uitilized in the Dreams. As one can see from the barplot, Nouns were mostly utilized since Dreams have objects that have to be described in detail. Then, Adverbs and different tenses of verbs were heavily utilized in describing the Dreamers' actions during the dream.")
                 barplot(tag_df['tag'])
 
-    except ValueError:
-        print("")    
+    except:
+        st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
 
     if st.session_state['show']:
         try:
@@ -606,7 +606,7 @@ def part_of_speech_tag():
 
                 # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
 
-        except ValueError:
+        except:
             st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
 
 ########################################################################################
