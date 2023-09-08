@@ -963,11 +963,11 @@ def summary_continue():
             st.write(continuation)
 
             st.header("Dream Visualization")
-            dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE \n"+dream, length = 100)
+            dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE: \n"+dream, length = 100)
             st.write(dalle)
             time.sleep(30)
             response = openai.Image.create(
-                        prompt="Give me a descriptive image of the statement: " + dalle,
+                        prompt="Give me a realistic image of the statement: " + dalle,
                         n=1,
                         size="1024x1024")
             
