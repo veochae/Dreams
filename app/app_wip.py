@@ -353,7 +353,7 @@ def data_cleaning():
                     return text
 
                 def lemmatizer(text):
-                    text = [lemmatize_sentence(word) for word in text] #lemmatize the tokenized words. Lemmatized > Stemming in this case
+                    text = [lemmatize_sentence(word)[0] for word in text] #lemmatize the tokenized words. Lemmatized > Stemming in this case
                     return text                                  #because lemmatizing keeps the context of words alive
 
                 def vectorization(li):                            #create matrix of words and its respective presence for each dream
