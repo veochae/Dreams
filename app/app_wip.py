@@ -429,7 +429,7 @@ def data_cleaning():
                 time.sleep(2)
 
                 lemmatized = x_stopwords.__deepcopy__() 
-                # lemmatized = pd.DataFrame([lemmatizer(x) for x in lemmatized])
+                lemmatized = [lemmatizer(x) for x in lemmatized]
                 
                 with st.form("Lemmatization"):
                     st.write(" ".join(lemmatized[ind]))
