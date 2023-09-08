@@ -928,7 +928,7 @@ def summary_continue():
                 summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
             except:
                 st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
-            continuation = summarize_dream("Tell me what happens after this story as if you are the storyteller: \n" + dream, length = 280)
+            continuation = summarize_dream("Tell me what happens after this story in the first person point of view: \n" + dream, length = 280)
 
             st.header("Dream Summary")
             st.write(summary)
