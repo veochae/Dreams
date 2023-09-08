@@ -256,6 +256,7 @@ def data_cleaning():
         nltk.download('stopwords')
         nltk.download('omw-1.4')
         nltk.download('wordnet')
+        nltk.download("punkt")
         stopword = nltk.corpus.stopwords.words('english')
 
         if result_dc:
