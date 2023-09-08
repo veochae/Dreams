@@ -428,7 +428,8 @@ def data_cleaning():
                 my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
                 time.sleep(2)
 
-                lemmatized = x_stopwords.__deepcopy__ 
+                lemmatized = x_stopwords.__deepcopy__() 
+
                 lemmatized = [lemmatizer(x) for x in lemmatized]
                 lemmatized.dropna()
                 
