@@ -248,256 +248,258 @@ def data_cleaning():
     st.write("**Corpus** : Corpus in its simplest sense is a dictionary. From the dataset that we have gathered in the previous steps, corpus takes all possible distinct words from the dataset and makes it into features. Then, instead of the actual sentences, each observation will now contain how many times the word appears in a sentence.")
     st.write("Below, once the reader starts the cleaning process, the progress bar will show the different stages in which the data is being processed through. Then, by selecting different radio buttons, one will be able to see the different results of each cleaning process.")
 
-    result_dc = st.button("Click to Start Data Manipulation")
-
-    nltk.download('stopwords')
-    nltk.download('omw-1.4')
-    nltk.download('wordnet')
-    stopword = nltk.corpus.stopwords.words('english')
-    wn = nltk.WordNetLemmatizer()
-
-    if result_dc:
-        st.session_state['result_dc'] = True
     try:
-        if st.session_state['result_dc']:
-            @st.cache_data
-            def preprocess(df):
-                my_bar = st.progress(0, text="Dropping Null Values")
-                time.sleep(2)
-                df= df.dropna()
-                my_bar.progress(10, text = "Transforming Date Time Objects")
-                time.sleep(2)
-                df['date'] = [datetime.fromtimestamp(time) for time in df['date']]
-                my_bar.progress(30, text = "Profanity Censor in Progress")
-                time.sleep(2)
-                # df['text'] = [profanity.censor(i) for i in df['text']]
-                my_bar.progress(50, text = "Calculating Length of each Text")
-                time.sleep(2)
-                #calculating length of each dream
-                df['length'] = [len(j) for j in df['text']]
-                my_bar.progress(70, text = "Getting Semi Dataset")
-                time.sleep(2)
-                # if less than or equal to 5th percentile, assign t_f column False
-                df['t_f'] = [True if j > np.percentile(df['length'], 5) else False for j in df['length']]
-                my_bar.progress(90, text = "Making Deep Copy of Semi")
-                time.sleep(2)
-                #only keep t_f == True rows
-                semi = df.loc[df['t_f'] == True, :].reset_index(drop = True).__deepcopy__()
-                my_bar.progress(100, text = "Complete!")
+        result_dc = st.button("Click to Start Data Manipulation")
 
-                return df, semi
-            
-            df, semi = preprocess(st.session_state['reddit'])
+        nltk.download('stopwords')
+        nltk.download('omw-1.4')
+        nltk.download('wordnet')
+        stopword = nltk.corpus.stopwords.words('english')
+        wn = nltk.WordNetLemmatizer()
 
-            st.dataframe(semi)
-            st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
+        if result_dc:
+            st.session_state['result_dc'] = True
+        try:
+            if st.session_state['result_dc']:
+                @st.cache_data
+                def preprocess(df):
+                    my_bar = st.progress(0, text="Dropping Null Values")
+                    time.sleep(2)
+                    df= df.dropna()
+                    my_bar.progress(10, text = "Transforming Date Time Objects")
+                    time.sleep(2)
+                    df['date'] = [datetime.fromtimestamp(time) for time in df['date']]
+                    my_bar.progress(30, text = "Profanity Censor in Progress")
+                    time.sleep(2)
+                    # df['text'] = [profanity.censor(i) for i in df['text']]
+                    my_bar.progress(50, text = "Calculating Length of each Text")
+                    time.sleep(2)
+                    #calculating length of each dream
+                    df['length'] = [len(j) for j in df['text']]
+                    my_bar.progress(70, text = "Getting Semi Dataset")
+                    time.sleep(2)
+                    # if less than or equal to 5th percentile, assign t_f column False
+                    df['t_f'] = [True if j > np.percentile(df['length'], 5) else False for j in df['length']]
+                    my_bar.progress(90, text = "Making Deep Copy of Semi")
+                    time.sleep(2)
+                    #only keep t_f == True rows
+                    semi = df.loc[df['t_f'] == True, :].reset_index(drop = True).__deepcopy__()
+                    my_bar.progress(100, text = "Complete!")
 
-            def clean(text):
-                text = re.sub('https?://\S+|www\.\S+', '', text) #replace website urls
-                text = re.sub(r"@\S+", '', text) #replace anything that follows @
-                text = re.sub(r"#\S+", '', text) #replace anything that follows #
-                text = re.sub(r"[0-9]", '', text) #replace numeric
-                text = re.sub(r"\n", '', text) #replace new line 
-                text = re.sub("\'m", ' am ', text) 
-                text = re.sub("\'re", ' are ', text) 
-                text = re.sub("\'d", ' had ', text)
-                text = re.sub("\'s", ' is ', text)
-                text = re.sub("\'ve", ' have ', text)
-                text = re.sub(" im ", ' i am ', text)
-                text = re.sub(" iam ", ' i am ', text)
-                text = re.sub(" youre ", ' you are ', text)
-                text = re.sub(" theyre ", ' they are ', text)
-                text = re.sub(" theyve ", ' they have ', text)
-                text = re.sub(" weve ", ' we have ', text)
-                text = re.sub(" isnt ", ' is not ', text)
-                text = re.sub(" arent ", ' are not ', text)
-                text = re.sub(" ur ", ' you are ', text)
-                text = re.sub(" ive ", ' i have ', text)
-                text = re.sub("_", '', text)
-                text = re.sub("\"", '', text)
-                text = re.sub(" bc ", ' because ', text)
-                text = re.sub(" aka ", ' also known as ', text)
-                text = re.sub("√©", 'e', text) #encoding error for é. replace it with e
-                text = re.sub(" bf  ", ' boyfriend ', text)
-                text = re.sub(" gf  ", ' girlfriend ', text)
-                text = re.sub(" btw  ", ' by the way ', text)
-                text = re.sub(" btwn  ", ' between ', text)
-                text = re.sub(r'([a-z])\1{2,}', r'\1', text) #if the same character is repeated more than twice, remove it to one. (E.A. ahhhhhh --> ah)
-                text = re.sub(' ctrl ', ' control ', text)
-                text = re.sub(' cuz ', ' because ', text)
-                text = re.sub(' dif ', ' different ', text)
-                text = re.sub(' dm ', ' direct message ', text)
-                text = re.sub("n't", r' not ', text)
-                text = re.sub(" fav ", ' favorite ', text)
-                text = re.sub(" fave ", ' favorite ', text)
-                text = re.sub(" fml ", " fuck my life ", text)
-                text = re.sub(" hq ", " headquarter ", text)
-                text = re.sub(" hr ", " hours ", text)
-                text = re.sub(" idk ",  "i do not know ", text)
-                text = re.sub(" ik ", ' i know ', text)
-                text = re.sub(" lol ", ' laugh out loud ', text)
-                text = re.sub(" u ", ' you ', text)
-                text = re.sub("√¶", 'ae', text) #encoding error for áe. replace it with ae
-                text = re.sub("√® ", 'e', text) #encoding error for é. replace it with e
-                text = text.strip()
-                return text
-            
-            def tokenization(text):
-                text = re.split('\W+', text) #split words by whitespace to tokenize words
-                return text
-
-            def remove_stopwords(text):
-                text = [word for word in text if word not in stopword] #remove stopwords in the nltk stopwords dictionary
-                return text
-
-            def lemmatizer(text):
-                text = [wn.lemmatize(word) for word in text] #lemmatize the tokenized words. Lemmatized > Stemming in this case
-                return text                                  #because lemmatizing keeps the context of words alive
-
-            def vectorization(li):                            #create matrix of words and its respective presence for each dream
-                vectorizer = CountVectorizer()   
-                Xs = vectorizer.fit_transform(li)   
-                X = np.array(Xs.todense())
+                    return df, semi
                 
-                return X
+                df, semi = preprocess(st.session_state['reddit'])
 
-            def get_column_name(li):                          #extract each word so that it will be present in corpus as column names
-                vectorizer = CountVectorizer()   
-                Xs = vectorizer.fit_transform(li)   
-                col_names=vectorizer.get_feature_names_out()
-                col_names = list(col_names)
+                st.dataframe(semi)
+                st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
 
-                return col_names
-            
-            @st.cache_data(experimental_allow_widgets=True)
-            def extract_array(df,ind):
-                my_bar = st.progress(0, text="Initializing Text Cleaning")
-                with st.form("Original Text"):
-                    st.write(df['text'][ind])
-
-                    submit_1 = st.form_submit_button("Continue to Initial Cleaning Process")   
+                def clean(text):
+                    text = re.sub('https?://\S+|www\.\S+', '', text) #replace website urls
+                    text = re.sub(r"@\S+", '', text) #replace anything that follows @
+                    text = re.sub(r"#\S+", '', text) #replace anything that follows #
+                    text = re.sub(r"[0-9]", '', text) #replace numeric
+                    text = re.sub(r"\n", '', text) #replace new line 
+                    text = re.sub("\'m", ' am ', text) 
+                    text = re.sub("\'re", ' are ', text) 
+                    text = re.sub("\'d", ' had ', text)
+                    text = re.sub("\'s", ' is ', text)
+                    text = re.sub("\'ve", ' have ', text)
+                    text = re.sub(" im ", ' i am ', text)
+                    text = re.sub(" iam ", ' i am ', text)
+                    text = re.sub(" youre ", ' you are ', text)
+                    text = re.sub(" theyre ", ' they are ', text)
+                    text = re.sub(" theyve ", ' they have ', text)
+                    text = re.sub(" weve ", ' we have ', text)
+                    text = re.sub(" isnt ", ' is not ', text)
+                    text = re.sub(" arent ", ' are not ', text)
+                    text = re.sub(" ur ", ' you are ', text)
+                    text = re.sub(" ive ", ' i have ', text)
+                    text = re.sub("_", '', text)
+                    text = re.sub("\"", '', text)
+                    text = re.sub(" bc ", ' because ', text)
+                    text = re.sub(" aka ", ' also known as ', text)
+                    text = re.sub("√©", 'e', text) #encoding error for é. replace it with e
+                    text = re.sub(" bf  ", ' boyfriend ', text)
+                    text = re.sub(" gf  ", ' girlfriend ', text)
+                    text = re.sub(" btw  ", ' by the way ', text)
+                    text = re.sub(" btwn  ", ' between ', text)
+                    text = re.sub(r'([a-z])\1{2,}', r'\1', text) #if the same character is repeated more than twice, remove it to one. (E.A. ahhhhhh --> ah)
+                    text = re.sub(' ctrl ', ' control ', text)
+                    text = re.sub(' cuz ', ' because ', text)
+                    text = re.sub(' dif ', ' different ', text)
+                    text = re.sub(' dm ', ' direct message ', text)
+                    text = re.sub("n't", r' not ', text)
+                    text = re.sub(" fav ", ' favorite ', text)
+                    text = re.sub(" fave ", ' favorite ', text)
+                    text = re.sub(" fml ", " fuck my life ", text)
+                    text = re.sub(" hq ", " headquarter ", text)
+                    text = re.sub(" hr ", " hours ", text)
+                    text = re.sub(" idk ",  "i do not know ", text)
+                    text = re.sub(" ik ", ' i know ', text)
+                    text = re.sub(" lol ", ' laugh out loud ', text)
+                    text = re.sub(" u ", ' you ', text)
+                    text = re.sub("√¶", 'ae', text) #encoding error for áe. replace it with ae
+                    text = re.sub("√® ", 'e', text) #encoding error for é. replace it with e
+                    text = text.strip()
+                    return text
                 
-                    if submit_1: 
-                        st.session_state['submit_1'] = True
-                time.sleep(2)
+                def tokenization(text):
+                    text = re.split('\W+', text) #split words by whitespace to tokenize words
+                    return text
 
-                if st.session_state['submit_1']:
-                    clean_text = df['text'].apply(lambda x:clean(x.lower()))         #first clean the text on lower cased list of dreams
-                    clean_text.dropna()
-                    with st.form("Initial Data Cleaning"):
-                        st.write(clean_text[ind])
+                def remove_stopwords(text):
+                    text = [word for word in text if word not in stopword] #remove stopwords in the nltk stopwords dictionary
+                    return text
 
-                        submit_2 = st.form_submit_button("Continue to Tokenization")           
-                        if submit_2:
-                            st.session_state['submit_2'] = True
+                def lemmatizer(text):
+                    text = [wn.lemmatize(word) for word in text] #lemmatize the tokenized words. Lemmatized > Stemming in this case
+                    return text                                  #because lemmatizing keeps the context of words alive
 
-                if st.session_state['submit_2']:
-                    my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
-                    time.sleep(2)
-
-                    tokenized = clean_text.apply(lambda x: tokenization(x))          #tokenize the cleaned text
-                    clean_text = tokenized.apply(lambda x: " ".join(x))              #rejoin the words (just in case white space still present)
-                    clean_text.dropna()
-                    tokenized.dropna()
+                def vectorization(li):                            #create matrix of words and its respective presence for each dream
+                    vectorizer = CountVectorizer()   
+                    Xs = vectorizer.fit_transform(li)   
+                    X = np.array(Xs.todense())
                     
-                    with st.form("Tokenization"):
-                        st.write(tokenized[ind])
+                    return X
 
-                        submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
-                        if submit_3:
-                            st.session_state['submit_3'] = True
+                def get_column_name(li):                          #extract each word so that it will be present in corpus as column names
+                    vectorizer = CountVectorizer()   
+                    Xs = vectorizer.fit_transform(li)   
+                    col_names=vectorizer.get_feature_names_out()
+                    col_names = list(col_names)
 
-                if st.session_state['submit_3']:         
-                    my_bar.progress(30, text = "Dreams Tokenization Complete")
-                    time.sleep(2)
+                    return col_names
+                
+                @st.cache_data(experimental_allow_widgets=True)
+                def extract_array(df,ind):
+                    my_bar = st.progress(0, text="Initializing Text Cleaning")
+                    with st.form("Original Text"):
+                        st.write(df['text'][ind])
 
-                    x_stopwords = tokenized.apply(lambda x: remove_stopwords(x))     #remove stopwords from tokenized list
-                    x_stopwords.dropna()
+                        submit_1 = st.form_submit_button("Continue to Initial Cleaning Process")   
                     
-                    with st.form("Stopwords Removal"):
-                        st.write(x_stopwords[ind])
-
-                        submit_4 = st.form_submit_button("Continue to Lemmatization")  
-                        if submit_4:
-                            st.session_state['submit_4'] = True
-
-                if st.session_state['submit_4']:               
-                    my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
+                        if submit_1: 
+                            st.session_state['submit_1'] = True
                     time.sleep(2)
 
-                    lemmatized = x_stopwords.apply(lambda x: lemmatizer(x))          #lemmatize the removed stopwords word list
-                    lemmatized.dropna()
-                    
-                    with st.form("Lemmatization"):
-                        st.write(lemmatized[ind])
+                    if st.session_state['submit_1']:
+                        clean_text = df['text'].apply(lambda x:clean(x.lower()))         #first clean the text on lower cased list of dreams
+                        clean_text.dropna()
+                        with st.form("Initial Data Cleaning"):
+                            st.write(clean_text[ind])
 
-                        submit_5 = st.form_submit_button("Create Corpus")  
-                        if submit_5:
-                            st.session_state['submit_5'] = True
+                            submit_2 = st.form_submit_button("Continue to Tokenization")           
+                            if submit_2:
+                                st.session_state['submit_2'] = True
 
-                if st.session_state['submit_5']:                  
-                    my_bar.progress(70, text = "Dreams Lemmatization Complete")
-                    time.sleep(2)
+                    if st.session_state['submit_2']:
+                        my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
+                        time.sleep(2)
 
-                    complete = lemmatized.apply(lambda x: " ".join(x))               #rejoin the words so it will look like a sentence
-                    mapx = vectorization(complete)                                   #start of mapping to corpus
-                    name = get_column_name(complete)
-                    mapx = pd.DataFrame(mapx, columns = name)
-                    mapx.columns = name
-                    my_bar.progress(90, text = "Dreams Corpus Complete")
-                    time.sleep(2)
-                    my_bar.progress(100, text = "Dreams Text Cleaning Complete")
+                        tokenized = clean_text.apply(lambda x: tokenization(x))          #tokenize the cleaned text
+                        clean_text = tokenized.apply(lambda x: " ".join(x))              #rejoin the words (just in case white space still present)
+                        clean_text.dropna()
+                        tokenized.dropna()
+                        
+                        with st.form("Tokenization"):
+                            st.write(tokenized[ind])
 
-                    return clean_text, tokenized, x_stopwords, lemmatized, complete, mapx
+                            submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
+                            if submit_3:
+                                st.session_state['submit_3'] = True
 
-            clean_text, tokenized, x_stopwords, lemmatized, complete, corpus = extract_array(semi, st.session_state['row_n'])
+                    if st.session_state['submit_3']:         
+                        my_bar.progress(30, text = "Dreams Tokenization Complete")
+                        time.sleep(2)
 
-            titles = ['clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete', 'corpus']
+                        x_stopwords = tokenized.apply(lambda x: remove_stopwords(x))     #remove stopwords from tokenized list
+                        x_stopwords.dropna()
+                        
+                        with st.form("Stopwords Removal"):
+                            st.write(x_stopwords[ind])
 
-            st.session_state['clean_text'] = clean_text
-            st.session_state['tokenized'] = tokenized
-            st.session_state['x_stopwords'] = x_stopwords
-            st.session_state['lemmatized'] = lemmatized
-            st.session_state['complete'] = complete
-            st.session_state['corpus'] = corpus
-            st.session_state['semi'] = semi
+                            submit_4 = st.form_submit_button("Continue to Lemmatization")  
+                            if submit_4:
+                                st.session_state['submit_4'] = True
 
-            st.write("Preview of the Different Cleaned Datasets")
-            radio = st.radio("Choose the Table you would like to see",
-                        ('clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete', 'corpus', 'semi'),
-                        horizontal=True)
-            
-            if radio == "clean_text":
-                st.write("From the intial text cleaning, the readers will see that all punctuations are eliminated and all words were transformed to lower case. This is becasue we are trying to segment the sentence by words. For instance, 'hello', 'hello.', and 'Hello' will be recognized as two different words in the eyes of python. Thus, to prevent this from happening, the data has been transformed with the measures mentioned above.")
-                st.dataframe(clean_text.head(20))
-            
-            elif radio == "tokenized":
-                st.write("From the tokenization, one will observe that the sentences are now 'tokenized' by each word.")
-                st.dataframe(pd.DataFrame(st.session_state['tokenized']).head(20))
+                    if st.session_state['submit_4']:               
+                        my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
+                        time.sleep(2)
 
-            elif radio == "x_stopwords":
-                st.write("In comparison to the tokenized version of the data, the readers will see that all the prepositions, conjunctions and various connecting words have been eliminated.")
-                st.dataframe(x_stopwords.head(20))
+                        lemmatized = x_stopwords.apply(lambda x: lemmatizer(x))          #lemmatize the removed stopwords word list
+                        lemmatized.dropna()
+                        
+                        with st.form("Lemmatization"):
+                            st.write(lemmatized[ind])
 
-            elif radio == "lemmatized":
-                st.write("From the lemmatized dataset in comparison to the x_stopwords dataset, the reader will observe that the words have been reverted back to its original root states.")
-                st.dataframe(lemmatized.head(20))
+                            submit_5 = st.form_submit_button("Create Corpus")  
+                            if submit_5:
+                                st.session_state['submit_5'] = True
 
-            elif radio == "complete":
-                st.write("The below is the completed dataset after the cleaning process. In contrary to the lemmatized version, now each row is back to a sentence format rather than tokenized. ")
-                st.dataframe(complete.head(20))
+                    if st.session_state['submit_5']:                  
+                        my_bar.progress(70, text = "Dreams Lemmatization Complete")
+                        time.sleep(2)
 
-            elif radio == "corpus":
-                st.write("The corpus below shows how many times a word appears in each sentence (row). Because there are about 1000 dreams, it is inherent that not all words would be in a sentence, thus showing a lot of zero values.")
-                st.dataframe(corpus.head(20))
+                        complete = lemmatized.apply(lambda x: " ".join(x))               #rejoin the words so it will look like a sentence
+                        mapx = vectorization(complete)                                   #start of mapping to corpus
+                        name = get_column_name(complete)
+                        mapx = pd.DataFrame(mapx, columns = name)
+                        mapx.columns = name
+                        my_bar.progress(90, text = "Dreams Corpus Complete")
+                        time.sleep(2)
+                        my_bar.progress(100, text = "Dreams Text Cleaning Complete")
 
-            elif radio == "semi":
-                st.write("The Semi Dataset is for the purpose of the analysis. Because shorter length dreams are often harder to extract information due to the lack of it, we eliminated the dreams that are in the low 5 percentile.")
-                st.dataframe(semi.head(20))        
+                        return clean_text, tokenized, x_stopwords, lemmatized, complete, mapx
+
+                clean_text, tokenized, x_stopwords, lemmatized, complete, corpus = extract_array(semi, st.session_state['row_n'])
+
+                titles = ['clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete', 'corpus']
+
+                st.session_state['clean_text'] = clean_text
+                st.session_state['tokenized'] = tokenized
+                st.session_state['x_stopwords'] = x_stopwords
+                st.session_state['lemmatized'] = lemmatized
+                st.session_state['complete'] = complete
+                st.session_state['corpus'] = corpus
+                st.session_state['semi'] = semi
+
+                st.write("Preview of the Different Cleaned Datasets")
+                radio = st.radio("Choose the Table you would like to see",
+                            ('clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete', 'corpus', 'semi'),
+                            horizontal=True)
+                
+                if radio == "clean_text":
+                    st.write("From the intial text cleaning, the readers will see that all punctuations are eliminated and all words were transformed to lower case. This is becasue we are trying to segment the sentence by words. For instance, 'hello', 'hello.', and 'Hello' will be recognized as two different words in the eyes of python. Thus, to prevent this from happening, the data has been transformed with the measures mentioned above.")
+                    st.dataframe(clean_text.head(20))
+                
+                elif radio == "tokenized":
+                    st.write("From the tokenization, one will observe that the sentences are now 'tokenized' by each word.")
+                    st.dataframe(pd.DataFrame(st.session_state['tokenized']).head(20))
+
+                elif radio == "x_stopwords":
+                    st.write("In comparison to the tokenized version of the data, the readers will see that all the prepositions, conjunctions and various connecting words have been eliminated.")
+                    st.dataframe(x_stopwords.head(20))
+
+                elif radio == "lemmatized":
+                    st.write("From the lemmatized dataset in comparison to the x_stopwords dataset, the reader will observe that the words have been reverted back to its original root states.")
+                    st.dataframe(lemmatized.head(20))
+
+                elif radio == "complete":
+                    st.write("The below is the completed dataset after the cleaning process. In contrary to the lemmatized version, now each row is back to a sentence format rather than tokenized. ")
+                    st.dataframe(complete.head(20))
+
+                elif radio == "corpus":
+                    st.write("The corpus below shows how many times a word appears in each sentence (row). Because there are about 1000 dreams, it is inherent that not all words would be in a sentence, thus showing a lot of zero values.")
+                    st.dataframe(corpus.head(20))
+
+                elif radio == "semi":
+                    st.write("The Semi Dataset is for the purpose of the analysis. Because shorter length dreams are often harder to extract information due to the lack of it, we eliminated the dreams that are in the low 5 percentile.")
+                    st.dataframe(semi.head(20))        
+        except:
+            print('')
+
     except:
-        print('')
-
-
+        st.warning("Please Complete the Data Collection Page Before Moving On")
                 
 ########################################################################################
 ###############       POS Tagging / NER Visualization  page      #######################
@@ -513,9 +515,10 @@ def part_of_speech_tag():
     nlp = spacy.load("en_core_web_sm")
 
     try:
-        result = st.button("Click to Start Data Visualization")
+        result = st.button("Click to Start POS Tagging")
         if result:
             complete_load = st.session_state['complete']
+            st.session_state['show'] = True
 
 
             @st.cache_data
@@ -570,40 +573,41 @@ def part_of_speech_tag():
     except ValueError:
         print("")    
 
-    try:
-        df = st.session_state['semi']
+    if st.session_state['show']:
+        try:
+            df = st.session_state['semi']
 
-        st.session_state['keyword'] = st.text_input("Type in Keyword you would like to see in the Dream")
-        filtered = df[df['text'].str.contains(st.session_state['keyword'])]
-        
-        if "keyword" in st.session_state.keys():
-            st.dataframe(filtered)
-            st.session_state['filtered'] = filtered
+            st.session_state['keyword'] = st.text_input("Type in Keyword you would like to see in the Dream")
+            filtered = df[df['text'].str.contains(st.session_state['keyword'])]
             
-        else:
-            st.dataframed(df)
+            if "keyword" in st.session_state.keys():
+                st.dataframe(filtered)
+                st.session_state['filtered'] = filtered
+                
+            else:
+                st.dataframed(df)
 
-        st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
+            st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
 
-        with st.container():
-            temp = df['text'][st.session_state['row_n']]
-            model = "en_core_web_sm"
+            with st.container():
+                temp = df['text'][st.session_state['row_n']]
+                model = "en_core_web_sm"
 
-            st.title("POS Taggging and NER Visualization")
-            text = st.text_area("Text to analyze", temp, height=200)
-            doc = spacy_streamlit.process_text(model, text)
+                st.title("POS Taggging and NER Visualization")
+                text = st.text_area("Text to analyze", temp, height=200)
+                doc = spacy_streamlit.process_text(model, text)
 
-            spacy_streamlit.visualize_parser(doc)
+                spacy_streamlit.visualize_parser(doc)
 
-            spacy_streamlit.visualize_ner(doc,
-                                          show_table=True
-                                            )
+                spacy_streamlit.visualize_ner(doc,
+                                            show_table=True
+                                                )
 
 
-            # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
+                # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
 
-    except ValueError:
-        st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
+        except ValueError:
+            st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
 
 ########################################################################################
 #############################       lda  page      #################################
@@ -705,255 +709,261 @@ def part_of_speech_tag():
 ########################################################################################
 def tf_idf():
     st.title("TF-IDF Analysis")
-    st.write(f"Your current selected dream index is {st.session_state['row_n']}")
-
-    result_ti = st.button("Click Here to start TF-IDF")
-
-    if result_ti:
-        st.session_state['result_ti'] = True
     try:
-        if st.session_state['result_ti']:
-            corpus = st.session_state['corpus']
-            token = st.session_state['tokenized']
-            tokenized = [list(set(li)) for li in token]
+        st.write(f"Your current selected dream index is {st.session_state['row_n']}")
 
-            #define term frequency (tf) function
-            def tf(corpus, token_set):
-                tf_dict = {}
-                n = len(token_set)
-                row_dict = corpus
+        result_ti = st.button("Click Here to start TF-IDF")
 
-                for word, count in row_dict.items():
-                    tf_dict[word] = count / float(n)
-                
-                return tf_dict
+        if result_ti:
+            st.session_state['result_ti'] = True
+        try:
+            if st.session_state['result_ti']:
+                corpus = st.session_state['corpus']
+                token = st.session_state['tokenized']
+                tokenized = [list(set(li)) for li in token]
 
-            #define inverse data frequency (idf) function
-            def idf(documents):
-                n = len(documents)
-                idf_dict = dict.fromkeys(documents[0].keys(),0)
+                #define term frequency (tf) function
+                def tf(corpus, token_set):
+                    tf_dict = {}
+                    n = len(token_set)
+                    row_dict = corpus
 
-                for document in documents:
-                    for word, val in document.items():
-                        if val > 0:
-                            idf_dict[word] += 1
+                    for word, count in row_dict.items():
+                        tf_dict[word] = count / float(n)
                     
-                for word, val in idf_dict.items():
-                    idf_dict[word] = math.log(n / float(val))
+                    return tf_dict
 
-                    #if one wants to match the sklearn version of the tfidfvectorizor
-                    #idf_dict[word] = math.log((n+1) / (1+float(val)))+1
+                #define inverse data frequency (idf) function
+                def idf(documents):
+                    n = len(documents)
+                    idf_dict = dict.fromkeys(documents[0].keys(),0)
 
-                return idf_dict
+                    for document in documents:
+                        for word, val in document.items():
+                            if val > 0:
+                                idf_dict[word] += 1
+                        
+                    for word, val in idf_dict.items():
+                        idf_dict[word] = math.log(n / float(val))
 
-            #define tf-idf function
-            def tf_idf(tf, idf):
-                tf_idf_dict = {}
+                        #if one wants to match the sklearn version of the tfidfvectorizor
+                        #idf_dict[word] = math.log((n+1) / (1+float(val)))+1
 
-                for word, val in tf.items():
-                    tf_idf_dict[word] = val * idf[word]
+                    return idf_dict
 
-                return tf_idf_dict
+                #define tf-idf function
+                def tf_idf(tf, idf):
+                    tf_idf_dict = {}
 
-            #main function to execute all above
-            @st.cache_data
-            def main(corpus, tokenized):
-                my_bar = st.progress(0,"Initializing tf-idf calculation")
-                tf_li = []
-                tf_idf_li = []
+                    for word, val in tf.items():
+                        tf_idf_dict[word] = val * idf[word]
+
+                    return tf_idf_dict
+
+                #main function to execute all above
+                @st.cache_data
+                def main(corpus, tokenized):
+                    my_bar = st.progress(0,"Initializing tf-idf calculation")
+                    tf_li = []
+                    tf_idf_li = []
+                    
+                    documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
+                    
+                    time.sleep(2)
+
+                    my_bar.progress(35, "Calculating tf")
+                    for l, r in enumerate(documents):
+                        tf_temp = tf(r, tokenized[l])
+                        tf_li.append(tf_temp)
+                    
+                    time.sleep(2)
+                    my_bar.progress(70, "Calculating idf")
+                    idf_dict = idf(documents)
+
+                    time.sleep(2)
+                    my_bar.progress(95, "Calculating tf_idf")
+                    for t in tf_li:
+                        tf_idf_temp = tf_idf(t, idf_dict)
+                        tf_idf_li.append(tf_idf_temp)
+
+                    time.sleep(2)
+                    my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
+                    return pd.DataFrame(tf_idf_li) , pd.DataFrame(tf_li) , pd.DataFrame(idf_dict, index=[0])
                 
-                documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
+                tf_idf_df, tf_df, idf_df= main(corpus, tokenized)
+
+                st.write("Preview")
+                radio = st.radio("Choose the Table you would like to see",
+                            ('TF-IDF', "TF", "IDF"),
+                            horizontal=True)
                 
-                time.sleep(2)
-
-                my_bar.progress(35, "Calculating tf")
-                for l, r in enumerate(documents):
-                    tf_temp = tf(r, tokenized[l])
-                    tf_li.append(tf_temp)
+                if radio == "TF-IDF":
+                    st.dataframe(tf_idf_df.head())
                 
-                time.sleep(2)
-                my_bar.progress(70, "Calculating idf")
-                idf_dict = idf(documents)
+                elif radio == "TF":
+                    st.dataframe(tf_df.head())
 
-                time.sleep(2)
-                my_bar.progress(95, "Calculating tf_idf")
-                for t in tf_li:
-                    tf_idf_temp = tf_idf(t, idf_dict)
-                    tf_idf_li.append(tf_idf_temp)
-
-                time.sleep(2)
-                my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
-                return pd.DataFrame(tf_idf_li) , pd.DataFrame(tf_li) , pd.DataFrame(idf_dict, index=[0])
-            
-            tf_idf_df, tf_df, idf_df= main(corpus, tokenized)
-
-            st.write("Preview")
-            radio = st.radio("Choose the Table you would like to see",
-                        ('TF-IDF', "TF", "IDF"),
-                        horizontal=True)
-            
-            if radio == "TF-IDF":
-                st.dataframe(tf_idf_df.head())
-            
-            elif radio == "TF":
-                st.dataframe(tf_df.head())
-
-            elif radio == "IDF":
-                st.dataframe(idf_df.head())  
+                elif radio == "IDF":
+                    st.dataframe(idf_df.head())  
 
 
 
-            def barplot(tf_idf_df, number_of_words):
-                rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
-                words = rendered_dream.index.tolist()
-                rendered_dream['words'] = words
-
-                fig = px.bar(rendered_dream,
-                                x='words', 
-                                y='values', 
-                                title=f"Dream {st.session_state['row_n']} tf-idf score words",
-                                labels = dict(words = "Words", values = 'TF-IDF Score'))
-                st.plotly_chart(fig,theme="streamlit", use_container_width=True)   
-
-            barplot(tf_idf_df = tf_idf_df, number_of_words = 10)
-            change = 2
-
-            if change == 2:
-                def barplot_2(tf_idf_df, number_of_words):
+                def barplot(tf_idf_df, number_of_words):
                     rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
                     words = rendered_dream.index.tolist()
                     rendered_dream['words'] = words
 
-                    rendered_dream_2 = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n_2'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
-                    words_2 = rendered_dream_2.index.tolist()
-                    rendered_dream_2['words'] = words_2          
-
-                    fig = make_subplots(rows=1, cols=2)
-
-                    fig.add_trace(go.Bar(x = rendered_dream['words'],
-                                        y = rendered_dream['values'],
-                                        name = f"Dream {st.session_state['row_n']}"),
-                                        row = 1, col = 1)
-                    
-                    fig.add_trace(go.Bar(x = rendered_dream_2['words'],
-                                        y = rendered_dream_2['values'],
-                                        name = f"Dream {st.session_state['row_n_2']}"),
-                                    row = 1, col = 2)         
-                    
-                    fig.update_layout(
-                                        title="TF-IDF Side by Side Barplot",
-                                        xaxis_title="Words",
-                                        yaxis_title="TF-IDF Values",
-                                        legend_title="Dreams"
-                                        # font=dict(
-                                        #     family="Courier New, monospace",
-                                        #     size=18,
-                                        #     color="RebeccaPurple"
-                                        # )
-                                    )
-                        
+                    fig = px.bar(rendered_dream,
+                                    x='words', 
+                                    y='values', 
+                                    title=f"Dream {st.session_state['row_n']} tf-idf score words",
+                                    labels = dict(words = "Words", values = 'TF-IDF Score'))
                     st.plotly_chart(fig,theme="streamlit", use_container_width=True)   
 
-                st.write(f"Current Keyword is `{st.session_state['keyword']}`")
-                st.dataframe(pd.DataFrame(st.session_state['filtered']))
-                st.write("Choose your Second Dream by row index")
-                try:
-                    st.session_state['row_n_2'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
-                    barplot_2(tf_idf_df = tf_idf_df, number_of_words = 10)
-                except:
-                    st.warning("Please Input the Second Dream Row Number")
-    except:
-        print("")
+                barplot(tf_idf_df = tf_idf_df, number_of_words = 10)
+                change = 2
 
+                if change == 2:
+                    def barplot_2(tf_idf_df, number_of_words):
+                        rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
+                        words = rendered_dream.index.tolist()
+                        rendered_dream['words'] = words
+
+                        rendered_dream_2 = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n_2'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
+                        words_2 = rendered_dream_2.index.tolist()
+                        rendered_dream_2['words'] = words_2          
+
+                        fig = make_subplots(rows=1, cols=2)
+
+                        fig.add_trace(go.Bar(x = rendered_dream['words'],
+                                            y = rendered_dream['values'],
+                                            name = f"Dream {st.session_state['row_n']}"),
+                                            row = 1, col = 1)
+                        
+                        fig.add_trace(go.Bar(x = rendered_dream_2['words'],
+                                            y = rendered_dream_2['values'],
+                                            name = f"Dream {st.session_state['row_n_2']}"),
+                                        row = 1, col = 2)         
+                        
+                        fig.update_layout(
+                                            title="TF-IDF Side by Side Barplot",
+                                            xaxis_title="Words",
+                                            yaxis_title="TF-IDF Values",
+                                            legend_title="Dreams"
+                                            # font=dict(
+                                            #     family="Courier New, monospace",
+                                            #     size=18,
+                                            #     color="RebeccaPurple"
+                                            # )
+                                        )
+                            
+                        st.plotly_chart(fig,theme="streamlit", use_container_width=True)   
+
+                    st.write(f"Current Keyword is `{st.session_state['keyword']}`")
+                    st.dataframe(pd.DataFrame(st.session_state['filtered']))
+                    st.write("Choose your Second Dream by row index")
+                    try:
+                        st.session_state['row_n_2'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
+                        barplot_2(tf_idf_df = tf_idf_df, number_of_words = 10)
+                    except:
+                        st.warning("Please Input the Second Dream Row Number")
+        except:
+            print("")
+    except:
+        st.warning("Please Complete the Previous Step Before Moving On")
 ########################################################################################
 #############################       Dream Summarization + Continuation      #################################
 ######################################################################################## 
         
 def summary_continue():
-    st.title("Dream Summarization and Continuation Using GPT3: Davinci 003")
+    st.title("Dream Summarization and Continuation Using GPT3.5")
     with st.form("open_ai_cred"):
         openai.api_key = st.text_input("OpenAI API Key")
 
         submitted = st.form_submit_button("Submit")    
-    
-    def summarize_dream(prompt, length):
-        response = openai.Completion.create(
-            engine="text-davinci-003",                  #most advanced version of text related algo in open ai
-            prompt=prompt,                              #what is being inputted to gpt
-            max_tokens=length,                            #maximum number of words
-            n=1,                                        #number of outputs
-            stop=None,                                  #stop when
-            temperature=0.5,                            #how much "risk" do you want the gpt to take
-        )
+    try:
+        def summarize_dream(prompt, length):
+            response = openai.Completion.create(
+                engine="text-davinci-003",                  #most advanced version of text related algo in open ai
+                prompt=prompt,                              #what is being inputted to gpt
+                max_tokens=length,                            #maximum number of words
+                n=1,                                        #number of outputs
+                stop=None,                                  #stop when
+                temperature=0.5,                            #how much "risk" do you want the gpt to take
+            )
 
-        text = response.choices[0].text.strip()
-        return text
+            text = response.choices[0].text.strip()
+            return text
+
+        with st.form("asdf"):
+            try:
+                st.header("Original Text")
+                dream = st.session_state['semi']['text'][st.session_state['row_n']]
+                st.write(dream)
+
+                dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
+                if dream_submit:
+                    st.session_state['dream_submit'] = True
+            except:
+                st.warning("Please select a dream")
+
+            
+        if st.session_state['dream_submit']: 
+            if len(dream) <= 280:
+                length = len(dream) * 0.6 
+            else:
+                length = 280     
+            try:     
+                summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
+            except:
+                st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
+            continuation = summarize_dream("Tell me what happens after this story as if you are the storyteller \n" + dream + "\n [insert]", length = 280)
+
+            st.header("Dream Summary")
+            st.write(summary)
+
+            classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
+            prediction = classifier(summary)
+            emotion = [x['label'] for x in prediction[0]]
+            score = [y['score'] for y in prediction[0]]
+
+            fig10 = make_subplots(rows=1, cols=1)
+
+            fig10.add_trace(go.Bar(x = emotion,
+                                    y = score,
+                                    name = f"Dream {1}"))
+
+            fig10.update_layout(
+                                title="Sentiment Classification Results",
+                                xaxis_title="Criteria",
+                                yaxis_title="Sentiment Scores",
+                                legend_title="Dreams"
+                                # font=dict(
+                                #     family="Courier New, monospace",
+                                #     size=18,
+                                #     color="RebeccaPurple"
+                                # )
+                            )    
+            
+            st.plotly_chart(fig10,theme="streamlit", use_container_width=True)  
 
 
+            st.header("Dream Continuation")
+            st.write(continuation)
 
-    with st.form("asdf"):
-        try:
-            st.header("Original Text")
-            dream = st.session_state['semi']['text'][st.session_state['row_n']]
-            st.write(dream)
-
-            dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
-        except:
-            st.warning("Please select a dream")
-
-         
-    if dream_submit: 
-        if len(dream) <= 280:
-            length = len(dream) * 0.6 
-        else:
-            length = 280          
-        summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
-        continuation = summarize_dream("Tell me what happens after this story as if you are the storyteller \n" + dream + "\n [insert]", length = 280)
-
-        st.header("Dream Summary")
-        st.write(summary)
-
-        classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
-        prediction = classifier(summary)
-        emotion = [x['label'] for x in prediction[0]]
-        score = [y['score'] for y in prediction[0]]
-
-        fig10 = make_subplots(rows=1, cols=1)
-
-        fig10.add_trace(go.Bar(x = emotion,
-                                y = score,
-                                name = f"Dream {1}"))
-
-        fig10.update_layout(
-                            title="Sentiment Classification Results",
-                            xaxis_title="Criteria",
-                            yaxis_title="Sentiment Scores",
-                            legend_title="Dreams"
-                            # font=dict(
-                            #     family="Courier New, monospace",
-                            #     size=18,
-                            #     color="RebeccaPurple"
-                            # )
-                        )    
-        
-        st.plotly_chart(fig10,theme="streamlit", use_container_width=True)  
-
-
-        st.header("Dream Continuation")
-        st.write(continuation)
-
-        st.header("Dream Visualization")
-        dalle = summarize_dream("As if you are the writer, summarize this dream into one sentence \n"+dream, length = 100)
-        st.write(dalle)
-        time.sleep(30)
-        response = openai.Image.create(
-                    prompt="Give me a realistic image of the dream: " + dalle,
-                    n=1,
-                    size="1024x1024")
-        
-        st.image(response['data'][0]['url'])
-        dream_submit = False
-
+            st.header("Dream Visualization")
+            dalle = summarize_dream("As if you are the writer, summarize this dream into one sentence \n"+dream, length = 100)
+            st.write(dalle)
+            time.sleep(30)
+            response = openai.Image.create(
+                        prompt="Give me a descriptive image of the statement: " + dalle,
+                        n=1,
+                        size="1024x1024")
+            
+            st.image(response['data'][0]['url'])
+            dream_submit = False
+    except: 
+        st.warning("Please Complete the Previous Step Before Moving On")
 
 ########################################################################################
 #############################       Data Download      #################################
