@@ -165,7 +165,6 @@ def data_collection():
     st.write("THIS IS SPACE FOR REDDIT DEV ACCOUNT INFROMATION")
     st.write("THIS IS SPACE FOR REDDIT DEV ACCOUNT INFROMATION")
     st.write("Now that you have gained access to the Reddit developer's account, you are ready to use the Reddit API in order to gather dreams that will then be used as the data for NLP. The subreddit to be used is r/Dreams, which can be easily searched on search engines for viewing purposes. In the below text boxes, please input your Reddit information in order to collect the dreams. ")
-    st.write("The process of Data Collection follows the below details:")
 
     st.write("The process of Data Collection follows the below details: ")
     st.write("1. Your authentication is granted with correct Client Id, Secret Key, Username, and Password. This implies that Reddit knows who is accessing their database and can identify whether you have access to the data of observance. If you do not input the correct credentials, your requests will be denied.")
@@ -635,9 +634,17 @@ def part_of_speech_tag():
 ########################################################################################
 
 def name_identity_recognition():
+    st.header("Named Identity Recognition")
 
     try:
         if st.session_state['show']:
+                st.write("As the next step of translating human language to machine comprehensible context, we go through the name identity recognition. Well first, we have to know what Named Identity is! ")
+                st.write("Named Identity is words or collection of words that signify a particular subject in a given text. In essence, the particular subjects would entail names, locations, companies, products, monetary values, percentages, time, etc. The key difference from the POS Tagging to Named Identity Recognition is that it provides more context to the sentence the algorithm is trying to understand. ")
+                st.write("For instance, let’s take the example of two sentences below:")
+                st.write("“I like Google” and “I like Wellesley”")
+                st.write("From the POS tagging, the machine learning algorithm understands that Google and Wellesley are nouns. However, it only recognizes that the two words are nouns, but not what the word itself entails. Named Identity Recognition will flag the two words into Company and Location. That way, the machine can now have a contextualized understanding of the sentence that one is a statement about a company, and the counterpart about a location. ")
+                st.write("So how is this used in real life you may ask! There are countless possible usages of Named Identity Recognition, but one of the most prominent used cases would be Netflix’s recommendation system. When you watch a show or movie on Netflix, based on the description of the show, Netflix can extract the entities in the description and recommend another entertainment piece that has the most similar entities in its description. Other used cases can be a simpler one where we can summarize a unstructured text data (such as a news article) to a structured format. In other words, instead of reading the entire article, NER allows for extraction of the 5Ws: Who, What, Why, When and Where.")
+                st.write("Now, with that being said, let’s try this new technique on the dream that you have chosen from the previous section!")
             
                 df = st.session_state['semi']
 
