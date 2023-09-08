@@ -519,7 +519,7 @@ def data_cleaning():
 ########################################################################################
 
 def part_of_speech_tag():
-    st.title("Part of Speech Tagging Visualization")
+    st.title("Part of Speech Tagging (POS)")
 
     nlp = spacy.load("en_core_web_sm")
 
@@ -611,9 +611,28 @@ def part_of_speech_tag():
                     doc = spacy_streamlit.process_text(model, text)
 
                     spacy_streamlit.visualize_parser(doc)
+                    # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
+
+    except:
+            st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
+
+def name_identity_recognition():
+
+    try:
+        if st.session_state['show']:
+            
+                df = st.session_state['semi']
+
+                with st.container():
+                    temp = df['text'][st.session_state['row_n']]
+                    model = "en_core_web_sm"
+
+                    st.title("POS Taggging and NER Visualization")
+                    text = st.text_area("Text to analyze", temp, height=200)
+                    doc = spacy_streamlit.process_text(model, text)
 
                     spacy_streamlit.visualize_ner(doc,
-                                                show_table=True
+                                                show_table=False
                                                     )
 
 
@@ -1033,7 +1052,8 @@ page_names_to_funcs = {
     "Introduction": introduction,
     "Data Collection": data_collection,
     "Data Cleaning": data_cleaning,
-    "POS and NER": part_of_speech_tag,
+    "Part of Speech Tagging": part_of_speech_tag,
+    "Name Identity Recognition": name_identity_recognition,
     "TF-IDF": tf_idf,
     "Dream Summary and Continuation": summary_continue,
     "Data Download": data_download
