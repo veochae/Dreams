@@ -572,41 +572,41 @@ def part_of_speech_tag():
 
     except:
         st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
-
-    if st.session_state['show']:
-        try:
-            df = st.session_state['semi']
-
-            st.session_state['keyword'] = st.text_input("Type in Keyword you would like to see in the Dream")
-            filtered = df[df['text'].str.contains(st.session_state['keyword'])]
+    try:
+        if st.session_state['show']:
             
-            if "keyword" in st.session_state.keys():
-                st.dataframe(filtered)
-                st.session_state['filtered'] = filtered
+                df = st.session_state['semi']
+
+                st.session_state['keyword'] = st.text_input("Type in Keyword you would like to see in the Dream")
+                filtered = df[df['text'].str.contains(st.session_state['keyword'])]
                 
-            else:
-                st.dataframed(df)
+                if "keyword" in st.session_state.keys():
+                    st.dataframe(filtered)
+                    st.session_state['filtered'] = filtered
+                    
+                else:
+                    st.dataframed(df)
 
-            st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
+                st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
 
-            with st.container():
-                temp = df['text'][st.session_state['row_n']]
-                model = "en_core_web_sm"
+                with st.container():
+                    temp = df['text'][st.session_state['row_n']]
+                    model = "en_core_web_sm"
 
-                st.title("POS Taggging and NER Visualization")
-                text = st.text_area("Text to analyze", temp, height=200)
-                doc = spacy_streamlit.process_text(model, text)
+                    st.title("POS Taggging and NER Visualization")
+                    text = st.text_area("Text to analyze", temp, height=200)
+                    doc = spacy_streamlit.process_text(model, text)
 
-                spacy_streamlit.visualize_parser(doc)
+                    spacy_streamlit.visualize_parser(doc)
 
-                spacy_streamlit.visualize_ner(doc,
-                                            show_table=True
-                                                )
+                    spacy_streamlit.visualize_ner(doc,
+                                                show_table=True
+                                                    )
 
 
-                # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
+                    # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
 
-        except:
+    except:
             st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
 
 ########################################################################################
