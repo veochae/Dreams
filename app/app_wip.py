@@ -499,18 +499,6 @@ def data_cleaning():
 
 
                 
-
-########################################################################################
-########################       Data Visualization  page      ###########################
-########################################################################################
-
-def data_visualization():
-    st.title("Data Visualization")
-    st.write("Before we jump into the more advanced text analysis, it is always important to perform basic anlaysis as the following. At the end of this endeavor, the end goal is always 'understand the data'. Thus, we go throug the inital phases of getting to know the data before moving onto more detailed analysis.")
-    st.write("**POS Tagging**")
- 
-        
-
 ########################################################################################
 ###############       POS Tagging / NER Visualization  page      #######################
 ########################################################################################
@@ -1024,9 +1012,7 @@ page_names_to_funcs = {
     "Introduction": introduction,
     "Data Collection": data_collection,
     "Data Cleaning": data_cleaning,
-    "Data Visualization": data_visualization,
     "POS and NER": part_of_speech_tag,
-    # "Latency Discriminant Analysis (LDA)": lda,
     "TF-IDF": tf_idf,
     "Dream Summary and Continuation": summary_continue,
     "Data Download": data_download
