@@ -70,9 +70,6 @@ import torch
 #############################       required functions     #############################
 ########################################################################################
 warnings.filterwarnings('ignore')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('brown')
-nltk.download('punkt')
 
 ###################### lottie file extraction
 def load_lottieurl(url):
@@ -239,6 +236,12 @@ def data_collection():
 ########################################################################################
 
 def data_cleaning():
+    nltk.download('stopwords')
+    nltk.download('omw-1.4')
+    nltk.download('wordnet')
+    nltk.download("punkt")
+    nltk.download('averaged_perceptron_tagger')
+    nltk.download('brown')    
     st.title("Data Manipulation")
     st.write("With the raw dataset in hand, now we move on to the critical stage of analysis: Data Manipulation.")
     st.write("In the dataframe that represents the dreams, each observations (row) represents a unique dream. In general, each unique observation in a collection of texts is referred to as a “document”, while collectively the documents are referred to as a “corpus” or a “text corpus”. With the raw corpus in hand, you are about to embark on an important process that is at the heart of NLP: Data Cleaning. So hold on tight and keep your eyes open – you are about to learn a host of useful tips and tricks.")
@@ -251,12 +254,6 @@ def data_cleaning():
     st.write("Have fun playing with the different data cleaning tasks below! You are about to get into something even more interesting once you are done with this.")
     try:
         result_dc = st.button("Click to Start Data Manipulation")
-
-        nltk.download('stopwords')
-        nltk.download('omw-1.4')
-        nltk.download('wordnet')
-        nltk.download("punkt")
-        nltk.download('averaged_perceptron_tagger')
         stopword = nltk.corpus.stopwords.words('english')
 
         if result_dc:
