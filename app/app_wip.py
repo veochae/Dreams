@@ -294,7 +294,8 @@ def data_cleaning():
 
                 st.dataframe(semi)
                 st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
-
+                
+                @st.cache_data
                 def clean(text):
                     text = re.sub('https?://\S+|www\.\S+', '', text) #replace website urls
                     text = re.sub(r"@\S+", '', text) #replace anything that follows @
@@ -344,19 +345,23 @@ def data_cleaning():
                     text = re.sub("√® ", 'e', text) #encoding error for é. replace it with e
                     text = text.strip()
                     return text
-                
+
+                @st.cache_data            
                 def tokenization(text):
                     text = re.split('\W+', text) #split words by whitespace to tokenize words
                     return text
 
+                @st.cache_data
                 def remove_stopwords(text):
                     text = [word for word in text if word not in stopword] #remove stopwords in the nltk stopwords dictionary
                     return text
 
+                @st.cache_data
                 def lemmatizer(text):
                     text = lemmatize_sentence(" ".join(text)) #lemmatize the tokenized words. Lemmatized > Stemming in this case
                     return text                                  #because lemmatizing keeps the context of words alive
 
+                @st.cache_data
                 def vectorization(li):                            #create matrix of words and its respective presence for each dream
                     vectorizer = CountVectorizer()   
                     Xs = vectorizer.fit_transform(li)   
@@ -364,6 +369,7 @@ def data_cleaning():
                     
                     return X
 
+                @st.cache_data
                 def get_column_name(li):                          #extract each word so that it will be present in corpus as column names
                     vectorizer = CountVectorizer()   
                     Xs = vectorizer.fit_transform(li)   
@@ -922,7 +928,7 @@ def summary_continue():
                 summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
             except:
                 st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
-            continuation = summarize_dream("Tell me what happens after this story as if you are the storyteller \n" + dream + "\n [insert]", length = 280)
+            continuation = summarize_dream("Tell me what happens after this story as if you are the storyteller: \n" + dream, length = 280)
 
             st.header("Dream Summary")
             st.write(summary)
@@ -957,7 +963,7 @@ def summary_continue():
             st.write(continuation)
 
             st.header("Dream Visualization")
-            dalle = summarize_dream("As if you are the writer, summarize this dream into one sentence \n"+dream, length = 100)
+            dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE \n"+dream, length = 100)
             st.write(dalle)
             time.sleep(30)
             response = openai.Image.create(
