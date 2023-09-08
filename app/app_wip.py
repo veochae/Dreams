@@ -402,7 +402,7 @@ def data_cleaning():
                         tokenized.dropna()
                         
                         with st.form("Tokenization"):
-                            st.write(tokenized[ind].join(" , "))
+                            st.write(" , ".join(tokenized[ind]))
 
                             submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
                             if submit_3:
@@ -416,7 +416,7 @@ def data_cleaning():
                         x_stopwords.dropna()
                         
                         with st.form("Stopwords Removal"):
-                            st.write(x_stopwords[ind].join(" "))
+                            st.write(" ".join(x_stopwords[ind]))
 
                             submit_4 = st.form_submit_button("Continue to Lemmatization")  
                             if submit_4:
@@ -430,7 +430,7 @@ def data_cleaning():
                         lemmatized.dropna()
                         
                         with st.form("Lemmatization"):
-                            st.write(lemmatized[ind].join(" "))
+                            st.write(" ".join(lemmatized[ind]))
 
                             submit_5 = st.form_submit_button("Create Corpus")  
                             if submit_5:
@@ -496,10 +496,10 @@ def data_cleaning():
                     st.write("The Semi Dataset is for the purpose of the analysis. Because shorter length dreams are often harder to extract information due to the lack of it, we eliminated the dreams that are in the low 5 percentile.")
                     st.dataframe(semi.head(20))        
         except:
-            st.warning("Please Complete the Data Collection Page Before Moving On")
+            st.warning("Please Complete the Previous Stage Before Moving On")
 
     except:
-        st.warning("Please Complete the Data Collection Page Before Moving On")
+        st.warning("Please Complete the Previous Stage Before Moving On")
                 
 ########################################################################################
 ###############       POS Tagging / NER Visualization  page      #######################
