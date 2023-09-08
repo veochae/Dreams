@@ -897,9 +897,11 @@ def summary_continue():
 
         with st.form("asdf"):
             st.header("Original Text")
-            dream = st.session_state['semi']['text'][st.session_state['row_n']]
-            st.write(dream)
-
+            try:
+                dream = st.session_state['semi']['text'][st.session_state['row_n']]
+                st.write(dream)
+            except:
+                pass
             dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
             if dream_submit:
                 st.session_state['dream_submit'] = True
