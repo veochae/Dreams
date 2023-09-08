@@ -353,7 +353,8 @@ def data_cleaning():
                     return text
 
                 def lemmatizer(text):
-                    text = lemmatize_sentence(text)              #lemmatize the tokenized words. Lemmatized > Stemming in this case
+                    temp = lemmatize_sentence(" ".join(text))
+                    text = temp.split(" ") #lemmatize the tokenized words. Lemmatized > Stemming in this case
                     return text                                  #because lemmatizing keeps the context of words alive
 
                 def vectorization(li):                            #create matrix of words and its respective presence for each dream
@@ -431,7 +432,7 @@ def data_cleaning():
                         lemmatized.dropna()
                         
                         with st.form("Lemmatization"):
-                            st.write(lemmatized[ind])
+                            st.write(" ".join(lemmatized[ind]))
 
                             submit_5 = st.form_submit_button("Create Corpus")  
                             if submit_5:
