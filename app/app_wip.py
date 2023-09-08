@@ -55,6 +55,7 @@ from gensim.models.coherencemodel import CoherenceModel
 
 #other pacakges
 from better_profanity import profanity
+from pywsd.utils import lemmatize_sentence
 
 #huggingface
 from transformers import pipeline
@@ -352,7 +353,7 @@ def data_cleaning():
                     return text
 
                 def lemmatizer(text):
-                    text = [wn.lemmatize(word) for word in text] #lemmatize the tokenized words. Lemmatized > Stemming in this case
+                    text = lemmatize_sentence(text)              #lemmatize the tokenized words. Lemmatized > Stemming in this case
                     return text                                  #because lemmatizing keeps the context of words alive
 
                 def vectorization(li):                            #create matrix of words and its respective presence for each dream
