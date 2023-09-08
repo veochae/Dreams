@@ -496,7 +496,7 @@ def data_cleaning():
                     st.write("The Semi Dataset is for the purpose of the analysis. Because shorter length dreams are often harder to extract information due to the lack of it, we eliminated the dreams that are in the low 5 percentile.")
                     st.dataframe(semi.head(20))        
         except:
-            print('')
+            st.warning("Please Complete the Data Collection Page Before Moving On")
 
     except:
         st.warning("Please Complete the Data Collection Page Before Moving On")
