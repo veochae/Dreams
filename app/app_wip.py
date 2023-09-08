@@ -446,7 +446,7 @@ def data_cleaning():
                         my_bar.progress(70, text = "Dreams Lemmatization Complete")
                         time.sleep(2)
 
-                        complete = [" ".join(x) for x in lemmatized]               #rejoin the words so it will look like a sentence
+                        complete = pd.DataFrame([" ".join(x) for x in lemmatized])               #rejoin the words so it will look like a sentence
                         mapx = vectorization(complete)                                   #start of mapping to corpus
                         name = get_column_name(complete)
                         mapx = pd.DataFrame(mapx, columns = name)
