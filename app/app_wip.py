@@ -896,18 +896,14 @@ def summary_continue():
             return text
 
         with st.form("asdf"):
-            try:
-                st.header("Original Text")
-                dream = st.session_state['semi']['text'][st.session_state['row_n']]
-                st.write(dream)
+            st.header("Original Text")
+            dream = st.session_state['semi']['text'][st.session_state['row_n']]
+            st.write(dream)
 
-                dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
-                if dream_submit:
-                    st.session_state['dream_submit'] = True
-            except:
-                st.warning("Please select a dream")
+            dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
+            if dream_submit:
+                st.session_state['dream_submit'] = True
 
-            
         if st.session_state['dream_submit']: 
             if len(dream) <= 280:
                 length = len(dream) * 0.6 
