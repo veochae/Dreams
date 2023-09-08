@@ -160,21 +160,21 @@ def introduction():
 
 def data_collection():
     st.title("Data Collection")
-    st.write("In order to first collect data for this analysis, we turn our attention to one of the most prominent social media source Reddit. Reddit has been created in 2005 with the purpose of creating an online environment in which users can freely submit images, posts or links for share, and have threaded discussions on various topics. As one may readily be knowledgeable, Reddit has a unique system called Threads. Threads are essentially topics of discussion, where the discussion actually takes place. Today, Reddit has 2.8 Million threads, being uitilzed as one of the hubs of online discussion.")
-    st.write("One of the most interesting threads in Reddit is called 'Dreams'. It is a community where users share their dreams and ask for interpretations or simply for the sake of joy of sharing.")
-    st.write("To collect the dreams posted by the Reddit users, we first access the Reddit API. The below will serve as a guideline for the readers to gain access to the Reddit Developer's account.")
+    st.write("Before anything else, you are going to first acquire the data which later will be analyzed using NLP. For that matter, shortly, you will be collecting data in real time from Reddit, an online environment for sharing and discussing information. Note that Reddit is organized in threads called “subreddits” which essentially are topics, where the discussion actually takes place. As you may have guessed – one such subreddit – in fact the only subreddit that you will use relates to reported dreams. It is a community where users share their dreams seeking interpretations or simply for the sake of sharing.")
+    st.write("To collect the data on dreams in real time, posted by the Reddit users, you first need to access the Reddit Application Programming Interface (API). Information on how to do that can be found here. That is a necessary step which fortunately won’t take more than a minute or so … for sure it won’t be too long to put you to sleep before the main event! The below will serve as a guideline for the readers to gain access to the Reddit Developer's account.")
     st.write("THIS IS SPACE FOR REDDIT DEV ACCOUNT INFROMATION")
     st.write("THIS IS SPACE FOR REDDIT DEV ACCOUNT INFROMATION")
-    st.write("Now that we have gained access to the Reddit developer's account, we access the Reddit API in order to gather Dreams that will be utilized for the analysis. The Reddit thread that we are going to be utilizing is r/Dreams, which can be easily searched on search engines for viewing purposes.")
-    st.write("In the below text boxes, please input your Reddit information in order to collect the Dreams. Your personal information nor any of the information will be accessed by the creators nor the streamlit application platform.")
+    st.write("Now that you have gained access to the Reddit developer's account, you are ready to use the Reddit API in order to gather dreams that will then be used as the data for NLP. The subreddit to be used is r/Dreams, which can be easily searched on search engines for viewing purposes. In the below text boxes, please input your Reddit information in order to collect the dreams. ")
+    st.write("The process of Data Collection follows the below details:")
 
     st.write("The process of Data Collection follows the below details: ")
     st.write("1. Your authentication is granted with correct Client Id, Secret Key, Username, and Password. This implies that Reddit knows who is accessing their database and can identify whether you have access to the data of observance. If you do not input the correct credentials, your requests will be denied.")
     st.write("2. With the correct credentials approved by Reddit, now we start collecting the Dreams. Majority of the major platform APIs prevent users from extracting large quantites of data at once. This is in order to prevent injection of malware viruses into the system, as well as to prevent data mining using a data bot. In order to constrain such possibilities, Reddit has placed a maximum number of data that can be collected at each run of request for data. Thus, to not manually rerun and append data each and every run, the script embeded in this app will take short 'time-off' after each run in order to not be restricted by Reddit data collection regulations. For each run, the amount of collected data will be displayed in the progress bar.")
     st.write("3. Contrary to what users may believe, the raw data that is collected from Reddit is in json format. For clarity, json file is a nested dictionary format, where all infromation is stored like a hierarchical tree, not a dataframe. Thus, we select only portions of the json data that is required for this anlaysis and create a dataframe.")
     st.write("4. After the intial raw data collection process, the embedded script performs initial cleaning on the dataset. This process includes the rudimentary process such as dropping Null values and profanity checks.")
-
-    
+    st.write(" ")
+    st.write("Note that the raw data collected from Reddit are in JSON (JavaScript Object Notation) format. For clarity, a JSON file has a nested format, where information is stored like a hierarchical tree (not a dataframe!). As an important pre-processing step the necessary portions of that JSON data will be selected and put into a dataframe. But worry not – that is going to be done for you automatically in the back end of this app (to keep you awake, after all!) One last detail: after the raw data gets pulled from Reddit, there will be an initial data cleaning step to drop the Null values and perform profanity checks before displaying the data. ")
+    st.write("Ready? Go!")
 
     with st.form("reddit_cred"):
         client_id = st.text_input("Reddit Client Id")
@@ -224,13 +224,13 @@ def data_collection():
             time.sleep(3)
             my_bar.progress(100, "Job Complete")
 
-            st.write("As mentioned in the process of collecting data from Reddit API, the inital format of the data collected is in json. The below is a sample look at what the raw data looks like. To best understand how json works, think of the folder directories in your local computers. Within your Desktop folder, the reader would have a folder for each class the reader takes. And within each class folder, the reader would have different assignment folders, containing assignments completed. As such json divides information in a hierarchical order: the deeper nested values are specific information pertaining to the encompassing information. Please press on the rotated green triangle below to assess the json file.")
+            st.write("Curious how the raw data look like? Take a look below to see it for one of the dreams that was just pulled from Reddit. To best understand how JSON works, think of the folder directories in your local computers. Within your Desktop folder, say you have a folder for each class you take. And within each class folder, imagine you have different assignment folders, containing assignments completed. As such JSON divides information in a hierarchical format: the deeper nested values are specific details pertaining to the encompassing information. Please press on the rotated green triangle below to assess the JSON file. This is a good opportunity for you to get familiar with JSON, by the way!")
             st.json(json_file, expanded= False)
 
-            st.write("Finally, the below is the dataframe of the extracted json file. From the json file, subreddit thread name, the title of the post, the dream, and the date at which the post was made in unicode text is extracted.")
+            st.write("Finally, the below is the dataframe based on the JSON file. Note that from the JSON data the app extracts subreddit thread name, the title of the post, the dream, and the date at which the post was made. The analyses taking part in this app exclude any comments that may be made by users following up on a post. ")
             st.dataframe(reddit.head(30))
 
-            st.write("As one can see, the dataframe is a much cleaner table look at the data that is easier for the readers to injest. With such thought in mind, one might wonder, 'Why do we ever use json file then?'. And yes, there are obvious pros and cons to the different file formats. For instance, as mentioned before, dataframe is extremeley effective when it comes to its structures. The data can be accessed by its row and column index and it is easier to manipulate. However, because of its structured nature, the file size can become exponetially large as the number of observations or features increase. Further, pandas dataframe stores various meta data about the data, such as the data type, index, class, etc. However, the json format only stores the text values of the data. Therefore, it is a structured word file that can be interpreted in hierarchical order when imported into an IDE. This saves tremendous amount of space when it comes to storing large datasets. And because most of the times the data in APIs are extremely large, json format is often chosen.")
+            st.write("Ever wondered why one would ever need JSON if dataframes seem so much cleaner? You see, although dataframes are intuitive – their size and the consequent burden on memory can become extremely large as the number of observations or features increase! Further, dataframes typically store various meta data, such as the data type, etc. On the contrary, the JSON format only stores the text values of the data. Therefore, it is a structured word file that can be interpreted in hierarchical fashion when imported into an Integrated Development Environment (IDE). This saves tremendous amount of space when it comes to storing large datasets. And because typically the data in APIs are extremely large, JSON is the go-to format!")
         
         except KeyError:
             st.warning("Please enter correct Reddit Credentials", icon="⚠️")
@@ -257,6 +257,7 @@ def data_cleaning():
         nltk.download('omw-1.4')
         nltk.download('wordnet')
         nltk.download("punkt")
+        nltk.download('averaged_perceptron_tagger')
         stopword = nltk.corpus.stopwords.words('english')
 
         if result_dc:
