@@ -72,6 +72,7 @@ import torch
 warnings.filterwarnings('ignore')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('brown')
+nltk.download('punkt')
 
 ###################### lottie file extraction
 def load_lottieurl(url):
