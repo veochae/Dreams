@@ -354,7 +354,7 @@ def data_cleaning():
                     return text
 
                 def lemmatizer(text):
-                    text = [lemmatize_sentence(word)[0] for word in text] #lemmatize the tokenized words. Lemmatized > Stemming in this case
+                    text = lemmatize_sentence(" ".join(text)) #lemmatize the tokenized words. Lemmatized > Stemming in this case
                     return text                                  #because lemmatizing keeps the context of words alive
 
                 def vectorization(li):                            #create matrix of words and its respective presence for each dream
@@ -428,7 +428,8 @@ def data_cleaning():
                         my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
                         time.sleep(2)
 
-                        lemmatized = x_stopwords.apply(lambda x: lemmatizer(x))          #lemmatize the removed stopwords word list
+                        lemmatized = x_stopwords.__deepcopy__ 
+                        lemmatized.text = [lemmatizer(x).split(" ") for x in lemmatized.text]
                         lemmatized.dropna()
                         
                         with st.form("Lemmatization"):
