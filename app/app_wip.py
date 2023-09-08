@@ -431,7 +431,7 @@ def data_cleaning():
                         lemmatized.dropna()
                         
                         with st.form("Lemmatization"):
-                            st.write(" ".join(lemmatized[ind]))
+                            st.write(lemmatized[ind])
 
                             submit_5 = st.form_submit_button("Create Corpus")  
                             if submit_5:
