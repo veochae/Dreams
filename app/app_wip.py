@@ -262,6 +262,7 @@ def data_cleaning():
             st.session_state['result_dc'] = True
         try:
             if st.session_state['result_dc']:
+
                 @st.cache_data
                 def preprocess(df):
                     my_bar = st.progress(0, text="Dropping Null Values")
@@ -423,6 +424,7 @@ def data_cleaning():
                 st.session_state['corpus'] = corpus
                 st.session_state['semi'] = semi
 
+                st.cache_data
                 def extract_array_sample(ind):
                     with st.form("Original Text"):
                         st.header("Original Text")
@@ -528,7 +530,6 @@ def part_of_speech_tag():
     st.write("“I like to run” and “I went for a run”")
     st.write("have two separate meanings. The former “run” is a verb that pertains to the action of running. The latter “run” pertains to the activity of running, a noun. However, in the sense of machine learning models, the two usages of “run” in both contexts are not distinguishable causing ambiguity.")
     st.write("So there has to be a way for the machine to understand the different ways the same word is utilized in different contexts! Therefore we introduce the POS Tagging.")
-    nlp = spacy.load("en_core_web_sm")
 
     # try:
     result = st.button("Click to Start POS Tagging")
