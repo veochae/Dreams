@@ -22,6 +22,12 @@ import json
 import time
 import warnings
 
+#streamlit
+import spacy_streamlit
+import streamlit as st
+import streamlit_lottie
+from streamlit_lottie import st_lottie
+
 #common add ons
 import pandas as pd
 import numpy as np
@@ -42,11 +48,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 # import matplotlib.pyplot as plt
 # from wordcloud import WordCloud,STOPWORDS
 
-#streamlit
-import spacy_streamlit
-import streamlit as st
-import streamlit_lottie
-from streamlit_lottie import st_lottie
+
 
 #plotly
 from plotly.subplots import make_subplots
