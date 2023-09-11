@@ -95,6 +95,7 @@ def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
 
 ###################### reddit data extraction
+@st.cache_data
 def reddit_data(time_wanted, headers):
     progress_text = "Validating the Credentials, Please wait."
     my_bar = st.progress(0, text=progress_text)
@@ -302,6 +303,7 @@ def data_cleaning():
                 st.dataframe(semi)
                 st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
                 
+                @st.cache_data
                 def clean(text):
                     text = re.sub('https?://\S+|www\.\S+', '', text) #replace website urls
                     text = re.sub(r"@\S+", '', text) #replace anything that follows @
@@ -352,18 +354,22 @@ def data_cleaning():
                     text = text.strip()
                     return text
 
+                @st.cache_data
                 def tokenization(text):
                     text = re.split('\W+', text) #split words by whitespace to tokenize words
                     return text
 
+                @st.cache_data
                 def remove_stopwords(text):
                     text = [word for word in text if word not in stopword] #remove stopwords in the nltk stopwords dictionary
                     return text
 
+                @st.cache_data
                 def lemmatizer(text):
                     text = lemmatize_sentence(" ".join(text)) #lemmatize the tokenized words. Lemmatized > Stemming in this case
                     return text                                  #because lemmatizing keeps the context of words alive
 
+                @st.cache_data
                 def vectorization(li):                            #create matrix of words and its respective presence for each dream
                     vectorizer = CountVectorizer()   
                     Xs = vectorizer.fit_transform(li)   
@@ -371,6 +377,7 @@ def data_cleaning():
                     
                     return X
 
+                @st.cache_data
                 def get_column_name(li):                          #extract each word so that it will be present in corpus as column names
                     vectorizer = CountVectorizer()   
                     Xs = vectorizer.fit_transform(li)   
@@ -571,6 +578,7 @@ def part_of_speech_tag():
         rows[1].dataframe(pd.read_csv("https://gist.githubusercontent.com/veochae/447a8d4c7fa38a9494966e59564d4222/raw/9df88f091d6d1728eb347ee68ee2cdb297c0e5ff/spacy_tag.csv"))
 
 
+        @st.cache_data
         def barplot(x, z="", l = False):
             t = np.unique(x, return_counts = True)
             s = np.argsort(t[1])
@@ -782,6 +790,7 @@ def tf_idf():
                 tokenized = [list(set(li)) for li in token]
 
                 #define term frequency (tf) function
+                @st.cache_data
                 def tf(corpus, token_set):
                     tf_dict = {}
                     n = len(token_set)
@@ -793,6 +802,7 @@ def tf_idf():
                     return tf_dict
 
                 #define inverse data frequency (idf) function
+                @st.cache_data
                 def idf(documents):
                     n = len(documents)
                     idf_dict = dict.fromkeys(documents[0].keys(),0)
@@ -811,6 +821,7 @@ def tf_idf():
                     return idf_dict
 
                 #define tf-idf function
+                @st.cache_data
                 def tf_idf(tf, idf):
                     tf_idf_dict = {}
 
@@ -820,7 +831,7 @@ def tf_idf():
                     return tf_idf_dict
 
                 #main function to execute all above
-                @st.cache
+                @st.cache_data
                 def main(corpus, tokenized):
                     my_bar = st.progress(0,"Initializing tf-idf calculation")
                     tf_li = []
@@ -849,7 +860,6 @@ def tf_idf():
                     
                     st.write('tf-idf worked')
 
-                    time.sleep(2)
                     my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
                     st.write("It's working up to here")
                     st.write(tf_idf_li)
