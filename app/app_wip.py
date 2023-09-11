@@ -366,7 +366,17 @@ def data_cleaning():
 
                 @st.cache_data
                 def lemmatizer(text):
-                    text = lemmatize_sentence(" ".join(text)) #lemmatize the tokenized words. Lemmatized > Stemming in this case
+                    import spacy
+                    nlp = spacy.load('en_core_web_sm')
+
+                    doc = nlp(" ".join(text))
+                    
+                    # Create list of tokens from given string
+                    tokens = []
+                    for token in doc:
+                        tokens.append(token)
+
+                    text = [token.lemma_ for token in doc]
                     return text                                  #because lemmatizing keeps the context of words alive
 
                 @st.cache_data
