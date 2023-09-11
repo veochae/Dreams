@@ -240,8 +240,6 @@ def data_collection():
             st.dataframe(reddit.head(30))
 
             st.write("Ever wondered why one would ever need JSON if dataframes seem so much cleaner? You see, although dataframes are intuitive – their size and the consequent burden on memory can become extremely large as the number of observations or features increase! Further, dataframes typically store various meta data, such as the data type, etc. On the contrary, the JSON format only stores the text values of the data. Therefore, it is a structured word file that can be interpreted in hierarchical fashion when imported into an Integrated Development Environment (IDE). This saves tremendous amount of space when it comes to storing large datasets. And because typically the data in APIs are extremely large, JSON is the go-to format!")
-
-            st.cache_data.clear()
         
         except KeyError:
             st.warning("Please enter correct Reddit Credentials", icon="⚠️")
@@ -487,7 +485,6 @@ def data_cleaning():
                             
 
                 extract_array_sample(st.session_state['row_n'])
-                st.cache_data.clear()
                 # st.write("Preview of the Different Cleaned Datasets")
                 # radio = st.radio("Choose the Table you would like to see",
                 #             ('clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete', 'corpus', 'semi'),
@@ -632,9 +629,6 @@ def part_of_speech_tag():
 
                     spacy_streamlit.visualize_parser(doc)
                     # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
-        
-        st.cache_data.clear()
-
     except:
             st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
 
