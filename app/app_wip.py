@@ -365,7 +365,7 @@ def data_cleaning():
                 def load_nlp():
                     return spacy.load('en_core_web_sm')
 
-                def lemmatizer(text,nlp):
+                def lemmatizer(text):
                     nlp = load_nlp()
                     doc = nlp(" ".join(text))
                     
