@@ -378,7 +378,7 @@ def data_cleaning():
                     return col_names
                 
                 @st.cache_data(experimental_allow_widgets=True)
-                def extract_array(df,ind):
+                def extract_array(df):
                     my_bar = st.progress(0, text="Initializing Text Cleaning")
 
                     clean_text = df['text'].apply(lambda x:clean(x.lower()))         #first clean the text on lower cased list of dreams
@@ -417,7 +417,7 @@ def data_cleaning():
                     time.sleep(2)
                     my_bar.progress(100, text = "Dreams Text Cleaning Complete")
 
-                clean_text, tokenized, x_stopwords, lemmatized, complete, corpus = extract_array(semi, st.session_state['row_n'])
+                clean_text, tokenized, x_stopwords, lemmatized, complete, corpus = extract_array(semi)
 
                 st.session_state['clean_text'] = clean_text
                 st.session_state['tokenized'] = tokenized
@@ -427,11 +427,10 @@ def data_cleaning():
                 st.session_state['corpus'] = corpus
                 st.session_state['semi'] = semi
 
-                @st.cache_data(experimental_allow_widgets=True)
                 def extract_array_sample(ind):
                     with st.form("Original Text"):
                         st.header("Original Text")
-                        st.write(st.session_state['semi']['text'][ind])
+                        st.write(st.session_state['semi'][ind])
 
                         submit_1 = st.form_submit_button("Continue to Initial Cleaning Process")   
                     
