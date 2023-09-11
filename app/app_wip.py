@@ -371,6 +371,7 @@ def data_cleaning():
 
                     return col_names
                 
+                @st.cache_data
                 def extract_array(df):
                     my_bar = st.progress(0, text="Initializing Text Cleaning")
 
