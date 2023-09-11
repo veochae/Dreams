@@ -430,7 +430,7 @@ def data_cleaning():
                 def extract_array_sample(ind):
                     with st.form("Original Text"):
                         st.header("Original Text")
-                        st.write(st.session_state['semi'][ind])
+                        st.write(st.session_state['semi'])
 
                         submit_1 = st.form_submit_button("Continue to Initial Cleaning Process")   
                     
