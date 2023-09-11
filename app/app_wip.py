@@ -303,7 +303,6 @@ def data_cleaning():
                 st.dataframe(semi)
                 st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
                 
-                @st.cache_data
                 def clean(text):
                     text = re.sub('https?://\S+|www\.\S+', '', text) #replace website urls
                     text = re.sub(r"@\S+", '', text) #replace anything that follows @
@@ -354,19 +353,15 @@ def data_cleaning():
                     text = text.strip()
                     return text
 
-                @st.cache_data
                 def tokenization(text):
                     text = re.split('\W+', text) #split words by whitespace to tokenize words
                     return text
 
-                @st.cache_data
                 def remove_stopwords(text):
                     text = [word for word in text if word not in stopword] #remove stopwords in the nltk stopwords dictionary
                     return text
 
-                @st.cache_data
                 def lemmatizer(text):
-                    import spacy
                     nlp = spacy.load('en_core_web_sm')
 
                     doc = nlp(" ".join(text))
@@ -379,7 +374,6 @@ def data_cleaning():
                     text = [token.lemma_ for token in doc]
                     return text                                  #because lemmatizing keeps the context of words alive
 
-                @st.cache_data
                 def vectorization(li):                            #create matrix of words and its respective presence for each dream
                     vectorizer = CountVectorizer()   
                     Xs = vectorizer.fit_transform(li)   
@@ -387,7 +381,6 @@ def data_cleaning():
                     
                     return X
 
-                @st.cache_data
                 def get_column_name(li):                          #extract each word so that it will be present in corpus as column names
                     vectorizer = CountVectorizer()   
                     Xs = vectorizer.fit_transform(li)   
@@ -799,6 +792,9 @@ def tf_idf():
                 token = st.session_state['tokenized']           
                 tokenized = [list(set(li)) for li in token]
 
+                st.write(corpus)
+                st.write(tokenized)
+
                 #define term frequency (tf) function
                 def tf(corpus, token_set):
                     tf_dict = {}
@@ -845,7 +841,6 @@ def tf_idf():
                     tf_idf_li = []
                     
                     documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
-                    st.write("initialization passed")
                     time.sleep(2)
 
                     my_bar.progress(35, "Calculating tf")
@@ -853,28 +848,25 @@ def tf_idf():
                         tf_temp = tf(r, tokenized[l])
                         tf_li.append(tf_temp)
                     
-                    st.write("tf worked")
                     time.sleep(2)
                     my_bar.progress(70, "Calculating idf")
                     idf_dict = idf(documents)
-                    st.write('idf worked')
 
                     time.sleep(2)
                     my_bar.progress(95, "Calculating tf_idf")
-                    for t in tf_li:
-                        tf_idf_temp = tf_idf(t, idf_dict)
-                        tf_idf_li.append(tf_idf_temp)
+
+                    asdf = st.progress(0,"Initializing tf-idf calculation")
+                    for xx, t in enumerate(tf_li):
+                        tf_idf_li.append(tf_idf(t, idf_dict))
+                        asdf.progress(np.ceil(100/len(tf_li)*xx), f"{xx}/{len(tf_li)}")
                     
-                    st.write('tf-idf worked')
 
                     my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
-                    st.write("It's working up to here")
                     st.write(tf_idf_li)
                     st.write(tf_li)
                     st.write(idf_dict)
                 #tf_idf_df, tf_df, idf_df= 
                 main(corpus, tokenized)
-                st.write("It's working up to here 2")
 
                 st.write("Preview")
                 radio = st.radio("Choose the Table you would like to see",
