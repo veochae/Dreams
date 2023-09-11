@@ -769,7 +769,7 @@ def tf_idf():
         st.header(f"Chosen Dream: Dream {st.session_state['row_n']}")
         st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
 
-        result_ti = True #st.button("Click Here to start TF-IDF")
+        result_ti = st.button("Click Here to start TF-IDF")
 
         if result_ti:
             st.session_state['result_ti'] = True
@@ -840,28 +840,15 @@ def tf_idf():
 
                     time.sleep(2)
                     my_bar.progress(95, "Calculating tf_idf")
-                    for xx, t in enumerate(tf_li):
+                    for t in tf_li:
                         tf_idf_li.append(tf_idf(t, idf_dict))
                     
 
                     my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
-                    return pd.DataFrame(tf_idf_li), pd.DataFrame(tf_li), pd.DataFrame(idf_dict)
 
-                tf_idf_df, tf_df, idf_df= main(corpus, tokenized)
+                    return pd.DataFrame(tf_idf_li)
 
-                st.write("Preview")
-                radio = st.radio("Choose the Table you would like to see",
-                            ('TF-IDF', "TF", "IDF"),
-                            horizontal=True)
-            
-                if radio == "TF-IDF":
-                    st.dataframe(tf_idf_df.head())
-                
-                elif radio == "TF":
-                    st.dataframe(tf_df.head())
-
-                elif radio == "IDF":
-                    st.dataframe(idf_df.head())  
+                tf_idf_df = main(corpus, tokenized)
 
                 def barplot(tf_idf_df, number_of_words):
                     rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
