@@ -780,101 +780,100 @@ def name_identity_recognition():
 ########################################################################################
 def tf_idf():
     st.title("TF-IDF Analysis")
-    try:
-        st.header(f"Chosen Dream: Dream {st.session_state['row_n']}")
-        st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
+    # try:
+    st.header(f"Chosen Dream: Dream {st.session_state['row_n']}")
+    st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
 
-        result_ti = st.button("Click Here to start TF-IDF")
+    result_ti = st.button("Click Here to start TF-IDF")
 
-        if result_ti:
-            st.session_state['result_ti'] = True
-        try:
-            if st.session_state['result_ti']:
-                corpus = st.session_state['corpus']
-                token = st.session_state['tokenized']           
-                tokenized = [list(set(li)) for li in token]
+    if result_ti:
+        st.session_state['result_ti'] = True
+    # try:
+    if st.session_state['result_ti']:
+        corpus = st.session_state['corpus']
+        token = st.session_state['tokenized']           
+        tokenized = [list(set(li)) for li in token]
 
-                st.write(corpus)
-                st.write(tokenized)
+        st.write(corpus)
+        st.write(tokenized)
 
-                #define term frequency (tf) function
-                def tf(corpus, token_set):
-                    tf_dict = {}
-                    n = len(token_set)
-                    row_dict = corpus
+        #define term frequency (tf) function
+        def tf(corpus, token_set):
+            tf_dict = {}
+            n = len(token_set)
+            row_dict = corpus
 
-                    for word, count in row_dict.items():
-                        tf_dict[word] = count / float(n)
-                    
-                    return tf_dict
+            for word, count in row_dict.items():
+                tf_dict[word] = count / float(n)
+            
+            return tf_dict
 
-                #define inverse data frequency (idf) function
-                def idf(documents):
-                    n = len(documents)
-                    idf_dict = dict.fromkeys(documents[0].keys(),0)
+        #define inverse data frequency (idf) function
+        def idf(documents):
+            n = len(documents)
+            idf_dict = dict.fromkeys(documents[0].keys(),0)
 
-                    for document in documents:
-                        for word, val in document.items():
-                            if val > 0:
-                                idf_dict[word] += 1
-                        
-                    for word, val in idf_dict.items():
-                        idf_dict[word] = math.log(n / float(val))
-
-                        #if one wants to match the sklearn version of the tfidfvectorizor
-                        #idf_dict[word] = math.log((n+1) / (1+float(val)))+1
-
-                    return idf_dict
-
-                #define tf-idf function
-                def tf_idf(tf, idf):
-                    tf_idf_dict = {}
-
-                    for word, val in tf.items():
-                        tf_idf_dict[word] = val * idf[word]
-
-                    return tf_idf_dict
-
-                #main function to execute all above
-                @st.cache_data
-                def main(corpus, tokenized):
-                    my_bar = st.progress(0,"Initializing tf-idf calculation")
-                    tf_li = []
-                    tf_idf_li = []
-                    
-                    documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
-                    time.sleep(2)
-
-                    my_bar.progress(35, "Calculating tf")
-                    for l, r in enumerate(documents):
-                        tf_temp = tf(r, tokenized[l])
-                        tf_li.append(tf_temp)
-                    
-                    time.sleep(2)
-                    my_bar.progress(70, "Calculating idf")
-                    idf_dict = idf(documents)
-
-                    time.sleep(2)
-                    my_bar.progress(95, "Calculating tf_idf")
-
-                    asdf = st.progress(0,"Initializing tf-idf calculation")
-                    for xx, t in enumerate(tf_li):
-                        tf_idf_li.append(tf_idf(t, idf_dict))
-                        asdf.progress(np.ceil(100/len(tf_li)*xx), f"{xx}/{len(tf_li)}")
-                    
-
-                    my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
-                    st.write(tf_idf_li)
-                    st.write(tf_li)
-                    st.write(idf_dict)
-                #tf_idf_df, tf_df, idf_df= 
-                main(corpus, tokenized)
-
-                st.write("Preview")
-                radio = st.radio("Choose the Table you would like to see",
-                            ('TF-IDF', "TF", "IDF"),
-                            horizontal=True)
+            for document in documents:
+                for word, val in document.items():
+                    if val > 0:
+                        idf_dict[word] += 1
                 
+            for word, val in idf_dict.items():
+                idf_dict[word] = math.log(n / float(val))
+
+                #if one wants to match the sklearn version of the tfidfvectorizor
+                #idf_dict[word] = math.log((n+1) / (1+float(val)))+1
+
+            return idf_dict
+
+        #define tf-idf function
+        def tf_idf(tf, idf):
+            tf_idf_dict = {}
+
+            for word, val in tf.items():
+                tf_idf_dict[word] = val * idf[word]
+
+            return tf_idf_dict
+
+        #main function to execute all above
+        @st.cache_data
+        def main(corpus, tokenized):
+            my_bar = st.progress(0,"Initializing tf-idf calculation")
+            tf_li = []
+            tf_idf_li = []
+            
+            documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
+            time.sleep(2)
+
+            my_bar.progress(35, "Calculating tf")
+            for l, r in enumerate(documents):
+                tf_temp = tf(r, tokenized[l])
+                tf_li.append(tf_temp)
+            
+            time.sleep(2)
+            my_bar.progress(70, "Calculating idf")
+            idf_dict = idf(documents)
+
+            time.sleep(2)
+            my_bar.progress(95, "Calculating tf_idf")
+            asdf = st.progress(0,"Initializing tf-idf calculation")
+            for xx, t in enumerate(tf_li):
+                tf_idf_li.append(tf_idf(t, idf_dict))
+                asdf.progress(np.ceil(100/len(tf_li)*xx), f"{xx}/{len(tf_li)}")
+            
+
+            my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
+            st.write(tf_idf_li)
+            st.write(tf_li)
+            st.write(idf_dict)
+        #tf_idf_df, tf_df, idf_df= 
+        main(corpus, tokenized)
+
+        st.write("Preview")
+        radio = st.radio("Choose the Table you would like to see",
+                    ('TF-IDF', "TF", "IDF"),
+                    horizontal=True)
+            
                 # if radio == "TF-IDF":
                 #     st.dataframe(tf_idf_df.head())
                 
@@ -951,10 +950,10 @@ def tf_idf():
                 #     except:
                 #         st.warning("Please Input the Second Dream Row Number")
                 # else: st.write('heyooooo')
-        except:
-            st.warning("Please Press to Start!")
-    except:
-        st.warning("Please Complete the Previous Step Before Moving On")
+    #     except:
+    #         st.warning("Please Press to Start!")
+    # except:
+    #     st.warning("Please Complete the Previous Step Before Moving On")
 ########################################################################################
 #############################       Dream Summarization + Continuation      #################################
 ######################################################################################## 
