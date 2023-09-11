@@ -442,7 +442,6 @@ def data_cleaning():
                     
                         if submit_1: 
                             st.session_state['submit_1'] = True
-                    time.sleep(2)
 
                     if st.session_state['submit_1']:
                         with st.form("Initial Data Cleaning"):
@@ -483,7 +482,7 @@ def data_cleaning():
                     if st.session_state['submit_5']:                  
                         with st.form("Corpus"):
                             st.header("Corpus")
-                            st.dataframe(st.session_state['corpus'].head(10))
+                            st.dataframe(st.session_state['corpus'].iloc[:10,:20])
                             st.form_submit_button("All Done!")
                             
 
@@ -633,7 +632,8 @@ def part_of_speech_tag():
 
                     spacy_streamlit.visualize_parser(doc)
                     # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
-                    st.cache_data.clear()
+        
+        st.cache_data.clear()
 
     except:
             st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
@@ -772,7 +772,6 @@ def name_identity_recognition():
 #############################       TF-IDF  page      ##################################
 ########################################################################################
 def tf_idf():
-    st.cache_data.clear()
     st.title("TF-IDF Analysis")
     try:
         st.header(f"Chosen Dream: Dream {st.session_state['row_n']}")
@@ -827,7 +826,7 @@ def tf_idf():
                     return tf_idf_dict
 
                 #main function to execute all above
-                @st.cache_data
+                @st.cache
                 def main(corpus, tokenized):
                     my_bar = st.progress(0,"Initializing tf-idf calculation")
                     tf_li = []
@@ -854,9 +853,11 @@ def tf_idf():
 
                     time.sleep(2)
                     my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
+                    st.write("It's working up to here")
                     return pd.DataFrame(tf_idf_li) , pd.DataFrame(tf_li) , pd.DataFrame(idf_dict, index=[0])
                 
                 tf_idf_df, tf_df, idf_df= main(corpus, tokenized)
+                st.write("It's working up to here 2")
 
                 # st.write("Preview")
                 # radio = st.radio("Choose the Table you would like to see",
@@ -871,8 +872,6 @@ def tf_idf():
 
                 # elif radio == "IDF":
                 #     st.dataframe(idf_df.head())  
-
-
 
                 def barplot(tf_idf_df, number_of_words):
                     rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
@@ -889,6 +888,7 @@ def tf_idf():
                 barplot(tf_idf_df = tf_idf_df, number_of_words = 10)
                 change = 2
 
+                st.write("It's working up to here 3")
                 if change == 2:
                     def barplot_2(tf_idf_df, number_of_words):
                         rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
