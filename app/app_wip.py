@@ -254,235 +254,235 @@ def data_cleaning():
     st.write("**Lemmatization or Stemming** : The purpose of this step is the standardization of the different versions of the same word. For instance, let's say we have words: improve, improving, and improved. All three have the same root, but in a different tense. Therefore, if we try to analyze frequencies of the words in a text, each of the three will count as different words. To prevent this from happening, we can lemmatize or stem the words, to reduce them to a shorter, more standard form. Note that while lemmatization reduces each word to a shorter form (“lemma”), which still is a word in a dictionary, in stemming the resultant shorter version (“stem”) may not be a proper word. In the case of the three words here, those would revert to 'improve'. Again, take a moment to appreciate how making words shorter is going to aid preserve memory which in turn will speed up processing and compute time in downstream tasks. ")
     st.write("Below, once the reader starts the cleaning process, the progress bar will show the different stages in which the data is being processed through. Then, by selecting different radio buttons, one will be able to see the different results of each cleaning process.")
     st.write("Have fun playing with the different data cleaning tasks below! You are about to get into something even more interesting once you are done with this.")
-    # try:
-    result_dc = st.button("Click to Start Data Manipulation")
-    stopword = nltk.corpus.stopwords.words('english')
+    try:
+        result_dc = st.button("Click to Start Data Manipulation")
+        stopword = nltk.corpus.stopwords.words('english')
 
-    if result_dc:
-        st.session_state['result_dc'] = True
-        # try:
-    if st.session_state['result_dc']:
-        @st.cache_data
-        def preprocess(df):
-            my_bar = st.progress(0, text="Dropping Null Values")
-            time.sleep(2)
-            df= df.dropna()
-            my_bar.progress(10, text = "Transforming Date Time Objects")
-            time.sleep(2)
-            df['date'] = [datetime.fromtimestamp(time) for time in df['date']]
-            my_bar.progress(30, text = "Profanity Censor in Progress")
-            time.sleep(2)
-            # df['text'] = [profanity.censor(i) for i in df['text']]
-            my_bar.progress(50, text = "Calculating Length of each Text")
-            time.sleep(2)
-            #calculating length of each dream
-            df['length'] = [len(j) for j in df['text']]
-            my_bar.progress(70, text = "Getting Semi Dataset")
-            time.sleep(2)
-            # if less than or equal to 5th percentile, assign t_f column False
-            df['t_f'] = [True if j > np.percentile(df['length'], 5) else False for j in df['length']]
-            my_bar.progress(90, text = "Making Deep Copy of Semi")
-            time.sleep(2)
-            #only keep t_f == True rows
-            semi = df.loc[df['t_f'] == True, :].reset_index(drop = True).__deepcopy__()
-            my_bar.progress(100, text = "Complete!")
+        if result_dc:
+            st.session_state['result_dc'] = True
+        try:
+            if st.session_state['result_dc']:
+                @st.cache_data
+                def preprocess(df):
+                    my_bar = st.progress(0, text="Dropping Null Values")
+                    time.sleep(2)
+                    df= df.dropna()
+                    my_bar.progress(10, text = "Transforming Date Time Objects")
+                    time.sleep(2)
+                    df['date'] = [datetime.fromtimestamp(time) for time in df['date']]
+                    my_bar.progress(30, text = "Profanity Censor in Progress")
+                    time.sleep(2)
+                    # df['text'] = [profanity.censor(i) for i in df['text']]
+                    my_bar.progress(50, text = "Calculating Length of each Text")
+                    time.sleep(2)
+                    #calculating length of each dream
+                    df['length'] = [len(j) for j in df['text']]
+                    my_bar.progress(70, text = "Getting Semi Dataset")
+                    time.sleep(2)
+                    # if less than or equal to 5th percentile, assign t_f column False
+                    df['t_f'] = [True if j > np.percentile(df['length'], 5) else False for j in df['length']]
+                    my_bar.progress(90, text = "Making Deep Copy of Semi")
+                    time.sleep(2)
+                    #only keep t_f == True rows
+                    semi = df.loc[df['t_f'] == True, :].reset_index(drop = True).__deepcopy__()
+                    my_bar.progress(100, text = "Complete!")
 
-            return df, semi
-        
-        df, semi = preprocess(st.session_state['reddit'])
+                    return df, semi
+                
+                df, semi = preprocess(st.session_state['reddit'])
 
-        st.dataframe(semi)
-        st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
-        
-        @st.cache_data
-        def clean(text):
-            text = re.sub('https?://\S+|www\.\S+', '', text) #replace website urls
-            text = re.sub(r"@\S+", '', text) #replace anything that follows @
-            text = re.sub(r"#\S+", '', text) #replace anything that follows #
-            text = re.sub(r"[0-9]", '', text) #replace numeric
-            text = re.sub(r"\n", '', text) #replace new line 
-            text = re.sub("\'m", ' am ', text) 
-            text = re.sub("\'re", ' are ', text) 
-            text = re.sub("\'d", ' had ', text)
-            text = re.sub("\'s", ' is ', text)
-            text = re.sub("\'ve", ' have ', text)
-            text = re.sub(" im ", ' i am ', text)
-            text = re.sub(" iam ", ' i am ', text)
-            text = re.sub(" youre ", ' you are ', text)
-            text = re.sub(" theyre ", ' they are ', text)
-            text = re.sub(" theyve ", ' they have ', text)
-            text = re.sub(" weve ", ' we have ', text)
-            text = re.sub(" isnt ", ' is not ', text)
-            text = re.sub(" arent ", ' are not ', text)
-            text = re.sub(" ur ", ' you are ', text)
-            text = re.sub(" ive ", ' i have ', text)
-            text = re.sub("_", '', text)
-            text = re.sub("\"", '', text)
-            text = re.sub(" bc ", ' because ', text)
-            text = re.sub(" aka ", ' also known as ', text)
-            text = re.sub("√©", 'e', text) #encoding error for é. replace it with e
-            text = re.sub(" bf  ", ' boyfriend ', text)
-            text = re.sub(" gf  ", ' girlfriend ', text)
-            text = re.sub(" btw  ", ' by the way ', text)
-            text = re.sub(" btwn  ", ' between ', text)
-            text = re.sub(r'([a-z])\1{2,}', r'\1', text) #if the same character is repeated more than twice, remove it to one. (E.A. ahhhhhh --> ah)
-            text = re.sub(' ctrl ', ' control ', text)
-            text = re.sub(' cuz ', ' because ', text)
-            text = re.sub(' dif ', ' different ', text)
-            text = re.sub(' dm ', ' direct message ', text)
-            text = re.sub("n't", r' not ', text)
-            text = re.sub(" fav ", ' favorite ', text)
-            text = re.sub(" fave ", ' favorite ', text)
-            text = re.sub(" fml ", " fuck my life ", text)
-            text = re.sub(" hq ", " headquarter ", text)
-            text = re.sub(" hr ", " hours ", text)
-            text = re.sub(" idk ",  "i do not know ", text)
-            text = re.sub(" ik ", ' i know ', text)
-            text = re.sub(" lol ", ' laugh out loud ', text)
-            text = re.sub(" u ", ' you ', text)
-            text = re.sub("√¶", 'ae', text) #encoding error for áe. replace it with ae
-            text = re.sub("√® ", 'e', text) #encoding error for é. replace it with e
-            text = text.strip()
-            return text
+                st.dataframe(semi)
+                st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
+                
+                @st.cache_data
+                def clean(text):
+                    text = re.sub('https?://\S+|www\.\S+', '', text) #replace website urls
+                    text = re.sub(r"@\S+", '', text) #replace anything that follows @
+                    text = re.sub(r"#\S+", '', text) #replace anything that follows #
+                    text = re.sub(r"[0-9]", '', text) #replace numeric
+                    text = re.sub(r"\n", '', text) #replace new line 
+                    text = re.sub("\'m", ' am ', text) 
+                    text = re.sub("\'re", ' are ', text) 
+                    text = re.sub("\'d", ' had ', text)
+                    text = re.sub("\'s", ' is ', text)
+                    text = re.sub("\'ve", ' have ', text)
+                    text = re.sub(" im ", ' i am ', text)
+                    text = re.sub(" iam ", ' i am ', text)
+                    text = re.sub(" youre ", ' you are ', text)
+                    text = re.sub(" theyre ", ' they are ', text)
+                    text = re.sub(" theyve ", ' they have ', text)
+                    text = re.sub(" weve ", ' we have ', text)
+                    text = re.sub(" isnt ", ' is not ', text)
+                    text = re.sub(" arent ", ' are not ', text)
+                    text = re.sub(" ur ", ' you are ', text)
+                    text = re.sub(" ive ", ' i have ', text)
+                    text = re.sub("_", '', text)
+                    text = re.sub("\"", '', text)
+                    text = re.sub(" bc ", ' because ', text)
+                    text = re.sub(" aka ", ' also known as ', text)
+                    text = re.sub("√©", 'e', text) #encoding error for é. replace it with e
+                    text = re.sub(" bf  ", ' boyfriend ', text)
+                    text = re.sub(" gf  ", ' girlfriend ', text)
+                    text = re.sub(" btw  ", ' by the way ', text)
+                    text = re.sub(" btwn  ", ' between ', text)
+                    text = re.sub(r'([a-z])\1{2,}', r'\1', text) #if the same character is repeated more than twice, remove it to one. (E.A. ahhhhhh --> ah)
+                    text = re.sub(' ctrl ', ' control ', text)
+                    text = re.sub(' cuz ', ' because ', text)
+                    text = re.sub(' dif ', ' different ', text)
+                    text = re.sub(' dm ', ' direct message ', text)
+                    text = re.sub("n't", r' not ', text)
+                    text = re.sub(" fav ", ' favorite ', text)
+                    text = re.sub(" fave ", ' favorite ', text)
+                    text = re.sub(" fml ", " fuck my life ", text)
+                    text = re.sub(" hq ", " headquarter ", text)
+                    text = re.sub(" hr ", " hours ", text)
+                    text = re.sub(" idk ",  "i do not know ", text)
+                    text = re.sub(" ik ", ' i know ', text)
+                    text = re.sub(" lol ", ' laugh out loud ', text)
+                    text = re.sub(" u ", ' you ', text)
+                    text = re.sub("√¶", 'ae', text) #encoding error for áe. replace it with ae
+                    text = re.sub("√® ", 'e', text) #encoding error for é. replace it with e
+                    text = text.strip()
+                    return text
 
-        @st.cache_data            
-        def tokenization(text):
-            text = re.split('\W+', text) #split words by whitespace to tokenize words
-            return text
+                @st.cache_data            
+                def tokenization(text):
+                    text = re.split('\W+', text) #split words by whitespace to tokenize words
+                    return text
 
-        @st.cache_data
-        def remove_stopwords(text):
-            text = [word for word in text if word not in stopword] #remove stopwords in the nltk stopwords dictionary
-            return text
+                @st.cache_data
+                def remove_stopwords(text):
+                    text = [word for word in text if word not in stopword] #remove stopwords in the nltk stopwords dictionary
+                    return text
 
-        @st.cache_data
-        def lemmatizer(text):
-            text = lemmatize_sentence(" ".join(text)) #lemmatize the tokenized words. Lemmatized > Stemming in this case
-            return text                                  #because lemmatizing keeps the context of words alive
+                @st.cache_data
+                def lemmatizer(text):
+                    text = lemmatize_sentence(" ".join(text)) #lemmatize the tokenized words. Lemmatized > Stemming in this case
+                    return text                                  #because lemmatizing keeps the context of words alive
 
-        @st.cache_data
-        def vectorization(li):                            #create matrix of words and its respective presence for each dream
-            vectorizer = CountVectorizer()   
-            Xs = vectorizer.fit_transform(li)   
-            X = np.array(Xs.todense())
-            
-            return X
-
-        @st.cache_data
-        def get_column_name(li):                          #extract each word so that it will be present in corpus as column names
-            vectorizer = CountVectorizer()   
-            Xs = vectorizer.fit_transform(li)   
-            col_names=vectorizer.get_feature_names_out()
-            col_names = list(col_names)
-
-            return col_names
-        
-        @st.cache_data(experimental_allow_widgets=True)
-        def extract_array(df):
-            my_bar = st.progress(0, text="Initializing Text Cleaning")
-
-            clean_text = df['text'].apply(lambda x:clean(x.lower()))         #first clean the text on lower cased list of dreams
-            clean_text.dropna()
-
-            my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
-            time.sleep(2)
-
-            tokenized = clean_text.apply(lambda x: tokenization(x))          #tokenize the cleaned text
-            clean_text = tokenized.apply(lambda x: " ".join(x))              #rejoin the words (just in case white space still present)
-            clean_text.dropna()
-            tokenized.dropna()
+                @st.cache_data
+                def vectorization(li):                            #create matrix of words and its respective presence for each dream
+                    vectorizer = CountVectorizer()   
+                    Xs = vectorizer.fit_transform(li)   
+                    X = np.array(Xs.todense())
                     
-            my_bar.progress(30, text = "Dreams Tokenization Complete")
-            time.sleep(2)
+                    return X
 
-            x_stopwords = tokenized.apply(lambda x: remove_stopwords(x))     #remove stopwords from tokenized list
-            x_stopwords.dropna()
+                @st.cache_data
+                def get_column_name(li):                          #extract each word so that it will be present in corpus as column names
+                    vectorizer = CountVectorizer()   
+                    Xs = vectorizer.fit_transform(li)   
+                    col_names=vectorizer.get_feature_names_out()
+                    col_names = list(col_names)
+
+                    return col_names
+                
+                @st.cache_data(experimental_allow_widgets=True)
+                def extract_array(df):
+                    my_bar = st.progress(0, text="Initializing Text Cleaning")
+
+                    clean_text = df['text'].apply(lambda x:clean(x.lower()))         #first clean the text on lower cased list of dreams
+                    clean_text.dropna()
+
+                    my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
+                    time.sleep(2)
+
+                    tokenized = clean_text.apply(lambda x: tokenization(x))          #tokenize the cleaned text
+                    clean_text = tokenized.apply(lambda x: " ".join(x))              #rejoin the words (just in case white space still present)
+                    clean_text.dropna()
+                    tokenized.dropna()
                             
-            my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
-            time.sleep(2)
+                    my_bar.progress(30, text = "Dreams Tokenization Complete")
+                    time.sleep(2)
 
-            lemmatized = x_stopwords.__deepcopy__() 
-            lemmatized = [lemmatizer(x) for x in lemmatized]
-            
+                    x_stopwords = tokenized.apply(lambda x: remove_stopwords(x))     #remove stopwords from tokenized list
+                    x_stopwords.dropna()
+                                    
+                    my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
+                    time.sleep(2)
 
-            my_bar.progress(70, text = "Dreams Lemmatization Complete")
-            time.sleep(2)
+                    lemmatized = x_stopwords.__deepcopy__() 
+                    lemmatized = [lemmatizer(x) for x in lemmatized]
+                    
 
-            complete = [" ".join(x) for x in lemmatized]               #rejoin the words so it will look like a sentence
-            mapx = vectorization(complete)                                   #start of mapping to corpus
-            name = get_column_name(complete)
-            mapx = pd.DataFrame(mapx, columns = name)
-            mapx.columns = name
-            my_bar.progress(90, text = "Dreams Corpus Complete")
-            time.sleep(2)
-            my_bar.progress(100, text = "Dreams Text Cleaning Complete")
+                    my_bar.progress(70, text = "Dreams Lemmatization Complete")
+                    time.sleep(2)
 
-            return clean_text, tokenized, x_stopwords, lemmatized, complete, mapx
+                    complete = [" ".join(x) for x in lemmatized]               #rejoin the words so it will look like a sentence
+                    mapx = vectorization(complete)                                   #start of mapping to corpus
+                    name = get_column_name(complete)
+                    mapx = pd.DataFrame(mapx, columns = name)
+                    mapx.columns = name
+                    my_bar.progress(90, text = "Dreams Corpus Complete")
+                    time.sleep(2)
+                    my_bar.progress(100, text = "Dreams Text Cleaning Complete")
 
-        clean_text, tokenized, x_stopwords, lemmatized, complete, corpus = extract_array(semi)
+                    return clean_text, tokenized, x_stopwords, lemmatized, complete, mapx
 
-        st.session_state['clean_text'] = clean_text
-        st.session_state['tokenized'] = tokenized
-        st.session_state['x_stopwords'] = x_stopwords
-        st.session_state['lemmatized'] = lemmatized
-        st.session_state['complete'] = complete
-        st.session_state['corpus'] = corpus
-        st.session_state['semi'] = semi
+                clean_text, tokenized, x_stopwords, lemmatized, complete, corpus = extract_array(semi)
 
-        def extract_array_sample(ind):
-            with st.form("Original Text"):
-                st.header("Original Text")
-                st.write(st.session_state['semi'])
+                st.session_state['clean_text'] = clean_text
+                st.session_state['tokenized'] = tokenized
+                st.session_state['x_stopwords'] = x_stopwords
+                st.session_state['lemmatized'] = lemmatized
+                st.session_state['complete'] = complete
+                st.session_state['corpus'] = corpus
+                st.session_state['semi'] = semi
 
-                submit_1 = st.form_submit_button("Continue to Initial Cleaning Process")   
-            
-                if submit_1: 
-                    st.session_state['submit_1'] = True
-            time.sleep(2)
+                def extract_array_sample(ind):
+                    with st.form("Original Text"):
+                        st.header("Original Text")
+                        st.write(st.session_state['semi']['text'][ind])
 
-            if st.session_state['submit_1']:
-                with st.form("Initial Data Cleaning"):
-                    st.header("Simple Text Cleaning")
-                    st.write(st.session_state['clean_text'][ind])
+                        submit_1 = st.form_submit_button("Continue to Initial Cleaning Process")   
+                    
+                        if submit_1: 
+                            st.session_state['submit_1'] = True
+                    time.sleep(2)
 
-                    submit_2 = st.form_submit_button("Continue to Tokenization")           
-                    if submit_2:
-                        st.session_state['submit_2'] = True
+                    if st.session_state['submit_1']:
+                        with st.form("Initial Data Cleaning"):
+                            st.header("Simple Text Cleaning")
+                            st.write(st.session_state['clean_text'][ind])
 
-            if st.session_state['submit_2']:
-                with st.form("Tokenization"):
-                    st.header("Tokenization")
-                    st.write(" , ".join(st.session_state['tokenized'][ind]))
+                            submit_2 = st.form_submit_button("Continue to Tokenization")           
+                            if submit_2:
+                                st.session_state['submit_2'] = True
 
-                    submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
-                    if submit_3:
-                        st.session_state['submit_3'] = True
-#asdf
-            if st.session_state['submit_3']:         
-                with st.form("Stopwords Removal"):
-                    st.header("Removing Stopwords")
-                    st.write(" ".join(st.session_state['x_stopwords'][ind]))
+                    if st.session_state['submit_2']:
+                        with st.form("Tokenization"):
+                            st.header("Tokenization")
+                            st.write(" , ".join(st.session_state['tokenized'][ind]))
 
-                    submit_4 = st.form_submit_button("Continue to Lemmatization")  
-                    if submit_4:
-                        st.session_state['submit_4'] = True
+                            submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
+                            if submit_3:
+                                st.session_state['submit_3'] = True
 
-            if st.session_state['submit_4']:               
-                with st.form("Lemmatization"):
-                    st.header("Lemmatization")
-                    st.write(" ".join(st.session_state['lemmatized'][ind]))
+                    if st.session_state['submit_3']:         
+                        with st.form("Stopwords Removal"):
+                            st.header("Removing Stopwords")
+                            st.write(" ".join(st.session_state['x_stopwords'][ind]))
 
-                    submit_5 = st.form_submit_button("Create Corpus")  
-                    if submit_5:
-                        st.session_state['submit_5'] = True
+                            submit_4 = st.form_submit_button("Continue to Lemmatization")  
+                            if submit_4:
+                                st.session_state['submit_4'] = True
 
-            if st.session_state['submit_5']:                  
-                with st.form("Corpus"):
-                    st.header("Corpus")
-                    st.dataframe(st.session_state['corpus'].head(10))
-                    st.form_submit_button("All Done!")
+                    if st.session_state['submit_4']:               
+                        with st.form("Lemmatization"):
+                            st.header("Lemmatization")
+                            st.write(" ".join(st.session_state['lemmatized'][ind]))
 
-        extract_array_sample(st.session_state['row_n'])
+                            submit_5 = st.form_submit_button("Create Corpus")  
+                            if submit_5:
+                                st.session_state['submit_5'] = True
+
+                    if st.session_state['submit_5']:                  
+                        with st.form("Corpus"):
+                            st.header("Corpus")
+                            st.dataframe(st.session_state['corpus'].head(10))
+                            st.form_submit_button("All Done!")
+
+                extract_array_sample(st.session_state['row_n'])
                 # st.write("Preview of the Different Cleaned Datasets")
                 # radio = st.radio("Choose the Table you would like to see",
                 #             ('clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete', 'corpus', 'semi'),
@@ -515,11 +515,11 @@ def data_cleaning():
                 # elif radio == "semi":
                 #     st.write("The Semi Dataset is for the purpose of the analysis. Because shorter length dreams are often harder to extract information due to the lack of it, we eliminated the dreams that are in the low 5 percentile.")
                 #     st.dataframe(semi.head(20))        
-    #     except:
-    #         st.warning("Please Complete the Previous Stage Before Moving On")
+        except:
+            st.warning("Please Complete the Previous Stage Before Moving On")
 
-    # except:
-    #     st.warning("Please Complete the Previous Stage Before Moving On")
+    except:
+        st.warning("Please Complete the Previous Stage Before Moving On")
                 
 ########################################################################################
 ###############       POS Tagging / NER Visualization  page      #######################
