@@ -141,7 +141,7 @@ def reddit_data(time_wanted, headers):
                 st.write("Data Collection Target Reached")
                 st.write(f'{len(df)} rows collected')
                 st.write(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
-                df.text = map(lambda x: profanity.censor(x),df.text)
+                #df.text = map(lambda x: profanity.censor(x),df.text)
                 return df, res.json()['data']['children'][1]
 
     else: 
@@ -485,9 +485,10 @@ def data_cleaning():
                             st.header("Corpus")
                             st.dataframe(st.session_state['corpus'].head(10))
                             st.form_submit_button("All Done!")
-                            st.cache_data.clear()
+                            
 
                 extract_array_sample(st.session_state['row_n'])
+                st.cache_data.clear()
                 # st.write("Preview of the Different Cleaned Datasets")
                 # radio = st.radio("Choose the Table you would like to see",
                 #             ('clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete', 'corpus', 'semi'),
@@ -940,7 +941,7 @@ def tf_idf():
                         st.warning("Please Input the Second Dream Row Number")
                 else: st.write('heyooooo')
         except:
-            st.warning("ERROR HERE FUCK ME")
+            st.warning("Please Press to Start!")
     except:
         st.warning("Please Complete the Previous Step Before Moving On")
 ########################################################################################
