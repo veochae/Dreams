@@ -361,7 +361,7 @@ def data_cleaning():
                     text = [word for word in text if word not in stopword] #remove stopwords in the nltk stopwords dictionary
                     return text
 
-                @st.cache_resource
+                @st.cache_data
                 def lemmatizer(text):
                     nlp = spacy.load('en_core_web_sm')
 
