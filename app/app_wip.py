@@ -417,6 +417,8 @@ def data_cleaning():
             time.sleep(2)
             my_bar.progress(100, text = "Dreams Text Cleaning Complete")
 
+            return clean_text, tokenized, x_stopwords, lemmatized, complete, mapx
+
         clean_text, tokenized, x_stopwords, lemmatized, complete, corpus = extract_array(semi)
 
         st.session_state['clean_text'] = clean_text
