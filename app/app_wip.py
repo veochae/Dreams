@@ -844,19 +844,19 @@ def tf_idf():
                 
                 tf_idf_df, tf_df, idf_df= main(corpus, tokenized)
 
-                st.write("Preview")
-                radio = st.radio("Choose the Table you would like to see",
-                            ('TF-IDF', "TF", "IDF"),
-                            horizontal=True)
+                # st.write("Preview")
+                # radio = st.radio("Choose the Table you would like to see",
+                #             ('TF-IDF', "TF", "IDF"),
+                #             horizontal=True)
                 
-                if radio == "TF-IDF":
-                    st.dataframe(tf_idf_df.head())
+                # if radio == "TF-IDF":
+                #     st.dataframe(tf_idf_df.head())
                 
-                elif radio == "TF":
-                    st.dataframe(tf_df.head())
+                # elif radio == "TF":
+                #     st.dataframe(tf_df.head())
 
-                elif radio == "IDF":
-                    st.dataframe(idf_df.head())  
+                # elif radio == "IDF":
+                #     st.dataframe(idf_df.head())  
 
 
 
