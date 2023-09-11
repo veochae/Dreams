@@ -404,7 +404,7 @@ def data_cleaning():
                         my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
                         time.sleep(2)
 
-                        tokenized = clean_text.apply(lambda x: tokenization(x))          #tokenize the cleaned text
+                        tokenized = map(lambda x: tokenization(x), clean_text)           #tokenize the cleaned text
                         clean_text = tokenized.apply(lambda x: " ".join(x))              #rejoin the words (just in case white space still present)
                         clean_text.dropna()
                         tokenized.dropna()
@@ -437,7 +437,7 @@ def data_cleaning():
                         time.sleep(2)
 
                         lemmatized = x_stopwords.__deepcopy__() 
-                        lemmatized = [lemmatizer(x) for x in lemmatized]
+                        lemmatized = map(lambda x: lemmatizer(x), lemmatized)
                         
                         with st.form("Lemmatization"):
                             st.header("Lemmatization")
