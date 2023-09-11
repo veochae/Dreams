@@ -1,14 +1,11 @@
 pandas == 2.0.1
 numpy == 1.22.1
 nltk == 3.7
-matplotlib == 3.5.2
-wordcloud == 1.8.2.2
 sklearn == 0.0
 scikit-learn == 1.1.2
 spacy_streamlit == 1.0.6
 streamlit == 1.22.0
 plotly == 5.14.1
-gensim == 4.3.0
 better_profanity == 0.7.0
 openai == 0.27.8
 transformers == 4.28.1  
