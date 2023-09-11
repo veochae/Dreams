@@ -437,7 +437,7 @@ def data_cleaning():
                         time.sleep(2)
 
                         lemmatized = x_stopwords.__deepcopy__() 
-                        lemmatized = map(lambda x: lemmatizer(x), lemmatized)
+                        lemmatized = [lemmatizer(x) for x in lemmatized]
                         
                         with st.form("Lemmatization"):
                             st.header("Lemmatization")
