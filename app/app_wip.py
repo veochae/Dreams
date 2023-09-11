@@ -769,7 +769,7 @@ def name_identity_recognition():
 #############################       TF-IDF  page      ##################################
 ########################################################################################
 def tf_idf():
-    st.clear
+    st.cache_data.clear()
     st.title("TF-IDF Analysis")
     try:
         st.write(f"Your current selected dream index is {st.session_state['row_n']}")
