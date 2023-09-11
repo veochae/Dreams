@@ -859,7 +859,7 @@ def tf_idf():
             asdf = st.progress(0,"Initializing tf-idf calculation")
             for xx, t in enumerate(tf_li):
                 tf_idf_li.append(tf_idf(t, idf_dict))
-                asdf.progress(np.ceil(100/len(tf_li)*xx), f"{xx}/{len(tf_li)}")
+                asdf.progress(int(np.ceil(100/len(tf_li)*xx)), f"{xx}/{len(tf_li)}")
             
 
             my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
