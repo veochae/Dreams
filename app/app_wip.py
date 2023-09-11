@@ -779,9 +779,6 @@ def tf_idf():
                 token = st.session_state['tokenized']           
                 tokenized = [list(set(li)) for li in token]
 
-                st.write(corpus)
-                st.write(tokenized)
-
                 #define term frequency (tf) function
                 def tf(corpus, token_set):
                     tf_dict = {}
@@ -865,7 +862,6 @@ def tf_idf():
                 barplot(tf_idf_df = tf_idf_df, number_of_words = 10)
                 change = 2
 
-                st.write("It's working up to here 3")
                 if change == 2:
                     def barplot_2(tf_idf_df, number_of_words):
                         rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
