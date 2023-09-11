@@ -430,7 +430,6 @@ def data_cleaning():
                 st.session_state['corpus'] = corpus
                 st.session_state['semi'] = semi
 
-                @st.cache_data
                 def extract_array_sample(ind):
                     with st.form("Original Text"):
                         st.header("Original Text")
