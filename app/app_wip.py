@@ -361,10 +361,12 @@ def data_cleaning():
                     text = [word for word in text if word not in stopword] #remove stopwords in the nltk stopwords dictionary
                     return text
 
-                @st.cache_data
-                def lemmatizer(text):
-                    nlp = spacy.load('en_core_web_sm')
+                @st.cache_resource
+                def load_nlp():
+                    return spacy.load('en_core_web_sm')
 
+                def lemmatizer(text,nlp):
+                    nlp = load_nlp()
                     doc = nlp(" ".join(text))
                     
                     # Create list of tokens from given string
@@ -414,8 +416,7 @@ def data_cleaning():
                     my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
                     time.sleep(2)
 
-                    lemmatized = x_stopwords.__deepcopy__() 
-                    lemmatized = [lemmatizer(x) for x in lemmatized]
+                    lemmatized = [lemmatizer(x) for x in x_stopwords]
                     
 
                     my_bar.progress(70, text = "Dreams Lemmatization Complete")
