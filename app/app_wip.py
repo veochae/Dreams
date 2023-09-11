@@ -27,10 +27,10 @@ import pandas as pd
 import numpy as np
 import nltk
 import spacy
-import matplotlib.pyplot as plt
-from wordcloud import WordCloud,STOPWORDS
 from datetime import datetime, date
 from sklearn.feature_extraction.text import CountVectorizer
+# import matplotlib.pyplot as plt
+# from wordcloud import WordCloud,STOPWORDS
 
 #streamlit
 import spacy_streamlit
@@ -44,10 +44,10 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 #gensim
-import gensim
-from gensim.utils import simple_preprocess
-import gensim.corpora as corpora
-from gensim.models.coherencemodel import CoherenceModel
+# import gensim
+# from gensim.utils import simple_preprocess
+# import gensim.corpora as corpora
+# from gensim.models.coherencemodel import CoherenceModel
 
 #ldavis
 # import pyLDAvis.gensim
@@ -237,12 +237,14 @@ def data_collection():
 ########################################################################################
 
 def data_cleaning():
-    nltk.download('stopwords')
-    nltk.download('omw-1.4')
-    nltk.download('wordnet')
-    nltk.download("punkt")
-    nltk.download('averaged_perceptron_tagger')
-    nltk.download('brown')    
+    @st.cache_resource
+    def nltk_downloads():
+        nltk.download('stopwords')
+        nltk.download('omw-1.4')
+        nltk.download('wordnet')
+        nltk.download("punkt")
+        nltk.download('averaged_perceptron_tagger')
+        nltk.download('brown')    
 
     st.title("Data Manipulation")
     st.write("With the raw dataset in hand, now we move on to the critical stage of analysis: Data Manipulation.")
