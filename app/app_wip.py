@@ -615,7 +615,7 @@ def part_of_speech_tag():
                     st.session_state['filtered'] = filtered
                     
                 else:
-                    st.dataframed(df)
+                    st.dataframe(df)
 
                 st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
 
@@ -827,7 +827,7 @@ def tf_idf():
                     tf_idf_li = []
                     
                     documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
-                    
+                    st.write("initialization passed")
                     time.sleep(2)
 
                     my_bar.progress(35, "Calculating tf")
@@ -835,15 +835,19 @@ def tf_idf():
                         tf_temp = tf(r, tokenized[l])
                         tf_li.append(tf_temp)
                     
+                    st.write("tf worked")
                     time.sleep(2)
                     my_bar.progress(70, "Calculating idf")
                     idf_dict = idf(documents)
+                    st.write('idf worked')
 
                     time.sleep(2)
                     my_bar.progress(95, "Calculating tf_idf")
                     for t in tf_li:
                         tf_idf_temp = tf_idf(t, idf_dict)
                         tf_idf_li.append(tf_idf_temp)
+                    
+                    st.write('tf-idf worked')
 
                     time.sleep(2)
                     my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
