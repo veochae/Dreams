@@ -55,6 +55,7 @@ import plotly.express as px
 
 #other pacakges
 from better_profanity import profanity
+nltk.download('averaged_perceptron_tagger')
 from pywsd.utils import lemmatize_sentence
 
 #huggingface
@@ -768,7 +769,7 @@ def name_identity_recognition():
 #############################       TF-IDF  page      ##################################
 ########################################################################################
 def tf_idf():
-    
+    st.clear
     st.title("TF-IDF Analysis")
     try:
         st.write(f"Your current selected dream index is {st.session_state['row_n']}")
