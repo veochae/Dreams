@@ -790,7 +790,6 @@ def tf_idf():
                 tokenized = [list(set(li)) for li in token]
 
                 #define term frequency (tf) function
-                @st.cache_data
                 def tf(corpus, token_set):
                     tf_dict = {}
                     n = len(token_set)
@@ -802,7 +801,6 @@ def tf_idf():
                     return tf_dict
 
                 #define inverse data frequency (idf) function
-                @st.cache_data
                 def idf(documents):
                     n = len(documents)
                     idf_dict = dict.fromkeys(documents[0].keys(),0)
@@ -821,7 +819,6 @@ def tf_idf():
                     return idf_dict
 
                 #define tf-idf function
-                @st.cache_data
                 def tf_idf(tf, idf):
                     tf_idf_dict = {}
 
