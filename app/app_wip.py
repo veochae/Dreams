@@ -852,9 +852,9 @@ def tf_idf():
                     time.sleep(2)
                     my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
                     st.write("It's working up to here")
-                    st.dataframe(pd.DataFrame(tf_idf_li)) 
-                    st.dataframe(pd.DataFrame(tf_li)) 
-                    st.dataframe(pd.DataFrame(idf_dict, index=[0]))
+                    st.write(tf_idf_li)
+                    st.write(tf_li)
+                    st.write(idf_dict)
                 #tf_idf_df, tf_df, idf_df= 
                 main(corpus, tokenized)
                 st.write("It's working up to here 2")
