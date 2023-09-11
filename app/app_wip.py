@@ -404,7 +404,7 @@ def data_cleaning():
                         my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
                         time.sleep(2)
 
-                        tokenized = map(lambda x: tokenization(x), clean_text)           #tokenize the cleaned text
+                        tokenized = clean_text.apply(lambda x: tokenization(x))          #tokenize the cleaned text
                         clean_text = tokenized.apply(lambda x: " ".join(x))              #rejoin the words (just in case white space still present)
                         clean_text.dropna()
                         tokenized.dropna()
