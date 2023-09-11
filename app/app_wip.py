@@ -821,7 +821,6 @@ def tf_idf():
             return tf_idf_dict
 
         #main function to execute all above
-        @st.cache_data
         def main(corpus, tokenized):
             my_bar = st.progress(0,"Initializing tf-idf calculation")
             tf_li = []
