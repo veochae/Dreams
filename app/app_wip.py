@@ -96,7 +96,7 @@ def reddit_data(time_wanted, headers):
     for post in res.json()['data']['children']:
         df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
                                                     'title': post['data']['title'],
-                                                    'text': profanity.censor(post['data']['selftext']).replace("*",""),
+                                                    'text': post['data']['selftext'],
                                                     'date': post['data']['created']},index=[0])],ignore_index=True )
     
     #further back collection
@@ -114,7 +114,7 @@ def reddit_data(time_wanted, headers):
             for post in res.json()['data']['children']:
                 df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
                                                     'title': post['data']['title'],
-                                                    'text': profanity.censor(post['data']['selftext']).replace("*",""),
+                                                    'text': post['data']['selftext'],
                                                     'date': post['data']['created']},index=[0])], ignore_index= True)
 
             latest_key = post['kind'] + '_' + post['data']['id']
@@ -126,15 +126,16 @@ def reddit_data(time_wanted, headers):
 
             if len(df) >= 985:
                 latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
-                print("Data Collection Target Reached")
-                print(f'{len(df)} rows collected')
-                print(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
+                st.write("Data Collection Target Reached")
+                st.write(f'{len(df)} rows collected')
+                st.write(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
+                df.text = map(lambda x: profanity.censor(x).replace("*",""),df.text)
                 return df, res.json()['data']['children'][1]
 
     else: 
-        print("Date Limit Reached")
-        print(f'{len(df)} rows collected')
-        print(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
+        st.write("Date Limit Reached")
+        st.write(f'{len(df)} rows collected')
+        st.write(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
         return df
     
 
@@ -466,8 +467,6 @@ def data_cleaning():
                         return clean_text, tokenized, x_stopwords, lemmatized, complete, mapx
 
                 clean_text, tokenized, x_stopwords, lemmatized, complete, corpus = extract_array(semi, st.session_state['row_n'])
-
-                titles = ['clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete', 'corpus']
 
                 st.session_state['clean_text'] = clean_text
                 st.session_state['tokenized'] = tokenized
