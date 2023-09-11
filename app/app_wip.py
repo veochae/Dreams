@@ -25,8 +25,6 @@ import warnings
 #streamlit
 import spacy_streamlit
 import streamlit as st
-import streamlit_lottie
-from streamlit_lottie import st_lottie
 
 #common add ons
 import pandas as pd
@@ -67,7 +65,6 @@ import plotly.express as px
 
 #other pacakges
 from better_profanity import profanity
-from pywsd.utils import lemmatize_sentence
 
 #huggingface
 from transformers import pipeline
@@ -83,12 +80,10 @@ import torch
 ########################################################################################
 warnings.filterwarnings('ignore')
 
-###################### lottie file extraction
-def load_lottieurl(url):
-    r  = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
+##########en-core-sm preload
+@st.cache_resource
+def load_nlp():
+    return spacy.load('en_core_web_sm')
 
 ###################### dataframe to csv conversion
 def convert_df(df):
@@ -157,13 +152,7 @@ def reddit_data(time_wanted, headers):
 ########################################################################################
 
 def introduction():
-    l1 = load_lottieurl("https://lottie.host/0e7f8667-876c-4470-9509-1938d325dbc7/1z7IT8acx2.json")
-    col1, col2 = st.columns([4,1])
-    with col1:
-        st.title("Analyzing Dreams using NLP")
-
-    with col2:
-        st_lottie(l1, key = "l1", height = 100, width = 130)
+    st.title("Analyzing Dreams using NLP")
 
 ########################################################################################
 #############################       data collection page      ##########################
@@ -361,10 +350,6 @@ def data_cleaning():
                     text = [word for word in text if word not in stopword] #remove stopwords in the nltk stopwords dictionary
                     return text
 
-                @st.cache_resource
-                def load_nlp():
-                    return spacy.load('en_core_web_sm')
-
                 def lemmatizer(text):
                     nlp = load_nlp()
                     doc = nlp(" ".join(text))
@@ -542,7 +527,7 @@ def data_cleaning():
 def part_of_speech_tag():
     st.title("Part of Speech Tagging (POS)")
 
-    nlp = spacy.load("en_core_web_sm")
+    nlp = load_nlp()
 
     st.write("Part of Speech Tagging (POS) is a classification method, where each word in a sentence is given a particular part of speech depending on the position and context within the sentence structure. The method was first introduced as a measure to reduce the ambiguity of word implications in a sentence for machine translation purposes. In other words, POS Tagging allows for machines to recognize the way in which the word is utilized. For example, the word “run” in the two sentences:")
     st.write("“I like to run” and “I went for a run”")
@@ -784,7 +769,7 @@ def tf_idf():
     st.header(f"Chosen Dream: Dream {st.session_state['row_n']}")
     st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
 
-    result_ti = st.button("Click Here to start TF-IDF")
+    result_ti = True #st.button("Click Here to start TF-IDF")
 
     if result_ti:
         st.session_state['result_ti'] = True
