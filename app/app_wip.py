@@ -244,7 +244,7 @@ def data_collection():
 
             st.write("Ever wondered why one would ever need JSON if dataframes seem so much cleaner? You see, although dataframes are intuitive – their size and the consequent burden on memory can become extremely large as the number of observations or features increase! Further, dataframes typically store various meta data, such as the data type, etc. On the contrary, the JSON format only stores the text values of the data. Therefore, it is a structured word file that can be interpreted in hierarchical fashion when imported into an Integrated Development Environment (IDE). This saves tremendous amount of space when it comes to storing large datasets. And because typically the data in APIs are extremely large, JSON is the go-to format!")
         
-            st.info("Next click on the next tab on the left to move on to the Data Cleaning Section!")
+            st.info("Next click on the next tab on the left to move on to the Data Cleaning Section!" ,icon="ℹ️")
         except KeyError:
             st.warning("Please enter correct Reddit Credentials", icon="⚠️")
 
@@ -304,7 +304,7 @@ def data_cleaning():
                 df, semi = preprocess(st.session_state['reddit'])
 
                 st.header("Breakdown of Data Cleaning Process")
-                st.info("Type in Keyword you would like to see in the Dream")
+                st.info("Type in Keyword you would like to see in the Dream" ,icon="ℹ️")
                 st.session_state['keyword'] = st.text_input("Keyword:")
                 filtered = df[df['text'].str.contains(st.session_state['keyword'])]
                 
@@ -497,7 +497,7 @@ def data_cleaning():
 
                             submit_5 = st.form_submit_button("All done!")  
                         
-                        st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!")
+                        st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
                             
 
@@ -546,7 +546,7 @@ def data_cleaning():
 
 def part_of_speech_tag():
     st.title("Part of Speech Tagging (POS)")
-    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}")
+    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}" ,icon="ℹ️")
 
     nlp = load_nlp()
     st.write("Part of Speech Tagging (POS) is a classification method, where each word in a sentence is given a particular part of speech depending on the position and context within the sentence structure. The method was first introduced as a measure to reduce the ambiguity of word implications in a sentence for machine translation purposes. In other words, POS Tagging allows for machines to recognize the way in which the word is utilized. For example, the word “run” in the two sentences:")
@@ -636,7 +636,7 @@ def part_of_speech_tag():
 
                 spacy_streamlit.visualize_parser(doc)
 
-            st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!")
+            st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!", icon="ℹ️")
                 # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
     # except:
     #         st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
@@ -647,7 +647,7 @@ def part_of_speech_tag():
 
 def named_entity_recognition():
     st.header("Named Entity Recognition")
-    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}")
+    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}" ,icon="ℹ️")
 
     try:
         if st.session_state['show']:
@@ -780,7 +780,7 @@ def named_entity_recognition():
 def tf_idf():
     st.title("TF-IDF Analysis")
     try:
-        st.info(f"Chosen Dream: Dream {st.session_state['row_n']}")
+        st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
         st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
 
         result_ti = st.button("Click Here to start TF-IDF")
@@ -913,12 +913,12 @@ def tf_idf():
                         st.plotly_chart(fig,theme="streamlit", use_container_width=True)   
 
                     try:
-                        st.info(f"Current Keyword is `{st.session_state['keyword']}`")
-                        st.write("If you wish to change the selected Dream or Keyword, please go back to the Data Cleaning Section of the App.")
+                        st.info(f"Current Keyword is `{st.session_state['keyword']}`", icon="ℹ️")
+                        st.success("If you wish to change the selected Dream or Keyword, please go back to the Data Cleaning Section of the App.")
                         st.dataframe(pd.DataFrame(st.session_state['filtered']))
                     except:
                         st.dataframe(pd.DataFrame(st.session_state['semi']))
-                    st.info("Second Dream Index:")
+                    st.info("Second Dream Index:" ,icon="ℹ️")
                     try:
                         st.session_state['row_n_2'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
                         
@@ -932,7 +932,7 @@ def tf_idf():
                             st.subheader(f"Dream 2: Dream {st.session_state['row_n_2']}")
                             st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n_2']]}""")
                         
-                        st.info("Next click on the next tab on the left to move on to the Dream Summarization and Continuation Section!")
+                        st.info("Next click on the next tab on the left to move on to the Dream Summarization and Continuation Section!" ,icon="ℹ️")
                     except:
                         st.warning("Please Input the Second Dream Row Number")
                 else: pass
