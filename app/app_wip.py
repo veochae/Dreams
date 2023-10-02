@@ -678,8 +678,7 @@ def tf_idf():
     st.write("Now, let's start the below section to explore TF-IDF!")
 
     try:
-        st.info("Your Currently Selected Dream Selected Dream:")
-        with st.expander(f"View Dream "):
+        with st.expander(f"Click Here to View the Selected Dream "):
             st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
 
         result_ti = st.button("Click Here to start TF-IDF")
