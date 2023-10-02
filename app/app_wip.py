@@ -145,7 +145,20 @@ def reddit_data(time_wanted, headers):
         st.write(f'{len(df)} rows collected')
         st.write(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
         return df
-    
+
+############### chat-gpt incorporated function
+def summarize_dream(prompt, length):
+    response = openai.Completion.create(
+        engine="text-davinci-003",                  #most advanced version of text related algo in open ai
+        prompt=prompt,                              #what is being inputted to gpt
+        max_tokens=length,                            #maximum number of words
+        n=1,                                        #number of outputs
+        stop=None,                                  #stop when
+        temperature=0.5,                            #how much "risk" do you want the gpt to take
+    )
+
+    text = response.choices[0].text.strip()
+    return text
 
 ########################################################################################
 #############################       introduction page      #############################
@@ -231,6 +244,7 @@ def data_collection():
 
             st.write("Ever wondered why one would ever need JSON if dataframes seem so much cleaner? You see, although dataframes are intuitive – their size and the consequent burden on memory can become extremely large as the number of observations or features increase! Further, dataframes typically store various meta data, such as the data type, etc. On the contrary, the JSON format only stores the text values of the data. Therefore, it is a structured word file that can be interpreted in hierarchical fashion when imported into an Integrated Development Environment (IDE). This saves tremendous amount of space when it comes to storing large datasets. And because typically the data in APIs are extremely large, JSON is the go-to format!")
         
+            st.info("Next click on the next tab on the left to move on to the Data Cleaning Section!")
         except KeyError:
             st.warning("Please enter correct Reddit Credentials", icon="⚠️")
 
@@ -470,15 +484,10 @@ def data_cleaning():
                             st.header("Lemmatization")
                             st.write(" ".join(st.session_state['lemmatized'][ind]))
 
-                            submit_5 = st.form_submit_button("Create Corpus")  
-                            if submit_5:
-                                st.session_state['submit_5'] = True
+                            submit_5 = st.form_submit_button("All done!")  
+                        
+                        st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!")
 
-                    if st.session_state['submit_5']:                  
-                        with st.form("Corpus"):
-                            st.header("Corpus")
-                            st.dataframe(st.session_state['corpus'].iloc[:10,:20])
-                            st.form_submit_button("All Done!")
                             
 
                 extract_array_sample(st.session_state['row_n'])
@@ -528,10 +537,9 @@ def part_of_speech_tag():
     st.title("Part of Speech Tagging (POS)")
 
     nlp = load_nlp()
-
     st.write("Part of Speech Tagging (POS) is a classification method, where each word in a sentence is given a particular part of speech depending on the position and context within the sentence structure. The method was first introduced as a measure to reduce the ambiguity of word implications in a sentence for machine translation purposes. In other words, POS Tagging allows for machines to recognize the way in which the word is utilized. For example, the word “run” in the two sentences:")
     st.write("“I like to run” and “I went for a run”")
-    st.write("have two separate meanings. The former “run” is a verb that pertains to the action of running. The latter “run” pertains to the activity of running, a noun. However, in the sense of machine learning models, the two usages of “run” in both contexts are not distinguishable causing ambiguity.")
+    st.write("has two separate meanings. The former “run” is a verb that pertains to the action of running. The latter “run” pertains to the activity of running, a noun. However, in the sense of machine learning models, the two usages of “run” in both contexts are not distinguishable causing ambiguity.")
     st.write("So there has to be a way for the machine to understand the different ways the same word is utilized in different contexts! Therefore we introduce the POS Tagging.")
 
     # try:
@@ -583,12 +591,14 @@ def part_of_speech_tag():
             fig6 = px.bar(x = x, 
                         y = y, 
                         labels = dict(x = "Part of Speech", y = 'Count'),
-                        title = "Count of Part of Speech in the Entire Corpus")    
+                        title = "Count of Part of Speech in the Entire Corpus") 
+
+            fig6.update_layout(yaxis={'categoryorder':'total ascending'})   
                 
             st.plotly_chart(fig6,theme="streamlit", use_container_width=True)    
 
         with st.container():
-            st.write("Next with the full list of POS Tags throughout all the Dreams that we have collected, we plot a barplot to see which Tags were heavily uitilized in the Dreams. As one can see from the barplot, Nouns were mostly utilized since Dreams have objects that have to be described in detail. Then, Adverbs and different tenses of verbs were heavily utilized in describing the Dreamers' actions during the dream.")
+            st.info("Next with the full list of POS Tags throughout all the Dreams that we have collected, we plot a barplot to see which Tags were heavily uitilized in the Dreams. As one can see from the barplot, Nouns were mostly utilized since Dreams have objects that have to be described in detail. Then, Adverbs and different tenses of verbs were heavily utilized in describing the Dreamers' actions during the dream.")
             barplot(tag_df['tag'])
 
     # except:
@@ -598,10 +608,10 @@ def part_of_speech_tag():
                 st.write("Now that we know that each word can be understood by the machine, how about sentences? Can machines now understand full sentences?")
                 st.write("To help ease the understanding of why we need this, we can give Chat-GPT as an example. To the human brain, when we observe the two statements: ")
                 st.write("“I use Chat-GPT”, “Do you use Chat-GPT?” ")
-                st.write("We already know which one of the two statements is a question. Not only because of the question mark on the second statement, but because it is a sentence that starts with a “be verb” and a pronoun as the target of asking the question. Obviously, humans do not actively process the part of speech for each and every sentence one encounters, but what about for Chat-GPT? Just like the young versions of ourselves first learning how to comprehend the sentence structure, Chat-GPT has to learn the sentence structures of English as well. Now, we can use the individual POS Tags as a sequence in order to essentially create a formula of sentence structures. With the example above, because")
-                st.write("b_verb + pronoun + verb + … ")
+                st.write("We already know which one of the two statements is a question. Not only because of the question mark on the second statement, but because it is a sentence that starts with an auxillary ”Do” and a pronoun as the target of asking the question. Obviously, humans do not actively process the part of speech for each and every sentence one encounters, but how about when the machine has to learn sentence structure? Just like the young versions of ourselves first learning how to comprehend the sentence structure, machine has to learn the sentence structures of English as well. Now, we can use the individual POS Tags as a sequence in order to essentially create a formula of sentence structures. With the example above, because")
+                st.write("auxillary + pronoun + verb + … ")
                 st.write("is the sequential order of POS tags in the given sentence, the machine will now recognize that this sentence is a question.")
-                st.write("As such, POS Tags not only help machines understand the individual usage of singular words, but also provides an even more powerful tool when used on an aggregated level, kind of like Google Translator for humans to machines!")
+                st.write("As such, POS tagging not only helps machines understand the individual usage of singular words, but also provides an even more powerful tool when used on an aggregated level!")
             
                 df = st.session_state['semi']
 
@@ -618,7 +628,7 @@ def part_of_speech_tag():
                 st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
 
                 with st.container():
-                    temp = df['text'][st.session_state['row_n']]
+                    temp = df['text'][st.session_state['row_n'][0]]
                     model = "en_core_web_sm"
 
                     st.title("POS Taggging and NER Visualization")
@@ -626,25 +636,27 @@ def part_of_speech_tag():
                     doc = spacy_streamlit.process_text(model, text)
 
                     spacy_streamlit.visualize_parser(doc)
+
+                st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!")
                     # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
     except:
             st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
 
 ########################################################################################
-#############################       name identity recognition  page      #################################
+#############################       namee entity recognition  page      #################################
 ########################################################################################
 
-def name_identity_recognition():
-    st.header("Named Identity Recognition")
+def named_entity_recognition():
+    st.header("Named Entity Recognition")
 
     try:
         if st.session_state['show']:
-                st.write("As the next step of translating human language to machine comprehensible context, we go through the name identity recognition. Well first, we have to know what Named Identity is! ")
-                st.write("Named Identity is words or collection of words that signify a particular subject in a given text. In essence, the particular subjects would entail names, locations, companies, products, monetary values, percentages, time, etc. The key difference from the POS Tagging to Named Identity Recognition is that it provides more context to the sentence the algorithm is trying to understand. ")
+                st.write("As the next step of translating human language to machine comprehensible context, we go through the named entity recognition. Well first, we have to know what Named Entity is! ")
+                st.write("Named Entities are words or collection of words that signify a particular subject in a given text. In essence, the particular subjects would entail names, locations, companies, products, monetary values, percentages, time, etc. The key difference from the POS Tagging to Named Entity Recognition is that it provides more context to the sentence the algorithm is trying to understand. ")
                 st.write("For instance, let’s take the example of two sentences below:")
                 st.write("“I like Google” and “I like Wellesley”")
-                st.write("From the POS tagging, the machine learning algorithm understands that Google and Wellesley are nouns. However, it only recognizes that the two words are nouns, but not what the word itself entails. Named Identity Recognition will flag the two words into Company and Location. That way, the machine can now have a contextualized understanding of the sentence that one is a statement about a company, and the counterpart about a location. ")
-                st.write("So how is this used in real life you may ask! There are countless possible usages of Named Identity Recognition, but one of the most prominent used cases would be Netflix’s recommendation system. When you watch a show or movie on Netflix, based on the description of the show, Netflix can extract the entities in the description and recommend another entertainment piece that has the most similar entities in its description. Other used cases can be a simpler one where we can summarize a unstructured text data (such as a news article) to a structured format. In other words, instead of reading the entire article, NER allows for extraction of the 5Ws: Who, What, Why, When and Where.")
+                st.write("From the POS tagging, the machine learning algorithm understands that Google and Wellesley are nouns. However, it only recognizes that the two words are nouns, but not what the each word entails. Named Entity Recognition will flag the two words into Company and Location respectively. That way, the machine can now have a contextualized understanding of the sentence that one is a statement about a company, and the counterpart about a location. ")
+                st.write("So how is this used in real life you may ask! There are countless possible usages of Named Entity Recognition, but one of the most prominent used cases would be Netflix’s recommendation system. When you watch a show or movie on Netflix, based on the description of the show, Netflix can extract the entities in the description and recommend another entertainment piece that has the most similar entities in its description. Other used cases can be a simpler one where we can summarize a unstructured text data (such as a news article) to a structured format. In other words, instead of reading the entire article, NER allows for extraction of the 5Ws: Who, What, Why, When and Where.")
                 st.write("Now, with that being said, let’s try this new technique on the dream that you have chosen from the previous section!")
             
                 df = st.session_state['semi']
@@ -660,6 +672,8 @@ def name_identity_recognition():
                     spacy_streamlit.visualize_ner(doc,
                                                 show_table=False
                                                     )
+                    
+                st.info("Next click on the next tab on the left to move on to the TF-IDF Section!")
 
 
     except:
@@ -766,7 +780,7 @@ def name_identity_recognition():
 def tf_idf():
     st.title("TF-IDF Analysis")
     try:
-        st.header(f"Chosen Dream: Dream {st.session_state['row_n']}")
+        st.info(f"Chosen Dream: Dream {st.session_state['row_n']}")
         st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
 
         result_ti = st.button("Click Here to start TF-IDF")
@@ -899,48 +913,82 @@ def tf_idf():
                         st.plotly_chart(fig,theme="streamlit", use_container_width=True)   
 
                     try:
-                        st.write(f"Current Keyword is `{st.session_state['keyword']}`")
+                        st.info(f"Current Keyword is `{st.session_state['keyword']}`")
                         st.dataframe(pd.DataFrame(st.session_state['filtered']))
                     except:
                         st.dataframe(pd.DataFrame(st.session_state['semi']))
-                    st.write("Choose your Second Dream by row index")
+                    st.info("Choose your Second Dream by row index")
                     try:
                         st.session_state['row_n_2'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
                         st.header(f"Chosen Dream 2: Dream {st.session_state['row_n_2']}")
                         st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n_2']]}""")
 
                         barplot_2(tf_idf_df = tf_idf_df, number_of_words = 10)
+                        st.info("Next click on the next tab on the left to move on to the Dream Summarization and Continuation Section!")
                     except:
                         st.warning("Please Input the Second Dream Row Number")
-                else: st.write('heyooooo')
+                else: pass
         except:
             st.warning("Please Press to Start!")
     except:
         st.warning("Please Complete the Previous Step Before Moving On")
+
+########################################################################################
+#############################       Setup for OpenAI      #################################
+######################################################################################## 
+def set_up_openai():
+    st.header("Setting Up your Open AI API")
+    with st.form("open_ai_cred"):
+        st.session_state['openai_key'] = st.text_input("OpenAI API Key")
+        submitted = st.form_submit_button("Submit")   
+
+########################################################################################
+#############################       Sentiment Analysis      #################################
+######################################################################################## 
+def sentiment_analysis():
+    st.header("Sentiment Analysis")
+    openai.api_key = st.session_state['openai_key']
+
+    dream = st.session_state['semi']['text'][st.session_state['row_n']]
+    st.write(dream)
+
+    try:     
+        summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
+    except:
+        st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
+
+    classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
+    prediction = classifier(summary)
+    emotion = [x['label'] for x in prediction[0]]
+    score = [y['score'] for y in prediction[0]]
+
+    fig10 = make_subplots(rows=1, cols=1)
+
+    fig10.add_trace(go.Bar(x = emotion,
+                            y = score,
+                            name = f"Dream {st.session_state['row_n']}"))
+
+    fig10.update_layout(
+                        title="Sentiment Classification Results",
+                        xaxis_title="Criteria",
+                        yaxis_title="Sentiment Scores",
+                        legend_title="Dreams"
+                        # font=dict(
+                        #     family="Courier New, monospace",
+                        #     size=18,
+                        #     color="RebeccaPurple"
+                        # )
+                    )    
+    
+    st.plotly_chart(fig10,theme="streamlit", use_container_width=True) 
 ########################################################################################
 #############################       Dream Summarization + Continuation      #################################
 ######################################################################################## 
         
 def summary_continue():
-    st.title("Dream Summarization and Continuation Using GPT3.5")
-    with st.form("open_ai_cred"):
-        openai.api_key = st.text_input("OpenAI API Key")
-
-        submitted = st.form_submit_button("Submit")    
+    st.title("Dream Summarization and Continuation Using GPT 3.5") 
+    openai.api_key = st.session_state['openai_key']
     try:
-        def summarize_dream(prompt, length):
-            response = openai.Completion.create(
-                engine="text-davinci-003",                  #most advanced version of text related algo in open ai
-                prompt=prompt,                              #what is being inputted to gpt
-                max_tokens=length,                            #maximum number of words
-                n=1,                                        #number of outputs
-                stop=None,                                  #stop when
-                temperature=0.5,                            #how much "risk" do you want the gpt to take
-            )
-
-            text = response.choices[0].text.strip()
-            return text
-
         with st.form("asdf"):
             st.header("Original Text")
             try:
@@ -965,32 +1013,6 @@ def summary_continue():
 
             st.header("Dream Summary")
             st.write(summary)
-
-            classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
-            prediction = classifier(summary)
-            emotion = [x['label'] for x in prediction[0]]
-            score = [y['score'] for y in prediction[0]]
-
-            fig10 = make_subplots(rows=1, cols=1)
-
-            fig10.add_trace(go.Bar(x = emotion,
-                                    y = score,
-                                    name = f"Dream {1}"))
-
-            fig10.update_layout(
-                                title="Sentiment Classification Results",
-                                xaxis_title="Criteria",
-                                yaxis_title="Sentiment Scores",
-                                legend_title="Dreams"
-                                # font=dict(
-                                #     family="Courier New, monospace",
-                                #     size=18,
-                                #     color="RebeccaPurple"
-                                # )
-                            )    
-            
-            st.plotly_chart(fig10,theme="streamlit", use_container_width=True)  
-
 
             st.header("Dream Continuation")
             st.write(continuation)
@@ -1067,8 +1089,10 @@ page_names_to_funcs = {
     "Data Collection": data_collection,
     "Data Cleaning": data_cleaning,
     "Part of Speech Tagging": part_of_speech_tag,
-    "Name Identity Recognition": name_identity_recognition,
+    "Named Entity Recognition": named_entity_recognition,
     "TF-IDF": tf_idf,
+    "OpenAI API Setup": set_up_openai,
+    "Sentiment Analysis": sentiment_analysis,
     "Dream Summary and Continuation": summary_continue,
     "Data Download": data_download
 }
