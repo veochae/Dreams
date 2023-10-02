@@ -72,7 +72,7 @@ warnings.filterwarnings('ignore')
 
 ##########profanity filter
 def task(index , xx):
-    return(index,profanity.censor(xx))
+    return(index,profanity.censor(xx, ""))
 
 @st.cache_data
 def multiprocessing_function(text_data):
