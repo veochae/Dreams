@@ -74,15 +74,21 @@ warnings.filterwarnings('ignore')
 def task(index , xx):
     return(index,profanity.censor(xx))
 
+@st.cache_data
 def multiprocessing_function(text_data):
+    progress_bar = st.progress(0, text="Start of Data Filtering")
     try:
-        aaa = time.time()
         with multiprocessing.Pool(processes=4) as pool:
-            res = pool.starmap(task, enumerate(text_data))    
+            res = pool.starmap(task, enumerate(text_data)) 
+            total_tasks = len(text_data)
+
+            for i, result in enumerate(res):
+                # Update the progress bar as tasks are completed
+                progress_percent = (i + 1) / total_tasks
+                progress_bar.progress(progress_percent)   
+
         res.sort(key=lambda x: x[0])
         final_results = [result[1] for result in res]
-        bbb = time.time()
-        st.write(bbb-aaa)
     except Exception as e:
         print("exception in worker process", e)
         raise e
@@ -421,6 +427,7 @@ def data_cleaning():
                     text = re.sub("√® ", 'e', text)   # Encoding error for é. Replace it with e
                     text = re.sub("amp amp", "", text)
                     text = re.sub("tl;dr", "too long did not read", text)
+                    text = re.sub("buttfuck", "", text)
                     text = text.strip()
                     return text
 
