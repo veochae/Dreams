@@ -1003,59 +1003,59 @@ def sentiment_analysis():
 def summary_continue():
     st.title("Dream Summarization and Continuation Using GPT 3.5") 
     openai.api_key = st.session_state['openai_key']
-    try:
-        with st.form("asdf"):
-            st.header("Original Text")
-            try:
-                dream = st.session_state['semi']['text'][st.session_state['row_n']]
-                st.write(dream)
-            except:
-                pass
-            dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
-            if dream_submit:
-                st.session_state['dream_submit'] = True
+    # try:
+    with st.form("asdf"):
+        st.header("Original Text")
+        try:
+            dream = st.session_state['semi']['text'][st.session_state['row_n']]
+            st.write(dream)
+        except:
+            pass
+        dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
+        if dream_submit:
+            st.session_state['dream_submit'] = True
 
-        if st.session_state['dream_submit']: 
-            if len(dream) <= 280:
-                length = len(dream) * 0.6 
-            else:
-                length = 280     
-            # try:     
-            summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
-            # except:
-                # st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
-            continuation = summarize_dream("Tell me what happens after this story in the first person point of view: \n" + dream, length = 280)
+    if st.session_state['dream_submit']: 
+        if len(dream) <= 280:
+            length = len(dream) * 0.6 
+        else:
+            length = 280     
+        # try:     
+        summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
+        # except:
+            # st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
+        continuation = summarize_dream("Tell me what happens after this story in the first person point of view: \n" + dream, length = 280)
 
-            st.header("Dream Summary")
-            st.write(summary)
+        st.header("Dream Summary")
+        st.write(summary)
 
-            st.header("Dream Continuation")
-            st.write(continuation)
+        st.header("Dream Continuation")
+        st.write(continuation)
 
-            st.header("Dream Visualization")
+        st.header("Dream Visualization")
 
-            st.session_state['artist'] = st.selectbox(
-                "What artist would you like to emulate?",
-                ("Salvador Dali", "Edvard Munch", "Gustav Klimt", "Vincent Van Gogh", "Edward Hopper"),
-                index = None,
-                placeholder = "Please select an artist"
-            )
+        st.session_state['artist'] = st.selectbox(
+            "What artist would you like to emulate?",
+            ("Salvador Dali", "Edvard Munch", "Gustav Klimt", "Vincent Van Gogh", "Edward Hopper"),
+            index = None,
+            placeholder = "Please select an artist"
+        )
 
-            if isinstance(st.session_state['artist']):
-                dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE: \n"+dream, length = 100)
-                st.write(dalle)
-                time.sleep(30)
-                response = openai.Image.create(
-                            prompt=f"Produce a painting in the style of '{st.session_state['artist']}' resembling '{st.session_state['emotion']}' about the following scenario '{dalle}'",
-                            n=1,
-                            size="1024x1024")
-                
-                st.image(response['data'][0]['url'])
-                dream_submit = False
-            else:
-                st.warning("Please select an artist")
-    except: 
-        st.warning("Please Complete the Previous Step Before Moving On")
+        if isinstance(st.session_state['artist']):
+            dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE: \n"+dream, length = 100)
+            st.write(dalle)
+            time.sleep(30)
+            response = openai.Image.create(
+                        prompt=f"Produce a painting in the style of '{st.session_state['artist']}' resembling '{st.session_state['emotion']}' about the following scenario '{dalle}'",
+                        n=1,
+                        size="1024x1024")
+            
+            st.image(response['data'][0]['url'])
+            dream_submit = False
+        else:
+            st.warning("Please select an artist")
+    # except: 
+    #     st.warning("Please Complete the Previous Step Before Moving On")
 
 ########################################################################################
 #############################       Data Download      #################################
