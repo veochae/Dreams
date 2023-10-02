@@ -151,8 +151,11 @@ def reddit_data(time_wanted, headers):
             if len(df) >= 985:
                 latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
                 st.success("Data Collection Completed!")
-                st.success(f'**Data Count**:{len(df)}')
-                st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
+                col11, col22 = st.columns(2)
+                with col11:
+                    st.success(f'**Data Count**:{len(df)}')
+                with col22:
+                    st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
                 time1 = time.time()
                 df.text = multiprocessing_function(df.text)
                 time2 = time.time()
