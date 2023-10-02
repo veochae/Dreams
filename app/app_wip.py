@@ -1017,7 +1017,7 @@ def summary_continue():
 
     if st.session_state['dream_submit']: 
         if len(dream) <= 280:
-            length = int(np.ceil(len(dream) * 0.6))
+            length = int(np.ceil(len(dream) * 0.3))
         else:
             length = 280     
         # try:     
@@ -1038,7 +1038,7 @@ def summary_continue():
             "What artist would you like to emulate?",
             ("Salvador Dali", "Edvard Munch", "Gustav Klimt", "Vincent Van Gogh", "Edward Hopper"),
             index = None,
-            placeholder = "Please select an artist"
+            placeholder = "Please select an artist",
         )
 
         if isinstance(st.session_state['artist']):
