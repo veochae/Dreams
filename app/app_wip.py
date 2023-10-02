@@ -580,7 +580,7 @@ def part_of_speech_tag():
                             labels = dict(x = "Part of Speech", y = 'Count'),
                             title = "Count of Part of Speech in the Entire Corpus") 
 
-                fig6.update_layout(xaxis={'categoryorder':'total ascending'})   
+                fig6.update_layout(xaxis={'categoryorder':'total descending'})   
                     
                 st.plotly_chart(fig6,theme="streamlit", use_container_width=True)    
 
