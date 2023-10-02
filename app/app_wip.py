@@ -939,8 +939,10 @@ def tf_idf():
 def set_up_openai():
     st.header("Setting Up your Open AI API")
     with st.form("open_ai_cred"):
-        st.session_state['openai_key'] = st.text_input("OpenAI API Key")
+        key_open = st.text_input("OpenAI API Key")
         submitted = st.form_submit_button("Submit")   
+        if submitted:
+            st.session_state['openai_key'] = key_open
 
 ########################################################################################
 #############################       Sentiment Analysis      #################################
@@ -961,6 +963,8 @@ def sentiment_analysis():
     prediction = classifier(summary)
     emotion = [x['label'] for x in prediction[0]]
     score = [y['score'] for y in prediction[0]]
+
+    st.session_state['emotion'] = emotion[score.index(np.max(score))]
 
     fig10 = make_subplots(rows=1, cols=1)
 
@@ -1018,16 +1022,27 @@ def summary_continue():
             st.write(continuation)
 
             st.header("Dream Visualization")
-            dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE: \n"+dream, length = 100)
-            st.write(dalle)
-            time.sleep(30)
-            response = openai.Image.create(
-                        prompt="Give me a realistic image of the statement: " + dalle,
-                        n=1,
-                        size="1024x1024")
-            
-            st.image(response['data'][0]['url'])
-            dream_submit = False
+
+            st.session_state['artist'] = st.selectbox(
+                "What artist would you like to emulate?",
+                ("Salvador Dali", "Edvard Munch", "Gustav Klimt", "Vincent Van Gogh", "Edward Hopper"),
+                index = None,
+                placeholder = "Please select an artist"
+            )
+
+            if isinstance(st.session_state['artist']):
+                dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE: \n"+dream, length = 100)
+                st.write(dalle)
+                time.sleep(30)
+                response = openai.Image.create(
+                            prompt=f"Produce a painting in the style of '{st.session_state['artist']}' resembling '{st.session_state['emotion']}' about the following scenario '{dalle}'",
+                            n=1,
+                            size="1024x1024")
+                
+                st.image(response['data'][0]['url'])
+                dream_submit = False
+            else:
+                st.warning("Please select an artist")
     except: 
         st.warning("Please Complete the Previous Step Before Moving On")
 
