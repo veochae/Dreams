@@ -643,10 +643,7 @@ def tf_idf():
     tf_latex = r'\text{TF}(w, d) = \frac{\text{Count of } w \text{ in } d}{\text{Total number of words in } d}'
     idf_latex = r'\text{IDF}(w) = \log\left(\frac{N}{n_w}\right)'
     tf_idf_latex = r'\text{TF-IDF}(w, d) = \text{TF}(w, d) \times \text{IDF}(w)'
-    text = """
-Number of Words: \(N\)  
-Number of documents containing \(w\): \(n_x\)
-"""
+    text = r"""\text{Number of Words}: (N) \\ \text{Number of documents containing} w: n_x"""
     
     st.title("TF-IDF Analysis")
     st.write("Ever wondered how LinkedIn scans your resume or how Google recommendation works?")
