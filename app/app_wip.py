@@ -546,6 +546,7 @@ def data_cleaning():
 
 def part_of_speech_tag():
     st.title("Part of Speech Tagging (POS)")
+    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}")
 
     nlp = load_nlp()
     st.write("Part of Speech Tagging (POS) is a classification method, where each word in a sentence is given a particular part of speech depending on the position and context within the sentence structure. The method was first introduced as a measure to reduce the ambiguity of word implications in a sentence for machine translation purposes. In other words, POS Tagging allows for machines to recognize the way in which the word is utilized. For example, the word “run” in the two sentences:")
@@ -626,7 +627,7 @@ def part_of_speech_tag():
 
             with st.container():
                 print()
-                temp = np.str.split(df['text'][st.session_state['row_n']], ".")[0]
+                temp = np.str.split(df['text'][st.session_state['row_n']], ".")[0] + "."
                 model = "en_core_web_sm"
 
                 st.title("POS Taggging and NER Visualization")
@@ -646,6 +647,7 @@ def part_of_speech_tag():
 
 def named_entity_recognition():
     st.header("Named Entity Recognition")
+    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}")
 
     try:
         if st.session_state['show']:
@@ -912,16 +914,24 @@ def tf_idf():
 
                     try:
                         st.info(f"Current Keyword is `{st.session_state['keyword']}`")
+                        st.write("If you wish to change the selected Dream or Keyword, please go back to the Data Cleaning Section of the App.")
                         st.dataframe(pd.DataFrame(st.session_state['filtered']))
                     except:
                         st.dataframe(pd.DataFrame(st.session_state['semi']))
-                    st.info("Choose your Second Dream by row index")
+                    st.info("Second Dream Index:")
                     try:
                         st.session_state['row_n_2'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
-                        st.header(f"Chosen Dream 2: Dream {st.session_state['row_n_2']}")
-                        st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n_2']]}""")
-
+                        
                         barplot_2(tf_idf_df = tf_idf_df, number_of_words = 10)
+
+                        col1,col2 = st.columns(2)
+                        with col1:
+                            st.subheader(f"Dream 1: Dream {st.session_state['row_n']}")
+                            st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")                        
+                        with col2:
+                            st.subheader(f"Dream 2: Dream {st.session_state['row_n_2']}")
+                            st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n_2']]}""")
+                        
                         st.info("Next click on the next tab on the left to move on to the Dream Summarization and Continuation Section!")
                     except:
                         st.warning("Please Input the Second Dream Row Number")
