@@ -30,6 +30,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud,STOPWORDS
 import nltk
 @st.cache_resource
 def nltk_downloads():
@@ -44,8 +45,7 @@ nltk_downloads()
 import spacy
 from datetime import datetime, date
 from sklearn.feature_extraction.text import CountVectorizer
-# import matplotlib.pyplot as plt
-from wordcloud import WordCloud,STOPWORDS
+
 
 #plotly
 from plotly.subplots import make_subplots
