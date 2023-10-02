@@ -612,34 +612,32 @@ def part_of_speech_tag():
             st.write("Next with the full list of POS Tags throughout all the Dreams that we have collected, we plot a barplot to see which Tags were heavily uitilized in the Dreams. As one can see from the barplot, Nouns were mostly utilized since Dreams have objects that have to be described in detail. Then, Adverbs and different tenses of verbs were heavily utilized in describing the Dreamers' actions during the dream.")
             barplot(tag_df['tag'])
 
+    # try:
+    if st.session_state['show']:
+            st.write("Now that we know that each word can be understood by the machine, how about sentences? Can machines now understand full sentences?")
+            st.write("To help ease the understanding of why we need this, we can give Chat-GPT as an example. To the human brain, when we observe the two statements: ")
+            st.write("“I use Chat-GPT”, “Do you use Chat-GPT?” ")
+            st.write("We already know which one of the two statements is a question. Not only because of the question mark on the second statement, but because it is a sentence that starts with an auxillary ”Do” and a pronoun as the target of asking the question. Obviously, humans do not actively process the part of speech for each and every sentence one encounters, but how about when the machine has to learn sentence structure? Just like the young versions of ourselves first learning how to comprehend the sentence structure, machine has to learn the sentence structures of English as well. Now, we can use the individual POS Tags as a sequence in order to essentially create a formula of sentence structures. With the example above, because")
+            st.write("auxillary + pronoun + verb + … ")
+            st.write("is the sequential order of POS tags in the given sentence, the machine will now recognize that this sentence is a question.")
+            st.write("As such, POS tagging not only helps machines understand the individual usage of singular words, but also provides an even more powerful tool when used on an aggregated level!")
+        
+            df = st.session_state['semi']
+
+            with st.container():
+                temp = df['text'][st.session_state['row_n'][0]]
+                model = "en_core_web_sm"
+
+                st.title("POS Taggging and NER Visualization")
+                text = st.text_area("Text to analyze", temp, height=200)
+                doc = spacy_streamlit.process_text(model, text)
+
+                spacy_streamlit.visualize_parser(doc)
+
+            st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!")
+                # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
     # except:
-    #     st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
-    try:
-        if st.session_state['show']:
-                st.write("Now that we know that each word can be understood by the machine, how about sentences? Can machines now understand full sentences?")
-                st.write("To help ease the understanding of why we need this, we can give Chat-GPT as an example. To the human brain, when we observe the two statements: ")
-                st.write("“I use Chat-GPT”, “Do you use Chat-GPT?” ")
-                st.write("We already know which one of the two statements is a question. Not only because of the question mark on the second statement, but because it is a sentence that starts with an auxillary ”Do” and a pronoun as the target of asking the question. Obviously, humans do not actively process the part of speech for each and every sentence one encounters, but how about when the machine has to learn sentence structure? Just like the young versions of ourselves first learning how to comprehend the sentence structure, machine has to learn the sentence structures of English as well. Now, we can use the individual POS Tags as a sequence in order to essentially create a formula of sentence structures. With the example above, because")
-                st.write("auxillary + pronoun + verb + … ")
-                st.write("is the sequential order of POS tags in the given sentence, the machine will now recognize that this sentence is a question.")
-                st.write("As such, POS tagging not only helps machines understand the individual usage of singular words, but also provides an even more powerful tool when used on an aggregated level!")
-            
-                df = st.session_state['semi']
-
-                with st.container():
-                    temp = df['text'][st.session_state['row_n'][0]]
-                    model = "en_core_web_sm"
-
-                    st.title("POS Taggging and NER Visualization")
-                    text = st.text_area("Text to analyze", temp, height=200)
-                    doc = spacy_streamlit.process_text(model, text)
-
-                    spacy_streamlit.visualize_parser(doc)
-
-                st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!")
-                    # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
-    except:
-            st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
+    #         st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
 
 ########################################################################################
 #############################       namee entity recognition  page      #################################
