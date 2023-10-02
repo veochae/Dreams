@@ -74,7 +74,6 @@ warnings.filterwarnings('ignore')
 def task(index , xx):
     return(index,profanity.censor(xx, ""))
 
-@st.cache_data
 def multiprocessing_function(text_data):
     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
@@ -153,7 +152,7 @@ def reddit_data(time_wanted, headers):
                 st.success("Data Collection Completed!")
                 col11, col22 = st.columns([2,4])
                 with col11:
-                    st.success(f'**Data Count**: {len(df)}')
+                    st.success(f'**Data Count**: {len(df)} Dreams')
                 with col22:
                     st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
                 time1 = time.time()
