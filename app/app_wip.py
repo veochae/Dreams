@@ -129,7 +129,7 @@ def reddit_data(time_wanted, headers):
                 st.write("Data Collection Target Reached")
                 st.write(f'{len(df)} rows collected')
                 st.write(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
-                #df.text = map(lambda x: profanity.censor(x),df.text)
+                df.text = map(lambda x: profanity.censor(x),df.text)
                 return df, res.json()['data']['children'][1]
 
     else: 
@@ -241,7 +241,7 @@ def data_collection():
             my_bar.progress(40, "Dropping Empty Observations") 
             st.session_state['reddit'] = reddit.dropna()
 
-            reddit_data['text'] = reddit_data['text'].apply(apply_censor)
+            # reddit_data['text'] = reddit_data['text'].apply(apply_censor)
             # reddit['text'] = [profanity.censor(i) for i in reddit['text']]
 
             my_bar.progress(80, "Converting pandas dataframe to CSV")
