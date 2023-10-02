@@ -75,13 +75,17 @@ def task(xx):
     return[profanity.censor(y, '') for y in xx]
 
 def multiprocessing_function(text_data):
-    aaa = time.time()
-    with multiprocessing.Pool(processes=4) as pool:
-        res = pool.starmap(task, enumerate(text_data))    
-    res.sort(key=lambda x: x[0])
-    final_results = [result[1] for result in res]
-    bbb = time.time()
-    st.write(bbb-aaa)
+    try:
+        aaa = time.time()
+        with multiprocessing.Pool(processes=4) as pool:
+            res = pool.starmap(task, enumerate(text_data))    
+        res.sort(key=lambda x: x[0])
+        final_results = [result[1] for result in res]
+        bbb = time.time()
+        st.write(bbb-aaa)
+    except Exception as e:
+        print("exception in worker process", e)
+        raise e
     return final_results
 
 ##########en-core-sm preload
