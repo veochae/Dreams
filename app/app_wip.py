@@ -154,6 +154,7 @@ def summarize_dream(prompt, length):
 
 def introduction():
     st.title("Analyzing Dreams using NLP")
+    st.image("./Dream.jpeg")
 
 ########################################################################################
 #############################       data collection page      ##########################
@@ -894,7 +895,7 @@ def sentiment_analysis():
 ######################################################################################## 
         
 def summary_continue():
-    st.title("Dream Summarization and Continuation") 
+    st.title("Dreams with GPT") 
     st.write("Now we are at the final stage and the most modern stage of NLP: **Generative Pre-trained Transformers** ")
     st.write("You are probably most familiar with Chat GPT as it is rapidly utilized all over regardless of the industries!")
     st.write("GPTs, most simply put, are neural networks that tries to emulate the human brain. Remember how neural networks work? It connects different nodes to resemble the human neurons and each of their interactions. Now, GPT 3.5 for instance, try to create 175 billion parameters. Although recreating a human brain would take trillions of parameters, GPT is yet the closest computer program that is closest to emulating the human brain.")
