@@ -150,16 +150,19 @@ def reddit_data(time_wanted, headers):
 
             if len(df) >= 985:
                 latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
-                st.success("Data Collection Target Reached")
-                st.success(f'{len(df)} rows collected')
-                st.success(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
+                st.success("Data Collection Completed!")
+                st.success(f'**Data Count**:{len(df)}')
+                st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
+                time1 = time.time()
                 df.text = multiprocessing_function(df.text)
+                time2 = time.time()
+                st.success(f'Data Filtering Complete! (time consumed: {time2-time1} seconds)')
                 return df, res.json()['data']['children'][1]
 
     else: 
-        st.write("Date Limit Reached")
-        st.write(f'{len(df)} rows collected')
-        st.write(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
+        st.success("Data Collection Completed!")
+        st.success(f'**Data Count**:{len(df)}')
+        st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
         return df
 
 ############### chat-gpt incorporated function
