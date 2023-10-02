@@ -1038,7 +1038,7 @@ def summary_continue():
         st.session_state['artist'] = st.selectbox(
             "What artist would you like to emulate?",
             ("Salvador Dali", "Edvard Munch", "Gustav Klimt", "Vincent Van Gogh", "Edward Hopper"),
-            index = None,
+            index = -1,
             placeholder = "Please select an artist")
 
         if isinstance(st.session_state['artist'],str):
