@@ -162,7 +162,7 @@ def reddit_data(time_wanted, headers):
                 with col33:
                     st.success(f'**Data Filtering Complete!**')
                 with col44:
-                    st.success(f'**time consumed**: {round((time2-time1)/60,2)} minutes)')
+                    st.success(f'**Time Consumed**: {round((time2-time1)/60,2)} minutes')
                 return df, res.json()['data']['children'][1]
 
     else: 
