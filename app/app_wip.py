@@ -387,7 +387,7 @@ def data_cleaning():
                     text = re.sub(" u ", ' you ', text)
                     text = re.sub("√¶", 'ae', text)  # Encoding error for áe. Replace it with ae
                     text = re.sub("√® ", 'e', text)   # Encoding error for é. Replace it with e
-                    text = re.sub("&#x200B;", "", text)
+                    text = re.sub("amp amp", "", text)
                     text = re.sub("tl;dr", "too long did not read", text)
                     text = text.strip()
                     return text
@@ -538,7 +538,9 @@ def data_cleaning():
 
 def part_of_speech_tag():
     st.title("Part of Speech Tagging (POS)")
-    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}" ,icon="ℹ️")
+    if isinstance(st.session_state['row_n'],str):
+        st.info(f"Chosen Dream: Dream {st.session_state['row_n']}" ,icon="ℹ️")
+    else: pass   
 
     nlp = load_nlp()
     st.write("Part of Speech Tagging (POS) is a classification method, where each word in a sentence is given a particular part of speech depending on the position and context within the sentence structure. The method was first introduced as a measure to reduce the ambiguity of word implications in a sentence for machine translation purposes. In other words, POS Tagging allows for machines to recognize the way in which the word is utilized. For example, the word “run” in the two sentences:")
@@ -617,7 +619,7 @@ def part_of_speech_tag():
                     temp = np.str.split(df['text'][st.session_state['row_n']], ".")[0] + "."
                     model = "en_core_web_sm"
 
-                    st.title("POS Taggging and NER Visualization")
+                    st.title("POS Taggging Visualization")
                     text = st.text_area("Text to analyze", temp, height=200)
                     doc = spacy_streamlit.process_text(model, text)
 
@@ -651,7 +653,7 @@ def named_entity_recognition():
                     temp = df['text'][st.session_state['row_n']]
                     model = "en_core_web_sm"
 
-                    st.title("POS Taggging and NER Visualization")
+                    st.title("NER Visualization")
                     text = st.text_area("Text to analyze", temp, height=200)
                     doc = spacy_streamlit.process_text(model, text)
 
@@ -674,7 +676,7 @@ def tf_idf():
     tf_latex = r'\text{TF}(w, d) = \frac{\text{Count of } w \text{ in } d}{\text{Total number of words in } d}'
     idf_latex = r'\text{IDF}(w) = \log\left(\frac{N}{n_w}\right)'
     tf_idf_latex = r'\text{TF-IDF}(w, d) = \text{TF}(w, d) \times \text{IDF}(w)'
-    text = r"""\text{Number of Words}: (N) \\ \text{Number of documents containing } w: n_x"""
+    text = r"""\text{Number of Words}: N \\ \text{Number of documents containing } w: n_x"""
     
     st.title("TF-IDF Analysis")
     st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")    
