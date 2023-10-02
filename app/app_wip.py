@@ -125,7 +125,7 @@ def reddit_data(time_wanted, headers):
                 st.write("Data Collection Target Reached")
                 st.write(f'{len(df)} rows collected')
                 st.write(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
-                df.text = list(map(lambda x: profanity.censor(x),df.text))
+                # df.text = list(map(lambda x: profanity.censor(x),df.text))
                 return df, res.json()['data']['children'][1]
 
     else: 
