@@ -160,7 +160,8 @@ def introduction():
         st.write("")
 
     with col5:
-        st.title("Analyzing Dreams using NLP")
+        st.title("Analyzing Dreams Using")
+        st.title("Natural Language Processing")
 
     with col6:
         st.write("")
