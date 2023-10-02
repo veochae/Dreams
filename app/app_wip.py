@@ -72,7 +72,7 @@ warnings.filterwarnings('ignore')
 
 ##########profanity filter
 def task(index , xx):
-    return(index,[profanity.censor(y, '') for y in xx])
+    return(index,profanity.censor(xx))
 
 def multiprocessing_function(text_data):
     try:
@@ -154,7 +154,8 @@ def reddit_data(time_wanted, headers):
                 st.write("Data Collection Target Reached")
                 st.write(f'{len(df)} rows collected')
                 st.write(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
-                df.text = multiprocessing_function(df.text)
+                temp = multiprocessing_function(df.text)
+                st.write(temp)
                 # temp1 = " [break] ".join(df.text)
                 # temp2 = profanity.censor(temp1)
                 # df.text = temp2.split("[break]")
