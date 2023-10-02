@@ -535,6 +535,7 @@ def data_cleaning():
 
                     if st.session_state['submit_5']:
                         with st.form("Resulting Wordcloud"):
+                            st.header("Resulting Wordcloud")
                             wordcloud(st.session_state['clean_text'], lim=100)
                             submit_6 = st.form_submit_button("All Done!")
                         
