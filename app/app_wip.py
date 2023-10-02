@@ -533,7 +533,7 @@ def data_cleaning():
                                 st.session_state['submit_5'] = True
 
                     if st.session_state['submit_5']:
-                        wordcloud(st.session_state['clean_text'].tolist(), lim=100)
+                        wordcloud(st.session_state['clean_text'], lim=100)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
