@@ -1037,9 +1037,7 @@ def summary_continue():
         st.session_state['artist'] = st.selectbox(
             "What artist would you like to emulate?",
             ("Salvador Dali", "Edvard Munch", "Gustav Klimt", "Vincent Van Gogh", "Edward Hopper"),
-            index = None,
-            placeholder = "Please select an artist",
-        )
+            placeholder = "Please select an artist")
 
         if isinstance(st.session_state['artist']):
             dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE: \n"+dream, length = 100)
