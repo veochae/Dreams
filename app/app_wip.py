@@ -29,6 +29,7 @@ import streamlit as st
 #common add ons
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import nltk
 @st.cache_resource
 def nltk_downloads():
@@ -44,7 +45,7 @@ import spacy
 from datetime import datetime, date
 from sklearn.feature_extraction.text import CountVectorizer
 # import matplotlib.pyplot as plt
-# from wordcloud import WordCloud,STOPWORDS
+from wordcloud import WordCloud,STOPWORDS
 
 #plotly
 from plotly.subplots import make_subplots
@@ -72,6 +73,14 @@ warnings.filterwarnings('ignore')
 @st.cache_resource
 def load_nlp():
     return spacy.load('en_core_web_sm')
+
+##########wordcloud
+def wordcloud(x, lim):
+    text = " ".join(t)
+    cloud = WordCloud(collocations = False, max_words = lim).generate(text)
+    plt.imshow(cloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.show()
 
 ###################### dataframe to csv conversion
 def convert_df(df):
@@ -519,7 +528,12 @@ def data_cleaning():
                             st.header("Lemmatization")
                             st.write(" ".join(st.session_state['lemmatized'][ind]))
 
-                            submit_5 = st.form_submit_button("All done!")  
+                            submit_5 = st.form_submit_button("Click to View the final WordCloud!")
+                            if submit_5:
+                                st.session_state['submit_5'] = True
+
+                    if st.session_state['submit_5']:
+                        wordcloud(st.session_state['clean_text']['text'], lim=100)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
