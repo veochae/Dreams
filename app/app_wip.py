@@ -640,32 +640,22 @@ def named_entity_recognition():
 #############################       TF-IDF  page      ##################################
 ########################################################################################
 def tf_idf():
-    tf_text = """
-    TF(w, d) = Count of w in d / Total number of words in d
-    """
-
-    idf_text = """
-    IDF(w) = log(N / nₓ)
-    """
-
-    tf_idf_text = """
-    TF-IDF(w, d) = TF(w, d) × IDF(w)
-    """
-    text = """
-    Number of Words: N  
-    Number of documents containing w: nₓ
-    """
+    tf_latex = r'\text{TF}(w, d) = \frac{\text{Count of } w \text{ in } d}{\text{Total number of words in } d}'
+    idf_latex = r'\text{IDF}(w) = \log\left(\frac{N}{n_w}\right)'
+    tf_idf_latex = r'\text{TF-IDF}(w, d) = \text{TF}(w, d) \times \text{IDF}(w)'
+    text = r'''Number of Words: \(N\) \\ Number of documents containing \(w\): \(n_w\)'''
+    
     st.title("TF-IDF Analysis")
     st.write("Ever wondered how LinkedIn scans your resume or how Google recommendation works?")
     st.write("Certainly, there are many other advanced methods that take place in both of the tech giants' machine learning methods, but in their core, TF-IDF exists.")
     st.write("TF-IDF stands for Term Frequency and Inverse Document Frequency, and it's a numerical representation used in NLP to understand the importance of words in a document or collection of documents. Let's break it down piece by piece to what TF and IDF each does:")
     st.write("**Term Frequency (TF)**: Term Frequency in the simplest sense measures how often a word appears in a document. It takes the document, and counts how many times each word is appearing in the specific document. The mathematical representation used in this following app is as follows:")
-    st.markdown(tf_text, unsafe_allow_html=True)
+    st.latex(tf_latex)
     st.write("**Inverse Document Frequency (IDF)**: Inverse Document Frequency, unlike the TF, takes all the documents in hand. Not specific to a singular document, but the entire set of documents you are trying to analyze. By providing this measure, we can see which words are less common throughout the documents. So in essence, IDF allows us to distinguish which words were rather specific to each document!")
-    st.markdown(text, unsafe_allow_html=True)
-    st.markdown(idf_text, unsafe_allow_html=True)
+    st.latex(text)
+    st.latex(idf_latex)
     st.write("**TF-IDF**: TF-IDF is the amalgamation of TF and IDF as you can tell by the name! By using the equation below, TF-IDF shows how important a word is in a document in comparison to when used in another document. For instance, when we search for the word **entrepreneurship**, a document pertaining to Babson College will have a higher TF-IDF score for the word in comparison to a document about Olin College, because entrepreneurship is more relevant in the document for Babson!")
-    st.markdown(tf_idf_text, unsafe_allow_html=True)
+    st.latex(tf_idf_latex)
     st.write("Now, let's start the below section to explore TF-IDF!")
 
     try:
