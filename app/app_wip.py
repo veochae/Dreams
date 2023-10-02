@@ -838,7 +838,6 @@ def set_up_openai():
 ######################################################################################## 
 def sentiment_analysis():
     st.header("Sentiment Analysis")
-    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
     st.write("In recent days, companies ask for more detailed reviews about their products than ever before. Ever wondered why?")
     st.write("It's because using Sentiment Analysis, the companies can start to realize how the customers **feel** about their products!")
     st.write("In the earlier days of the sentiment analysis, it was quite simple. You would classify a piece of text as **positive**, **negative**, or **neutral**. We won't dive into too much detail about how that has been done, but if you are curious, checkout this [link](https://www.geeksforgeeks.org/python-sentiment-analysis-using-vader/)!")
@@ -848,7 +847,7 @@ def sentiment_analysis():
     st.write("So, without further explanation, let's see what kind of emotion the dream you have chosen shows!")
 
     with st.form("sentiment_analysis"):
-        st.info("Selected Dream:")
+        st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
         dream = st.session_state['semi']['text'][st.session_state['row_n']]
         st.write(dream)        
         submitted_sentiment = st.form_submit_button("Let's Begin!")   
@@ -856,8 +855,6 @@ def sentiment_analysis():
     if submitted_sentiment:
         try:
             openai.api_key = st.session_state['openai_key']
-
-
 
             try:     
                 summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
@@ -897,7 +894,13 @@ def sentiment_analysis():
 ######################################################################################## 
         
 def summary_continue():
-    st.title("Dream Summarization and Continuation Using GPT 3.5") 
+    st.title("Dream Summarization and Continuation") 
+    st.write("Now we are at the final stage and the most modern stage of NLP: **Generative Pre-trained Transformers** ")
+    st.write("You are probably most familiar with Chat GPT as it is rapidly utilized all over regardless of the industries!")
+    st.write("GPTs, most simply put, are neural networks that tries to emulate the human brain. Remember how neural networks work? It connects different nodes to resemble the human neurons and each of their interactions. Now, GPT 3.5 for instance, try to create 175 billion parameters. Although recreating a human brain would take trillions of parameters, GPT is yet the closest computer program that is closest to emulating the human brain.")
+    st.write("And as a byproduct of of the textual GPTs, there also is DALL-E, which is image generative AI. DALL·E is like a creative image generator with a touch of AI magic. It can take written descriptions and turn them into unique images. Imagine describing an idea in words, and DALL·E brings it to life as an artwork.")
+    st.write("Using the Chat GPT 3.5 Davinci and DALL-E, below we summarize, expand and visualize the dream that you have been observing throughout this app.")
+
     openai.api_key = st.session_state['openai_key']
     try:
         with st.form("asdf"):
