@@ -1017,7 +1017,7 @@ def summary_continue():
 
     if st.session_state['dream_submit']: 
         if len(dream) <= 280:
-            length = np.ceil(len(dream) * 0.6)
+            length = int(np.ceil(len(dream) * 0.6))
         else:
             length = 280     
         # try:     
