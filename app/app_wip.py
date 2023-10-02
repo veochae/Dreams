@@ -68,6 +68,10 @@ import torch
 ########################################################################################
 warnings.filterwarnings('ignore')
 
+##########profanity censor
+def apply_censor(text):
+    return profanity.censor(text)
+
 ##########en-core-sm preload
 @st.cache_resource
 def load_nlp():
@@ -237,7 +241,7 @@ def data_collection():
             my_bar.progress(40, "Dropping Empty Observations") 
             st.session_state['reddit'] = reddit.dropna()
 
-            reddit_data['text'] = reddit_data['text'].apply(profanity.censor)
+            reddit_data['text'] = reddit_data['text'].apply(apply_censor)
             # reddit['text'] = [profanity.censor(i) for i in reddit['text']]
 
             my_bar.progress(80, "Converting pandas dataframe to CSV")
