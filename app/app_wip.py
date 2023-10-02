@@ -333,7 +333,7 @@ def data_cleaning():
                     text = re.sub('https?://\S+|www\.\S+', '', text) #replace website urls
                     text = re.sub(r"@\S+", '', text) #replace anything that follows @
                     text = re.sub(r"#\S+", '', text) #replace anything that follows #
-                    text = re.sub(r"[0-9]", '', text) #replace numeric
+                    # text = re.sub(r"[0-9]", '', text) #replace numeric
                     text = re.sub(r"\n", '', text) #replace new line 
                     text = re.sub("\'m", ' am ', text) 
                     text = re.sub("\'re", ' are ', text) 
