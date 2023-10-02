@@ -265,19 +265,19 @@ def data_collection():
 ########################################################################################
 
 def data_cleaning():
-
-
     st.title("Data Manipulation")
-    st.write("With the raw dataset in hand, now we move on to the critical stage of analysis: Data Manipulation.")
-    st.write("In the dataframe that represents the dreams, each observations (row) represents a unique dream. In general, each unique observation in a collection of texts is referred to as a “document”, while collectively the documents are referred to as a “corpus” or a “text corpus”. With the raw corpus in hand, you are about to embark on an important process that is at the heart of NLP: Data Cleaning. So hold on tight and keep your eyes open – you are about to learn a host of useful tips and tricks.")
-    st.write("As one may be aware, different data types require various data cleaning processes. For instance, numeric values may require changing the data type to its correct state, normalization or standardization, and more. Further, categorical variables often need one-hot-encoding or categorical type transformation. In the case of text data, the cleaning process is quite arduous and has various tasks, which are stated below.")
-    st.write("**Basic Cleaning** : During this step the text is converted into lower (or upper) case and then stripped off of parts that the data scientist finds unimportant for the downstream NLP tasks. This finding of text within the text is often done using “Regex” which stands for “regular expression”! Regex allows finding of certain patterns that one wishes to identify (and often remove or replace) in a given text. Say the data scientist wishes to eliminate numbers, punctuation, URLs, abbreviations, etc. before moving on to analyzing the text. ")
-    st.write("**Tokenization** : Tokenization is the process of segmenting the text into smaller pieces – tokens. Those tokens are usually just unigrams – single words or equivalently the lemmatized or stemmed versions of words if lemmatization/stemming has been applied. To preserve context, text can instead be tokenized into pairs of neighboring words called bigrams. In general, depending on the situation, text can be tokenized into n-grams: collections of neighboring n words! ")
-    st.write("**Stopwords Removal** : In writing an English sentence, commonly repeated words such as articles and prepositions often can be eliminated without much loss of information when it comes to NLP. If left untouched, then when analyzing word frequency in text, it is inevitable for these connecting words to be the most prevalent. So, in order to analyze text more meaningfully and efficiently, those “stopwords” are often eliminated as part of cleaning. Notice also how stopword removal helps preserve computer memory, which can easily get out of hands if analyzing large volumes of text carelessly.")
-    st.write("**Lemmatization or Stemming** : The purpose of this step is the standardization of the different versions of the same word. For instance, let's say we have words: improve, improving, and improved. All three have the same root, but in a different tense. Therefore, if we try to analyze frequencies of the words in a text, each of the three will count as different words. To prevent this from happening, we can lemmatize or stem the words, to reduce them to a shorter, more standard form. Note that while lemmatization reduces each word to a shorter form (“lemma”), which still is a word in a dictionary, in stemming the resultant shorter version (“stem”) may not be a proper word. In the case of the three words here, those would revert to 'improve'. Again, take a moment to appreciate how making words shorter is going to aid preserve memory which in turn will speed up processing and compute time in downstream tasks. ")
-    st.write("Below, once the reader starts the cleaning process, the progress bar will show the different stages in which the data is being processed through. Then, for each of the cleaning steps above, with the reader's choice of dream, the reader will be able to see the direct changes made to the dreams!")
-    st.write("Have fun playing with the different data cleaning tasks below! You are about to get into something even more interesting once you are done with this.")
+
     try:
+        st.write("With the raw dataset in hand, now we move on to the critical stage of analysis: Data Manipulation.")
+        st.write("In the dataframe that represents the dreams, each observations (row) represents a unique dream. In general, each unique observation in a collection of texts is referred to as a “document”, while collectively the documents are referred to as a “corpus” or a “text corpus”. With the raw corpus in hand, you are about to embark on an important process that is at the heart of NLP: Data Cleaning. So hold on tight and keep your eyes open – you are about to learn a host of useful tips and tricks.")
+        st.write("As one may be aware, different data types require various data cleaning processes. For instance, numeric values may require changing the data type to its correct state, normalization or standardization, and more. Further, categorical variables often need one-hot-encoding or categorical type transformation. In the case of text data, the cleaning process is quite arduous and has various tasks, which are stated below.")
+        st.write("**Basic Cleaning** : During this step the text is converted into lower (or upper) case and then stripped off of parts that the data scientist finds unimportant for the downstream NLP tasks. This finding of text within the text is often done using “Regex” which stands for “regular expression”! Regex allows finding of certain patterns that one wishes to identify (and often remove or replace) in a given text. Say the data scientist wishes to eliminate numbers, punctuation, URLs, abbreviations, etc. before moving on to analyzing the text. ")
+        st.write("**Tokenization** : Tokenization is the process of segmenting the text into smaller pieces – tokens. Those tokens are usually just unigrams – single words or equivalently the lemmatized or stemmed versions of words if lemmatization/stemming has been applied. To preserve context, text can instead be tokenized into pairs of neighboring words called bigrams. In general, depending on the situation, text can be tokenized into n-grams: collections of neighboring n words! ")
+        st.write("**Stopwords Removal** : In writing an English sentence, commonly repeated words such as articles and prepositions often can be eliminated without much loss of information when it comes to NLP. If left untouched, then when analyzing word frequency in text, it is inevitable for these connecting words to be the most prevalent. So, in order to analyze text more meaningfully and efficiently, those “stopwords” are often eliminated as part of cleaning. Notice also how stopword removal helps preserve computer memory, which can easily get out of hands if analyzing large volumes of text carelessly.")
+        st.write("**Lemmatization or Stemming** : The purpose of this step is the standardization of the different versions of the same word. For instance, let's say we have words: improve, improving, and improved. All three have the same root, but in a different tense. Therefore, if we try to analyze frequencies of the words in a text, each of the three will count as different words. To prevent this from happening, we can lemmatize or stem the words, to reduce them to a shorter, more standard form. Note that while lemmatization reduces each word to a shorter form (“lemma”), which still is a word in a dictionary, in stemming the resultant shorter version (“stem”) may not be a proper word. In the case of the three words here, those would revert to 'improve'. Again, take a moment to appreciate how making words shorter is going to aid preserve memory which in turn will speed up processing and compute time in downstream tasks. ")
+        st.write("Below, once the reader starts the cleaning process, the progress bar will show the different stages in which the data is being processed through. Then, for each of the cleaning steps above, with the reader's choice of dream, the reader will be able to see the direct changes made to the dreams!")
+        st.write("Have fun playing with the different data cleaning tasks below! You are about to get into something even more interesting once you are done with this.")
+            
         result_dc = st.button("Click to Start Data Manipulation")
         stopword = nltk.corpus.stopwords.words('english')
 
@@ -540,15 +540,11 @@ def part_of_speech_tag():
     st.title("Part of Speech Tagging (POS)")
     try:
         st.info(f"Chosen Dream: Dream {st.session_state['row_n']}" ,icon="ℹ️")
-    except: pass   
-
-    nlp = load_nlp()
-    st.write("Part of Speech Tagging (POS) is a classification method, where each word in a sentence is given a particular part of speech depending on the position and context within the sentence structure. The method was first introduced as a measure to reduce the ambiguity of word implications in a sentence for machine translation purposes. In other words, POS Tagging allows for machines to recognize the way in which the word is utilized. For example, the word “run” in the two sentences:")
-    st.write("“I like to run” and “I went for a run”")
-    st.write("has two separate meanings. The former “run” is a verb that pertains to the action of running. The latter “run” pertains to the activity of running, a noun. However, in the sense of machine learning models, the two usages of “run” in both contexts are not distinguishable causing ambiguity.")
-    st.write("So there has to be a way for the machine to understand the different ways the same word is utilized in different contexts! Therefore we introduce the POS Tagging.")
-
-    try:
+        nlp = load_nlp()
+        st.write("Part of Speech Tagging (POS) is a classification method, where each word in a sentence is given a particular part of speech depending on the position and context within the sentence structure. The method was first introduced as a measure to reduce the ambiguity of word implications in a sentence for machine translation purposes. In other words, POS Tagging allows for machines to recognize the way in which the word is utilized. For example, the word “run” in the two sentences:")
+        st.write("“I like to run” and “I went for a run”")
+        st.write("has two separate meanings. The former “run” is a verb that pertains to the action of running. The latter “run” pertains to the activity of running, a noun. However, in the sense of machine learning models, the two usages of “run” in both contexts are not distinguishable causing ambiguity.")
+        st.write("So there has to be a way for the machine to understand the different ways the same word is utilized in different contexts! Therefore we introduce the POS Tagging.")        
         result = st.button("Click to Start POS Tagging")
         if result:
             complete_load = st.session_state['complete']
@@ -635,9 +631,9 @@ def part_of_speech_tag():
 
 def named_entity_recognition():
     st.header("Named Entity Recognition")
-    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}" ,icon="ℹ️")
-
+    
     try:
+        st.info(f"Chosen Dream: Dream {st.session_state['row_n']}" ,icon="ℹ️")
         if st.session_state['show']:
                 st.write("As the next step of translating human language to machine comprehensible context, we go through the named entity recognition. Well first, we have to know what Named Entity is! ")
                 st.write("Named Entities are words or collection of words that signify a particular subject in a given text. In essence, the particular subjects would entail names, locations, companies, products, monetary values, percentages, time, etc. The key difference from the POS Tagging to Named Entity Recognition is that it provides more context to the sentence the algorithm is trying to understand. ")
@@ -679,20 +675,19 @@ def tf_idf():
     text = r"""\text{Number of Words}: N \\ \text{Number of documents containing } w: n_x"""
     
     st.title("TF-IDF Analysis")
-    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")    
-    st.write("Ever wondered how LinkedIn scans your resume or how Google recommendation works?")
-    st.write("Certainly, there are many other advanced methods that take place in both of the tech giants' machine learning methods, but in their core, TF-IDF exists.")
-    st.write("TF-IDF stands for Term Frequency and Inverse Document Frequency, and it's a numerical representation used in NLP to understand the importance of words in a document or collection of documents. Let's break it down piece by piece to what TF and IDF each does:")
-    st.write("**Term Frequency (TF)**: Term Frequency in the simplest sense measures how often a word appears in a document. It takes the document, and counts how many times each word is appearing in the specific document. The mathematical representation used in this following app is as follows:")
-    st.latex(tf_latex)
-    st.write("**Inverse Document Frequency (IDF)**: Inverse Document Frequency, unlike the TF, takes all the documents in hand. Not specific to a singular document, but the entire set of documents you are trying to analyze. By providing this measure, we can see which words are less common throughout the documents. So in essence, IDF allows us to distinguish which words were rather specific to each document!")
-    st.latex(text)
-    st.latex(idf_latex)
-    st.write("**TF-IDF**: TF-IDF is the amalgamation of TF and IDF as you can tell by the name! By using the equation below, TF-IDF shows how important a word is in a document in comparison to when used in another document. For instance, when we search for the word **entrepreneurship**, a document pertaining to Babson College will have a higher TF-IDF score for the word in comparison to a document about Olin College, because entrepreneurship is more relevant in the document for Babson!")
-    st.latex(tf_idf_latex)
-    st.write("Now, let's start the below section to explore TF-IDF!")
-
     try:
+        st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")    
+        st.write("Ever wondered how LinkedIn scans your resume or how Google recommendation works?")
+        st.write("Certainly, there are many other advanced methods that take place in both of the tech giants' machine learning methods, but in their core, TF-IDF exists.")
+        st.write("TF-IDF stands for Term Frequency and Inverse Document Frequency, and it's a numerical representation used in NLP to understand the importance of words in a document or collection of documents. Let's break it down piece by piece to what TF and IDF each does:")
+        st.write("**Term Frequency (TF)**: Term Frequency in the simplest sense measures how often a word appears in a document. It takes the document, and counts how many times each word is appearing in the specific document. The mathematical representation used in this following app is as follows:")
+        st.latex(tf_latex)
+        st.write("**Inverse Document Frequency (IDF)**: Inverse Document Frequency, unlike the TF, takes all the documents in hand. Not specific to a singular document, but the entire set of documents you are trying to analyze. By providing this measure, we can see which words are less common throughout the documents. So in essence, IDF allows us to distinguish which words were rather specific to each document!")
+        st.latex(text)
+        st.latex(idf_latex)
+        st.write("**TF-IDF**: TF-IDF is the amalgamation of TF and IDF as you can tell by the name! By using the equation below, TF-IDF shows how important a word is in a document in comparison to when used in another document. For instance, when we search for the word **entrepreneurship**, a document pertaining to Babson College will have a higher TF-IDF score for the word in comparison to a document about Olin College, because entrepreneurship is more relevant in the document for Babson!")
+        st.latex(tf_idf_latex)
+        st.write("Now, let's start the below section to explore TF-IDF!")        
         with st.expander(f"Click Here to View the Selected Dream "):
             st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
 
@@ -858,7 +853,7 @@ def tf_idf():
 #############################       Setup for OpenAI      #################################
 ######################################################################################## 
 def set_up_openai():
-    st.header("Setting Up your Open AI API")
+    st.title("Setting Up your Open AI API")
     with st.form("open_ai_cred"):
         key_open = st.text_input("OpenAI API Key")
         submitted = st.form_submit_button("Submit")   
@@ -869,73 +864,78 @@ def set_up_openai():
 #############################       Sentiment Analysis      #################################
 ######################################################################################## 
 def sentiment_analysis():
-    st.header("Sentiment Analysis")
-    st.write("In recent days, companies ask for more detailed reviews about their products than ever before. Ever wondered why?")
-    st.write("It's because using Sentiment Analysis, the companies can start to realize how the customers **feel** about their products!")
-    st.write("In the earlier days of the sentiment analysis, it was quite simple. You would classify a piece of text as **positive**, **negative**, or **neutral**. We won't dive into too much detail about how that has been done, but if you are curious, checkout this [link](https://www.geeksforgeeks.org/python-sentiment-analysis-using-vader/)!")
-    st.write("Now, coming back to the modern days, the sentiment analysis have evolved into something more specific and granular: **Emotion Analysis**.")
-    st.write("Instead of just figuring out whether the customers' reactions were positive or negative, we start to look at multiple emotions such as: fear, joy, happiness, surprise, love, anger, sadness ,etc.")
-    st.write("The pretrained model that we use for the purpose of this exercise is from hugging face, using more than 100,000 tweets as its training data. Essentially, all of those tweets were tagged with different emotions. And the neural networks is trained to recognize different speech patterns and words that comprises the emotions that has been prelabelled. Now, having **learned** about human emotions over 100,000 text files, the model can start to predict what emotion the writer of the text is trying to show.")
-    st.write("So, without further explanation, let's see what kind of emotion the dream you have chosen shows!")
+    st.title("Sentiment Analysis")
+    try:
+        st.write("In recent days, companies ask for more detailed reviews about their products than ever before. Ever wondered why?")
+        st.write("It's because using Sentiment Analysis, the companies can start to realize how the customers **feel** about their products!")
+        st.write("In the earlier days of the sentiment analysis, it was quite simple. You would classify a piece of text as **positive**, **negative**, or **neutral**. We won't dive into too much detail about how that has been done, but if you are curious, checkout this [link](https://www.geeksforgeeks.org/python-sentiment-analysis-using-vader/)!")
+        st.write("Now, coming back to the modern days, the sentiment analysis have evolved into something more specific and granular: **Emotion Analysis**.")
+        st.write("Instead of just figuring out whether the customers' reactions were positive or negative, we start to look at multiple emotions such as: fear, joy, happiness, surprise, love, anger, sadness ,etc.")
+        st.write("The pretrained model that we use for the purpose of this exercise is from hugging face, using more than 100,000 tweets as its training data. Essentially, all of those tweets were tagged with different emotions. And the neural networks is trained to recognize different speech patterns and words that comprises the emotions that has been prelabelled. Now, having **learned** about human emotions over 100,000 text files, the model can start to predict what emotion the writer of the text is trying to show.")
+        st.write("So, without further explanation, let's see what kind of emotion the dream you have chosen shows!")
 
-    with st.form("sentiment_analysis"):
-        st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
-        with st.expander(f"Click Here to View the Selected Dream "):
-            dream = st.session_state['semi']['text'][st.session_state['row_n']]
-            st.write(dream)        
-        submitted_sentiment = st.form_submit_button("Let's Begin!")   
-    
-    if submitted_sentiment:
-        try:
-            openai.api_key = st.session_state['openai_key']
+        with st.form("sentiment_analysis"):
+            st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
+            with st.expander(f"Click Here to View the Selected Dream "):
+                dream = st.session_state['semi']['text'][st.session_state['row_n']]
+                st.write(dream)        
+            submitted_sentiment = st.form_submit_button("Let's Begin!")   
+        
+        if submitted_sentiment:
+            try:
+                openai.api_key = st.session_state['openai_key']
 
-            try:     
-                summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
+                try:     
+                    summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
+                except:
+                    st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
+
+                classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
+                prediction = classifier(summary)
+                emotion = [x['label'] for x in prediction[0]]
+                score = [y['score'] for y in prediction[0]]
+
+                st.session_state['emotion'] = emotion[score.index(np.max(score))]
+
+                fig10 = make_subplots(rows=1, cols=1)
+
+                fig10.add_trace(go.Bar(x = emotion,
+                                        y = score,
+                                        name = f"Dream {st.session_state['row_n']}"))
+
+                fig10.update_layout(
+                                    title="Sentiment Classification Results",
+                                    xaxis_title="Criteria",
+                                    yaxis_title="Sentiment Scores",
+                                    legend_title="Dreams"
+                                    # font=dict(
+                                    #     family="Courier New, monospace",
+                                    #     size=18,
+                                    #     color="RebeccaPurple"
+                                    # )
+                                )    
+
+                st.plotly_chart(fig10,theme="streamlit", use_container_width=True) 
             except:
-                st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
-
-            classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
-            prediction = classifier(summary)
-            emotion = [x['label'] for x in prediction[0]]
-            score = [y['score'] for y in prediction[0]]
-
-            st.session_state['emotion'] = emotion[score.index(np.max(score))]
-
-            fig10 = make_subplots(rows=1, cols=1)
-
-            fig10.add_trace(go.Bar(x = emotion,
-                                    y = score,
-                                    name = f"Dream {st.session_state['row_n']}"))
-
-            fig10.update_layout(
-                                title="Sentiment Classification Results",
-                                xaxis_title="Criteria",
-                                yaxis_title="Sentiment Scores",
-                                legend_title="Dreams"
-                                # font=dict(
-                                #     family="Courier New, monospace",
-                                #     size=18,
-                                #     color="RebeccaPurple"
-                                # )
-                            )    
-
-            st.plotly_chart(fig10,theme="streamlit", use_container_width=True) 
-        except:
-            st.warning("Please Complete the Previous Step Before Moving On")
+                st.warning("Either OpenAI Key is incorrect or you have chosen inappropriate dream")
+    except:
+        st.warning("Please Complete the Previous Step Before Moving On")
 ########################################################################################
 #############################       Dream Summarization + Continuation      #################################
 ######################################################################################## 
         
 def summary_continue():
     st.title("Dreams with GPT") 
-    st.write("Now we are at the final stage and the most modern stage of NLP: **Generative Pre-trained Transformers** ")
-    st.write("You are probably most familiar with Chat GPT as it is rapidly utilized all over regardless of the industries!")
-    st.write("GPTs, most simply put, are neural networks that tries to emulate the human brain. Remember how neural networks work? It connects different nodes to resemble the human neurons and each of their interactions. Now, GPT 3.5 for instance, try to create 175 billion parameters. Although recreating a human brain would take trillions of parameters, GPT is yet the closest computer program that is closest to emulating the human brain.")
-    st.write("And as a byproduct of of the textual GPTs, there also is DALL-E, which is image generative AI. DALL·E is like a creative image generator with a touch of AI magic. It can take written descriptions and turn them into unique images. Imagine describing an idea in words, and DALL·E brings it to life as an artwork.")
-    st.write("Using the Chat GPT 3.5 Davinci and DALL-E, below we summarize, expand and visualize the dream that you have been observing throughout this app.")
 
-    openai.api_key = st.session_state['openai_key']
     try:
+        st.write("Now we are at the final stage and the most modern stage of NLP: **Generative Pre-trained Transformers** ")
+        st.write("You are probably most familiar with Chat GPT as it is rapidly utilized all over regardless of the industries!")
+        st.write("GPTs, most simply put, are neural networks that tries to emulate the human brain. Remember how neural networks work? It connects different nodes to resemble the human neurons and each of their interactions. Now, GPT 3.5 for instance, try to create 175 billion parameters. Although recreating a human brain would take trillions of parameters, GPT is yet the closest computer program that is closest to emulating the human brain.")
+        st.write("And as a byproduct of of the textual GPTs, there also is DALL-E, which is image generative AI. DALL·E is like a creative image generator with a touch of AI magic. It can take written descriptions and turn them into unique images. Imagine describing an idea in words, and DALL·E brings it to life as an artwork.")
+        st.write("Using the Chat GPT 3.5 Davinci and DALL-E, below we summarize, expand and visualize the dream that you have been observing throughout this app.")
+
+        openai.api_key = st.session_state['openai_key']    
+
         with st.form("asdf"):
             st.header("Original Text")
             try:
@@ -999,47 +999,49 @@ def summary_continue():
 def data_download():
     st.title("Download Datasets")
 
-    titles = ['clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete']
-    
-    col1,col2,col3,col4,col5,col6,col7 = st.columns([1,1,1,1,1,1,1])
-
-    for k,context in enumerate(titles):
-        if k <= 4:
-            x = pd.DataFrame({'title': pd.DataFrame(st.session_state['semi'])['title'],
-                context: st.session_state[context]}).reset_index()
-            # x = x.drop("index", axis =1)
-
-            vars()[f'{context}_csv'] = convert_df(x)
-
-            with vars()[f'col{k+1}']:
-                st.download_button(
-                f"{context}",
-                vars()[f'{context}_csv'],
-                f"{context}.csv",
-                "text/csv",
-                key=f'download-csv-{k+1}'
-        )
-        else: pass
-
-    with col6:
-        corpus_csv = convert_df(st.session_state['corpus'])
-
-        st.download_button(
-        "corpus",
-        corpus_csv,
-        "corpus.csv",
-        "text/csv",
-        key=f'download-csv-7'
-)        
+    try:
+        titles = ['clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete']
         
-    with col7:
-        st.download_button(
-        "semi_cleaned",
-        convert_df(st.session_state['semi']),
-        "semi_cleaned.csv",
-        "text/csv",
-        key=f'download-csv-8'
-)
+        col1,col2,col3,col4,col5,col6,col7 = st.columns([1,1,1,1,1,1,1])
+
+        for k,context in enumerate(titles):
+            if k <= 4:
+                x = pd.DataFrame({'title': pd.DataFrame(st.session_state['semi'])['title'],
+                    context: st.session_state[context]}).reset_index()
+                # x = x.drop("index", axis =1)
+
+                vars()[f'{context}_csv'] = convert_df(x)
+
+                with vars()[f'col{k+1}']:
+                    st.download_button(
+                    f"{context}",
+                    vars()[f'{context}_csv'],
+                    f"{context}.csv",
+                    "text/csv",
+                    key=f'download-csv-{k+1}'
+            )
+            else: pass
+
+        with col6:
+            corpus_csv = convert_df(st.session_state['corpus'])
+
+            st.download_button(
+            "corpus",
+            corpus_csv,
+            "corpus.csv",
+            "text/csv",
+            key=f'download-csv-7'
+    )        
+            
+        with col7:
+            st.download_button(
+            "semi_cleaned",
+            convert_df(st.session_state['semi']),
+            "semi_cleaned.csv",
+            "text/csv",
+            key=f'download-csv-8'
+    )
+    except: st.warning("You must complete the Data Cleaning Process to View the Page")
 
 ########################################################################################
 #############################       sidebar  page      #################################
