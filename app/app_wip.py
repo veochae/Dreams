@@ -79,13 +79,14 @@ def multiprocessing_function(text_data):
     progress_bar = st.progress(0, text="Start of Data Filtering")
     try:
         with multiprocessing.Pool(processes=4) as pool:
-            res = pool.starmap(task, enumerate(text_data)) 
-            total_tasks = len(text_data)
+            res = []
 
-            for i, result in enumerate(res):
+            for i, result in enumerate(pool.imap_unordered(task, text_data)):
                 # Update the progress bar as tasks are completed
-                progress_percent = (i + 1) / total_tasks
-                progress_bar.progress(progress_percent)   
+                progress_percent = (i + 1) / len(text_data)
+                progress_bar.progress(progress_percent)
+
+                res.append((i, result)) 
 
         res.sort(key=lambda x: x[0])
         final_results = [result[1] for result in res]
