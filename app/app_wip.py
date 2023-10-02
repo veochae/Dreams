@@ -154,7 +154,17 @@ def summarize_dream(prompt, length):
 
 def introduction():
     st.title("Analyzing Dreams using NLP")
-    st.image("./Dream.jpeg")
+    col1, col2, col3 = st.beta_columns([1,6,1])
+
+    with col1:
+        st.write("")
+
+    with col2:
+        st.image("./Dream.jpeg")
+
+    with col3:
+        st.write("")
+
 
 ########################################################################################
 #############################       data collection page      ##########################
