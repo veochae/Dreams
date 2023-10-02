@@ -630,7 +630,7 @@ def part_of_speech_tag():
 ########################################################################################
 
 def named_entity_recognition():
-    st.header("Named Entity Recognition")
+    st.title("Named Entity Recognition")
     
     try:
         st.info(f"Chosen Dream: Dream {st.session_state['row_n']}" ,icon="ℹ️")
