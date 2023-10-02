@@ -625,7 +625,7 @@ def part_of_speech_tag():
             df = st.session_state['semi']
 
             with st.container():
-                temp = df['text'][st.session_state['row_n'][0]]
+                temp = df['text'][st.session_state['row_n']][0]
                 model = "en_core_web_sm"
 
                 st.title("POS Taggging and NER Visualization")
