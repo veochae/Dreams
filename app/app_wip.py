@@ -81,6 +81,7 @@ def wordcloud(x, lim):
     plt.imshow(cloud, interpolation='bilinear')
     plt.axis("off")
     plt.show()
+    st.pyplot()
 
 ###################### dataframe to csv conversion
 def convert_df(df):
