@@ -153,7 +153,18 @@ def summarize_dream(prompt, length):
 ########################################################################################
 
 def introduction():
-    st.title("Analyzing Dreams using NLP")
+    
+    col4, col5, col6 = st.columns([1,6,1])
+
+    with col4:
+        st.write("")
+
+    with col5:
+        st.title("Analyzing Dreams using NLP")
+
+    with col6:
+        st.write("")
+
     col1, col2, col3 = st.columns([1,6,1])
 
     with col1:
