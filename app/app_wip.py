@@ -926,11 +926,13 @@ def tf_idf():
 
                         col1,col2 = st.columns(2)
                         with col1:
-                            st.subheader(f"Dream 1: Dream {st.session_state['row_n']}")
-                            st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")                        
+                            with st.expander:
+                                st.subheader(f"Dream 1: Dream {st.session_state['row_n']}")
+                                st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")                        
                         with col2:
-                            st.subheader(f"Dream 2: Dream {st.session_state['row_n_2']}")
-                            st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n_2']]}""")
+                            with st.expander:
+                                st.subheader(f"Dream 2: Dream {st.session_state['row_n_2']}")
+                                st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n_2']]}""")
                         
                         st.info("Next click on the next tab on the left to move on to the Dream Summarization and Continuation Section!" ,icon="ℹ️")
                     except:
