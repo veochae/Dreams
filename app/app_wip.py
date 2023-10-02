@@ -303,7 +303,16 @@ def data_cleaning():
                 
                 df, semi = preprocess(st.session_state['reddit'])
 
-                st.dataframe(semi)
+                st.session_state['keyword'] = st.text_input("Type in Keyword you would like to see in the Dream")
+                filtered = df[df['text'].str.contains(st.session_state['keyword'])]
+                
+                if "keyword" in st.session_state.keys():
+                    st.dataframe(filtered)
+                    st.session_state['filtered'] = filtered
+                    
+                else:
+                    st.dataframe(df)
+
                 st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
                 
                 def clean(text):
@@ -593,12 +602,12 @@ def part_of_speech_tag():
                         labels = dict(x = "Part of Speech", y = 'Count'),
                         title = "Count of Part of Speech in the Entire Corpus") 
 
-            fig6.update_layout(yaxis={'categoryorder':'total ascending'})   
+            fig6.update_layout(xaxis={'categoryorder':'total ascending'})   
                 
             st.plotly_chart(fig6,theme="streamlit", use_container_width=True)    
 
         with st.container():
-            st.info("Next with the full list of POS Tags throughout all the Dreams that we have collected, we plot a barplot to see which Tags were heavily uitilized in the Dreams. As one can see from the barplot, Nouns were mostly utilized since Dreams have objects that have to be described in detail. Then, Adverbs and different tenses of verbs were heavily utilized in describing the Dreamers' actions during the dream.")
+            st.write("Next with the full list of POS Tags throughout all the Dreams that we have collected, we plot a barplot to see which Tags were heavily uitilized in the Dreams. As one can see from the barplot, Nouns were mostly utilized since Dreams have objects that have to be described in detail. Then, Adverbs and different tenses of verbs were heavily utilized in describing the Dreamers' actions during the dream.")
             barplot(tag_df['tag'])
 
     # except:
@@ -614,18 +623,6 @@ def part_of_speech_tag():
                 st.write("As such, POS tagging not only helps machines understand the individual usage of singular words, but also provides an even more powerful tool when used on an aggregated level!")
             
                 df = st.session_state['semi']
-
-                st.session_state['keyword'] = st.text_input("Type in Keyword you would like to see in the Dream")
-                filtered = df[df['text'].str.contains(st.session_state['keyword'])]
-                
-                if "keyword" in st.session_state.keys():
-                    st.dataframe(filtered)
-                    st.session_state['filtered'] = filtered
-                    
-                else:
-                    st.dataframe(df)
-
-                st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
 
                 with st.container():
                     temp = df['text'][st.session_state['row_n'][0]]
