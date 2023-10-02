@@ -538,9 +538,9 @@ def data_cleaning():
 
 def part_of_speech_tag():
     st.title("Part of Speech Tagging (POS)")
-    if isinstance(st.session_state['row_n'],str):
+    try:
         st.info(f"Chosen Dream: Dream {st.session_state['row_n']}" ,icon="ℹ️")
-    else: pass   
+    except: pass   
 
     nlp = load_nlp()
     st.write("Part of Speech Tagging (POS) is a classification method, where each word in a sentence is given a particular part of speech depending on the position and context within the sentence structure. The method was first introduced as a measure to reduce the ambiguity of word implications in a sentence for machine translation purposes. In other words, POS Tagging allows for machines to recognize the way in which the word is utilized. For example, the word “run” in the two sentences:")
