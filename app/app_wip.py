@@ -76,7 +76,7 @@ def task(index , xx):
 
 @st.cache_data
 def multiprocessing_function(text_data):
-    st.info("**Data Filtering in Progress**: This Process might take about 2-3 Minutes!")
+    st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
         with multiprocessing.Pool(processes=4) as pool:
             res = pool.starmap(task, enumerate(text_data)) 
@@ -159,7 +159,11 @@ def reddit_data(time_wanted, headers):
                 time1 = time.time()
                 df.text = multiprocessing_function(df.text)
                 time2 = time.time()
-                st.success(f'Data Filtering Complete! (time consumed: {round((time2-time1)/60,2)} minutes)')
+                col33, col44 = st.columns([3,2])
+                with col33:
+                    st.success(f'**Data Filtering Complete!**')
+                with col44:
+                    st.success(f'**time consumed**: {round((time2-time1)/60,2)} minutes)')
                 return df, res.json()['data']['children'][1]
 
     else: 
@@ -274,7 +278,7 @@ def data_collection():
 
             # reddit_data['text'] = reddit_data['text'].apply(apply_censor)
             # reddit['text'] = [profanity.censor(i) for i in reddit['text']]
-
+            time.sleep(3)
             my_bar.progress(80, "Converting pandas dataframe to CSV")
 
             time.sleep(3)
