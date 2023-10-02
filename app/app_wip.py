@@ -46,22 +46,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 # import matplotlib.pyplot as plt
 # from wordcloud import WordCloud,STOPWORDS
 
-
-
 #plotly
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import plotly.express as px
-
-#gensim
-# import gensim
-# from gensim.utils import simple_preprocess
-# import gensim.corpora as corpora
-# from gensim.models.coherencemodel import CoherenceModel
-
-#ldavis
-# import pyLDAvis.gensim
-# import pyLDAvis
 
 #other pacakges
 from better_profanity import profanity
@@ -76,7 +64,7 @@ import openai
 import torchvision
 import torch
 ########################################################################################
-#############################       required functions     #############################
+#############################       required UDFs     #############################
 ########################################################################################
 warnings.filterwarnings('ignore')
 
@@ -501,39 +489,7 @@ def data_cleaning():
 
                             
 
-                extract_array_sample(st.session_state['row_n'])
-                # st.write("Preview of the Different Cleaned Datasets")
-                # radio = st.radio("Choose the Table you would like to see",
-                #             ('clean_text', 'tokenized', 'x_stopwords', 'lemmatized', 'complete', 'corpus', 'semi'),
-                #             horizontal=True)
-                
-                # if radio == "clean_text":
-                #     st.write("From the intial text cleaning, the readers will see that all punctuations are eliminated and all words were transformed to lower case. This is becasue we are trying to segment the sentence by words. For instance, 'hello', 'hello.', and 'Hello' will be recognized as two different words in the eyes of python. Thus, to prevent this from happening, the data has been transformed with the measures mentioned above.")
-                #     st.dataframe(clean_text.head(20))
-                
-                # elif radio == "tokenized":
-                #     st.write("From the tokenization, one will observe that the sentences are now 'tokenized' by each word.")
-                #     st.dataframe(pd.DataFrame(st.session_state['tokenized']).head(20))
-
-                # elif radio == "x_stopwords":
-                #     st.write("In comparison to the tokenized version of the data, the readers will see that all the prepositions, conjunctions and various connecting words have been eliminated.")
-                #     st.dataframe(x_stopwords.head(20))
-
-                # elif radio == "lemmatized":
-                #     st.write("From the lemmatized dataset in comparison to the x_stopwords dataset, the reader will observe that the words have been reverted back to its original root states.")
-                #     st.dataframe(lemmatized.head(20))
-
-                # elif radio == "complete":
-                #     st.write("The below is the completed dataset after the cleaning process. In contrary to the lemmatized version, now each row is back to a sentence format rather than tokenized. ")
-                #     st.dataframe(complete.head(20))
-
-                # elif radio == "corpus":
-                #     st.write("The corpus below shows how many times a word appears in each sentence (row). Because there are about 1000 dreams, it is inherent that not all words would be in a sentence, thus showing a lot of zero values.")
-                #     st.dataframe(corpus.head(20))
-
-                # elif radio == "semi":
-                #     st.write("The Semi Dataset is for the purpose of the analysis. Because shorter length dreams are often harder to extract information due to the lack of it, we eliminated the dreams that are in the low 5 percentile.")
-                #     st.dataframe(semi.head(20))        
+                extract_array_sample(st.session_state['row_n'])  
         except:
             st.warning("Please Complete the Previous Stage Before Moving On")
 
@@ -679,106 +635,25 @@ def named_entity_recognition():
     except:
             st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
 
-########################################################################################
-#############################       lda  page      #################################
-########################################################################################
-
-# def lda():
-#     st.title("Latency Discriminant Analysis")
-
-
-#     token = st.session_state['lemmatized']   
-#     #put the lemmatized dreams into list
-#     tokenized = [li for li in token]
-
-#     # Create Dictionary
-#     id2word = corpora.Dictionary(tokenized)
-
-#     # Create Corpus
-#     texts = tokenized
-
-#     # Term Document Frequency
-#     corpus = [id2word.doc2bow(text) for text in texts]     
-
-#     st.write("Calculating the Optimal Number of Topics for LDA model")
-#     try:
-#         maximum = int(st.text_input("Choose Maximum Number of Topics of Observance"))
-
-#         @st.cache_data
-#         def coherence_tuning(max_topics):
-#             # number of topics
-#             coherence = []
-#             my_bar = st.progress(0, "Start of Coherence Measurement")
-#             time.sleep(3)
-
-#             for topic in range(3,max_topics+1):
-#                 # Build LDA model
-#                 lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
-#                                                             id2word=id2word,
-#                                                             num_topics=topic, 
-#                                                             random_state=100,
-#                                                             update_every=1,
-#                                                             chunksize=10,
-#                                                             passes=2,
-#                                                             alpha='auto',
-#                                                             per_word_topics=True)
-
-#                 cm = gensim.models.coherencemodel.CoherenceModel(
-#                                                                 model=lda_model, 
-#                                                                 corpus = corpus, 
-#                                                                 coherence='u_mass')  
-                
-#                 coherence.append(cm.get_coherence())
-#                 my_bar.progress((1/(max_topics - 2))*(topic-2) ,f"Model with Topic Count {topic} complete")
-#                 time.sleep(1)
-
-            
-
-#             fig = px.line(x=range(3,max_topics+1), 
-#                             y=coherence, 
-#                             title='Coherence Measure for Each Number of Topic',
-#                             labels = dict(x = "Topic Count", y = 'U-Mass Coherence Measure'))
-#             st.plotly_chart(fig,theme="streamlit", use_container_width=True)  
-
-#             return min(coherence), coherence.index(min(coherence))
-
-#         minimum, min_indx = coherence_tuning(maximum)
-
-#         st.write(f"The best model with the lowest U-MASS Coherence Measure of {round(minimum,3)} is {3+min_indx} Topics")
-
-#         visual_top = int(st.text_input("Choose the Final Number of Topics for Visualization"))
-
-#         lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
-#                                             id2word=id2word,
-#                                             num_topics=visual_top, 
-#                                             random_state=100,
-#                                             update_every=1,
-#                                             chunksize=10,
-#                                             passes=2,
-#                                             alpha='auto',                                                
-#                                             per_word_topics=True)
-
-#         # pyLDAvis.enable_notebook()
-#         vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word,  mds='mmds')
-
-#         pyLDAvis.save_html(vis, 'lda.html')
-
-#         st.title("LDA Model Visualization")
-#         from streamlit import components
-#         with open('./lda.html', 'r') as f:
-#             html_string = f.read()
-#         components.v1.html(html_string, width=1700, height=1000, scrolling=True)
-    
-#     except:
-#         print("Input a Valid Number for Number of Topics")
-
-
 
 ########################################################################################
 #############################       TF-IDF  page      ##################################
 ########################################################################################
 def tf_idf():
     st.title("TF-IDF Analysis")
+    st.write("Ever wondered how LinkedIn scans your resume or how Google recommendation works?")
+    st.write("Certainly, there are many other advanced methods that take place in both of the tech giants' machine learning methods, but in their core, TF-IDF exists.")
+    st.write("TF-IDF stands for Term Frequency and Inverse Document Frequency, and it's a numerical representation used in NLP to understand the importance of words in a document or collection of documents. Let's break it down piece by piece to what TF and IDF each does:")
+    st.write("**Term Frequency (TF)** Term Frequency in the simplest sense measures how often a word appears in a document. It takes the document, and counts how many times each word is appearing in the specific document. The mathematical representation used in this following app is as follows:")
+    st.latex("\text{TF}(\text{word}: w,\text{document}: d) = \frac{\text{Count of } w \text{ in } d}{\text{Total number of words in } d}")
+    st.write("**Inverse Document Frequency (IDF)**: Inverse Document Frequency, unlike the TF, takes all the documents in hand. Not specific to a singular document, but the entire set of documents you are trying to analyze. By providing this measure, we can see which words are less common throughout the documents. So in essence, IDF allows us to distinguish which words were rather specific to each document!")
+    st.latex("""\text{Number} \text{of} \text{Words}: N \\
+             \text{Number} \text{of} \text{documents} \text{containing} \text{w}: n_w """)
+    st.latex("""\text{IDF}(\text{word}: w) = \log\left(\frac{N}{n_w}\right)""")
+    st.write("**TF-IDF**: TF-IDF is the amalgamation of TF and IDF as you can tell by the name! By using the equation below, TF-IDF shows how important a word is in a document in comparison to when used in another document. For instance, when we search for the word **entrepreneurship**, a document pertaining to Babson College will have a higher TF-IDF score for the word in comparison to a document about Olin College, because entrepreneurship is more relevant in the document for Babson!")
+    st.latex("\text{TF-IDF}(w, d) = \text{TF}(w, d) \times \text{IDF}(w)")
+    st.write("Now, let's start the below section to explore TF-IDF!")
+
     try:
         st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
         st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
@@ -918,9 +793,9 @@ def tf_idf():
                         st.dataframe(pd.DataFrame(st.session_state['filtered']))
                     except:
                         st.dataframe(pd.DataFrame(st.session_state['semi']))
-                    st.info("Second Dream Index:" ,icon="ℹ️")
+                    st.info("Choose another dream that you would like to examine" ,icon="ℹ️")
                     try:
-                        st.session_state['row_n_2'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))
+                        st.session_state['row_n_2'] = int(st.text_input("Second Dream Index:"))
                         
                         barplot_2(tf_idf_df = tf_idf_df, number_of_words = 10)
 
@@ -1003,62 +878,61 @@ def sentiment_analysis():
 def summary_continue():
     st.title("Dream Summarization and Continuation Using GPT 3.5") 
     openai.api_key = st.session_state['openai_key']
-    # try:
-    with st.form("asdf"):
-        st.header("Original Text")
-        try:
-            dream = st.session_state['semi']['text'][st.session_state['row_n']]
-            st.write(dream)
-        except:
-            pass
-        dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
-        if dream_submit:
-            st.session_state['dream_submit'] = True
+    try:
+        with st.form("asdf"):
+            st.header("Original Text")
+            try:
+                dream = st.session_state['semi']['text'][st.session_state['row_n']]
+                st.write(dream)
+            except:
+                pass
+            dream_submit = st.form_submit_button("Proceed to Summarization and Continuation") 
+            if dream_submit:
+                st.session_state['dream_submit'] = True
 
-    if st.session_state['dream_submit']: 
-        if len(dream) <= 280:
-            length = int(np.ceil(len(dream) * 0.3))
-        else:
-            length = 280     
-        # try:     
-        summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
-        # except:
-            # st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
-        continuation = summarize_dream("Tell me what happens after this story in the first person point of view: \n" + dream, length = 280)
+        if st.session_state['dream_submit']: 
+            if len(dream) <= 280:
+                length = int(np.ceil(len(dream) * 0.3))
+            else:
+                length = 280     
+            # try:     
+            summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
+            # except:
+                # st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
+            continuation = summarize_dream("Tell me what happens after this story in the first person point of view: \n" + dream, length = 280)
 
-        st.header("Dream Summary")
-        st.write(summary)
+            st.header("Dream Summary")
+            st.write(summary)
 
-        st.header("Dream Continuation")
-        st.write(continuation)
+            st.header("Dream Continuation")
+            st.write(continuation)
 
-        st.header("Dream Visualization")
+            st.header("Dream Visualization")
 
-        continued = False
-        st.session_state['artist'] = st.selectbox(
-            "What artist would you like to emulate?",
-            ("Salvador Dali", "Edvard Munch", "Gustav Klimt", "Vincent Van Gogh", "Edward Hopper"),
-            index = 0,
-            placeholder = "Please select an artist")
+            continued = False
+            st.session_state['artist'] = st.selectbox(
+                "What artist would you like to emulate?",
+                ("Salvador Dali", "Edvard Munch", "Gustav Klimt", "Vincent Van Gogh", "Edward Hopper"),
+                index = 0,
+                placeholder = "Please select an artist")
 
-        if isinstance(st.session_state['artist'],str):
-            continued = True
-        
-        if continued:
-            dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE: \n"+dream, length = 100)
-            st.write(dalle)
-            time.sleep(30)
-            response = openai.Image.create(
-                        prompt=f"Produce a painting in the style of '{st.session_state['artist']}' resembling '{st.session_state['emotion']}' about the following scenario '{dalle}'",
-                        n=1,
-                        size="1024x1024")
+            if isinstance(st.session_state['artist'],str):
+                continued = True
             
-            st.image(response['data'][0]['url'])
-            dream_submit = False
-        else:
-            st.warning("Please select an artist")
-    # except: 
-    #     st.warning("Please Complete the Previous Step Before Moving On")
+            if continued:
+                dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE: \n"+dream, length = 100)
+                time.sleep(5)
+                response = openai.Image.create(
+                            prompt=f"Produce a painting in the style of '{st.session_state['artist']}' resembling '{st.session_state['emotion']}' about the following scenario '{dalle}'",
+                            n=1,
+                            size="1024x1024")
+                
+                st.image(response['data'][0]['url'])
+                dream_submit = False
+            else:
+                st.warning("Please select an artist")
+    except: 
+        st.warning("Please Complete the Previous Step Before Moving On")
 
 ########################################################################################
 #############################       Data Download      #################################
@@ -1128,3 +1002,108 @@ page_names_to_funcs = {
 
 demo_name = st.sidebar.selectbox("Please Select a Page", page_names_to_funcs.keys())
 page_names_to_funcs[demo_name]()
+
+
+########################################################################################
+#############################       lda  page      #################################
+########################################################################################
+
+# def lda():
+#gensim
+# import gensim
+# from gensim.utils import simple_preprocess
+# import gensim.corpora as corpora
+# from gensim.models.coherencemodel import CoherenceModel
+
+#ldavis
+# import pyLDAvis.gensim
+# import pyLDAvis
+#     st.title("Latency Discriminant Analysis")
+
+
+#     token = st.session_state['lemmatized']   
+#     #put the lemmatized dreams into list
+#     tokenized = [li for li in token]
+
+#     # Create Dictionary
+#     id2word = corpora.Dictionary(tokenized)
+
+#     # Create Corpus
+#     texts = tokenized
+
+#     # Term Document Frequency
+#     corpus = [id2word.doc2bow(text) for text in texts]     
+
+#     st.write("Calculating the Optimal Number of Topics for LDA model")
+#     try:
+#         maximum = int(st.text_input("Choose Maximum Number of Topics of Observance"))
+
+#         @st.cache_data
+#         def coherence_tuning(max_topics):
+#             # number of topics
+#             coherence = []
+#             my_bar = st.progress(0, "Start of Coherence Measurement")
+#             time.sleep(3)
+
+#             for topic in range(3,max_topics+1):
+#                 # Build LDA model
+#                 lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
+#                                                             id2word=id2word,
+#                                                             num_topics=topic, 
+#                                                             random_state=100,
+#                                                             update_every=1,
+#                                                             chunksize=10,
+#                                                             passes=2,
+#                                                             alpha='auto',
+#                                                             per_word_topics=True)
+
+#                 cm = gensim.models.coherencemodel.CoherenceModel(
+#                                                                 model=lda_model, 
+#                                                                 corpus = corpus, 
+#                                                                 coherence='u_mass')  
+                
+#                 coherence.append(cm.get_coherence())
+#                 my_bar.progress((1/(max_topics - 2))*(topic-2) ,f"Model with Topic Count {topic} complete")
+#                 time.sleep(1)
+
+            
+
+#             fig = px.line(x=range(3,max_topics+1), 
+#                             y=coherence, 
+#                             title='Coherence Measure for Each Number of Topic',
+#                             labels = dict(x = "Topic Count", y = 'U-Mass Coherence Measure'))
+#             st.plotly_chart(fig,theme="streamlit", use_container_width=True)  
+
+#             return min(coherence), coherence.index(min(coherence))
+
+#         minimum, min_indx = coherence_tuning(maximum)
+
+#         st.write(f"The best model with the lowest U-MASS Coherence Measure of {round(minimum,3)} is {3+min_indx} Topics")
+
+#         visual_top = int(st.text_input("Choose the Final Number of Topics for Visualization"))
+
+#         lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
+#                                             id2word=id2word,
+#                                             num_topics=visual_top, 
+#                                             random_state=100,
+#                                             update_every=1,
+#                                             chunksize=10,
+#                                             passes=2,
+#                                             alpha='auto',                                                
+#                                             per_word_topics=True)
+
+#         # pyLDAvis.enable_notebook()
+#         vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word,  mds='mmds')
+
+#         pyLDAvis.save_html(vis, 'lda.html')
+
+#         st.title("LDA Model Visualization")
+#         from streamlit import components
+#         with open('./lda.html', 'r') as f:
+#             html_string = f.read()
+#         components.v1.html(html_string, width=1700, height=1000, scrolling=True)
+    
+#     except:
+#         print("Input a Valid Number for Number of Topics")
+
+
