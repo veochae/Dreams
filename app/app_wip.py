@@ -640,10 +640,12 @@ def named_entity_recognition():
 #############################       TF-IDF  page      ##################################
 ########################################################################################
 def tf_idf():
+    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
+
     tf_latex = r'\text{TF}(w, d) = \frac{\text{Count of } w \text{ in } d}{\text{Total number of words in } d}'
     idf_latex = r'\text{IDF}(w) = \log\left(\frac{N}{n_w}\right)'
     tf_idf_latex = r'\text{TF-IDF}(w, d) = \text{TF}(w, d) \times \text{IDF}(w)'
-    text = r"""\text{Number of Words}: (N) \\ \text{Number of documents containing} w: n_x"""
+    text = r"""\text{Number of Words}: (N) \\ \text{Number of documents containing } w: n_x"""
     
     st.title("TF-IDF Analysis")
     st.write("Ever wondered how LinkedIn scans your resume or how Google recommendation works?")
@@ -659,7 +661,7 @@ def tf_idf():
     st.write("Now, let's start the below section to explore TF-IDF!")
 
     try:
-        st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
+        st.info("Selected Dream:")
         st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
 
         result_ti = st.button("Click Here to start TF-IDF")
@@ -835,46 +837,61 @@ def set_up_openai():
 #############################       Sentiment Analysis      #################################
 ######################################################################################## 
 def sentiment_analysis():
-    try:
-        st.header("Sentiment Analysis")
-        openai.api_key = st.session_state['openai_key']
+    st.header("Sentiment Analysis")
+    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
+    st.write("In recent days, companies ask for more detailed reviews about their products than ever before. Ever wondered why?")
+    st.write("It's because using Sentiment Analysis, the companies can start to realize how the customers **feel** about their products!")
+    st.write("In the earlier days of the sentiment analysis, it was quite simple. You would classify a piece of text as **positive**, **negative**, or **neutral**. We won't dive into too much detail about how that has been done, but if you are curious, checkout this [link](https://www.geeksforgeeks.org/python-sentiment-analysis-using-vader/)!")
+    st.write("Now, coming back to the modern days, the sentiment analysis have evolved into something more specific and granular: **Emotion Analysis**.")
+    st.write("Instead of just figuring out whether the customers' reactions were positive or negative, we start to look at multiple emotions such as: fear, joy, happiness, surprise, love, anger, sadness ,etc.")
+    st.write("The pretrained model that we use for the purpose of this exercise is from hugging face, using more than 100,000 tweets as its training data. Essentially, all of those tweets were tagged with different emotions. And the neural networks is trained to recognize different speech patterns and words that comprises the emotions that has been prelabelled. Now, having **learned** about human emotions over 100,000 text files, the model can start to predict what emotion the writer of the text is trying to show.")
+    st.write("So, without further explanation, let's see what kind of emotion the dream you have chosen shows!")
 
+    with st.form("sentiment_analysis"):
+        st.info("Selected Dream:")
         dream = st.session_state['semi']['text'][st.session_state['row_n']]
-        st.write(dream)
+        st.write(dream)        
+        submitted_sentiment = st.form_submit_button("Let's Begin!")   
+    
+    if submitted_sentiment:
+        try:
+            openai.api_key = st.session_state['openai_key']
 
-        try:     
-            summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
+
+
+            try:     
+                summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
+            except:
+                st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
+
+            classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
+            prediction = classifier(summary)
+            emotion = [x['label'] for x in prediction[0]]
+            score = [y['score'] for y in prediction[0]]
+
+            st.session_state['emotion'] = emotion[score.index(np.max(score))]
+
+            fig10 = make_subplots(rows=1, cols=1)
+
+            fig10.add_trace(go.Bar(x = emotion,
+                                    y = score,
+                                    name = f"Dream {st.session_state['row_n']}"))
+
+            fig10.update_layout(
+                                title="Sentiment Classification Results",
+                                xaxis_title="Criteria",
+                                yaxis_title="Sentiment Scores",
+                                legend_title="Dreams"
+                                # font=dict(
+                                #     family="Courier New, monospace",
+                                #     size=18,
+                                #     color="RebeccaPurple"
+                                # )
+                            )    
+
+            st.plotly_chart(fig10,theme="streamlit", use_container_width=True) 
         except:
-            st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
-
-        classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
-        prediction = classifier(summary)
-        emotion = [x['label'] for x in prediction[0]]
-        score = [y['score'] for y in prediction[0]]
-
-        st.session_state['emotion'] = emotion[score.index(np.max(score))]
-
-        fig10 = make_subplots(rows=1, cols=1)
-
-        fig10.add_trace(go.Bar(x = emotion,
-                                y = score,
-                                name = f"Dream {st.session_state['row_n']}"))
-
-        fig10.update_layout(
-                            title="Sentiment Classification Results",
-                            xaxis_title="Criteria",
-                            yaxis_title="Sentiment Scores",
-                            legend_title="Dreams"
-                            # font=dict(
-                            #     family="Courier New, monospace",
-                            #     size=18,
-                            #     color="RebeccaPurple"
-                            # )
-                        )    
-
-        st.plotly_chart(fig10,theme="streamlit", use_container_width=True) 
-    except:
-        st.warning("Please Complete the Previous Step Before Moving On")
+            st.warning("Please Complete the Previous Step Before Moving On")
 ########################################################################################
 #############################       Dream Summarization + Continuation      #################################
 ######################################################################################## 
