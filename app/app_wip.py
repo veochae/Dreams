@@ -303,7 +303,8 @@ def data_cleaning():
                 
                 df, semi = preprocess(st.session_state['reddit'])
 
-                st.session_state['keyword'] = st.text_input("Type in Keyword you would like to see in the Dream")
+                st.info("Type in Keyword you would like to see in the Dream")
+                st.session_state['keyword'] = st.text_input("")
                 filtered = df[df['text'].str.contains(st.session_state['keyword'])]
                 
                 if "keyword" in st.session_state.keys():
