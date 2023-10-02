@@ -330,13 +330,24 @@ def data_cleaning():
                 st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
                 
                 def clean(text):
-                    text = re.sub('https?://\S+|www\.\S+', '', text) #replace website urls
-                    text = re.sub(r"@\S+", '', text) #replace anything that follows @
-                    text = re.sub(r"#\S+", '', text) #replace anything that follows #
-                    # text = re.sub(r"[0-9]", '', text) #replace numeric
-                    text = re.sub(r"\n", '', text) #replace new line 
-                    text = re.sub("\'m", ' am ', text) 
-                    text = re.sub("\'re", ' are ', text) 
+                    # Remove URLs while preserving punctuation
+                    text = re.sub(r'https?://\S+|www\.\S+', '', text)
+
+                    # Remove mentions while preserving punctuation
+                    text = re.sub(r"@\S+", '', text)
+
+                    # Remove hashtags while preserving punctuation
+                    text = re.sub(r"#\S+", '', text)
+
+                    # Remove standalone numbers while preserving punctuation
+                    text = re.sub(r"\b[0-9]+\b", '', text)
+
+                    # Remove newlines
+                    text = re.sub(r"\n", '', text)
+
+                    # Replace contractions and special characters
+                    text = re.sub("\'m", ' am ', text)
+                    text = re.sub("\'re", ' are ', text)
                     text = re.sub("\'d", ' had ', text)
                     text = re.sub("\'s", ' is ', text)
                     text = re.sub("\'ve", ' have ', text)
@@ -354,12 +365,12 @@ def data_cleaning():
                     text = re.sub("\"", '', text)
                     text = re.sub(" bc ", ' because ', text)
                     text = re.sub(" aka ", ' also known as ', text)
-                    text = re.sub("√©", 'e', text) #encoding error for é. replace it with e
+                    text = re.sub("√©", 'e', text)  # Encoding error for é. Replace it with e
                     text = re.sub(" bf  ", ' boyfriend ', text)
                     text = re.sub(" gf  ", ' girlfriend ', text)
                     text = re.sub(" btw  ", ' by the way ', text)
                     text = re.sub(" btwn  ", ' between ', text)
-                    text = re.sub(r'([a-z])\1{2,}', r'\1', text) #if the same character is repeated more than twice, remove it to one. (E.A. ahhhhhh --> ah)
+                    text = re.sub(r'([a-z])\1{2,}', r'\1', text)  # If the same character is repeated more than twice, remove it to one.
                     text = re.sub(' ctrl ', ' control ', text)
                     text = re.sub(' cuz ', ' because ', text)
                     text = re.sub(' dif ', ' different ', text)
@@ -370,12 +381,12 @@ def data_cleaning():
                     text = re.sub(" fml ", " fuck my life ", text)
                     text = re.sub(" hq ", " headquarter ", text)
                     text = re.sub(" hr ", " hours ", text)
-                    text = re.sub(" idk ",  "i do not know ", text)
+                    text = re.sub(" idk ", " i do not know ", text)
                     text = re.sub(" ik ", ' i know ', text)
                     text = re.sub(" lol ", ' laugh out loud ', text)
                     text = re.sub(" u ", ' you ', text)
-                    text = re.sub("√¶", 'ae', text) #encoding error for áe. replace it with ae
-                    text = re.sub("√® ", 'e', text) #encoding error for é. replace it with e
+                    text = re.sub("√¶", 'ae', text)  # Encoding error for áe. Replace it with ae
+                    text = re.sub("√® ", 'e', text)   # Encoding error for é. Replace it with e
                     text = text.strip()
                     return text
 
