@@ -237,6 +237,7 @@ def data_collection():
             my_bar.progress(40, "Dropping Empty Observations") 
             st.session_state['reddit'] = reddit.dropna()
 
+            reddit_data['text'] = reddit_data['text'].apply(profanity.censor)
             # reddit['text'] = [profanity.censor(i) for i in reddit['text']]
 
             my_bar.progress(80, "Converting pandas dataframe to CSV")
@@ -662,7 +663,6 @@ def named_entity_recognition():
 #############################       TF-IDF  page      ##################################
 ########################################################################################
 def tf_idf():
-    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
 
     tf_latex = r'\text{TF}(w, d) = \frac{\text{Count of } w \text{ in } d}{\text{Total number of words in } d}'
     idf_latex = r'\text{IDF}(w) = \log\left(\frac{N}{n_w}\right)'
@@ -670,6 +670,7 @@ def tf_idf():
     text = r"""\text{Number of Words}: (N) \\ \text{Number of documents containing } w: n_x"""
     
     st.title("TF-IDF Analysis")
+    st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")    
     st.write("Ever wondered how LinkedIn scans your resume or how Google recommendation works?")
     st.write("Certainly, there are many other advanced methods that take place in both of the tech giants' machine learning methods, but in their core, TF-IDF exists.")
     st.write("TF-IDF stands for Term Frequency and Inverse Document Frequency, and it's a numerical representation used in NLP to understand the importance of words in a document or collection of documents. Let's break it down piece by piece to what TF and IDF each does:")
