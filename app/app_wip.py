@@ -76,18 +76,10 @@ def task(index , xx):
 
 @st.cache_data
 def multiprocessing_function(text_data):
-    progress_bar = st.progress(0, text="Start of Data Filtering")
+    st.info("**Data Filtering in Progress**: This Process might take about 2-3 Minutes!")
     try:
         with multiprocessing.Pool(processes=4) as pool:
-            res = []
-
-            for i, result in enumerate(pool.imap_unordered(task, text_data)):
-                # Update the progress bar as tasks are completed
-                progress_percent = (i + 1) / len(text_data)
-                progress_bar.progress(progress_percent)
-
-                res.append((i, result)) 
-
+            res = pool.starmap(task, enumerate(text_data)) 
         res.sort(key=lambda x: x[0])
         final_results = [result[1] for result in res]
     except Exception as e:
@@ -158,13 +150,10 @@ def reddit_data(time_wanted, headers):
 
             if len(df) >= 985:
                 latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
-                st.write("Data Collection Target Reached")
-                st.write(f'{len(df)} rows collected')
-                st.write(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
+                st.success("Data Collection Target Reached")
+                st.success(f'{len(df)} rows collected')
+                st.success(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
                 df.text = multiprocessing_function(df.text)
-                # temp1 = " [break] ".join(df.text)
-                # temp2 = profanity.censor(temp1)
-                # df.text = temp2.split("[break]")
                 return df, res.json()['data']['children'][1]
 
     else: 
