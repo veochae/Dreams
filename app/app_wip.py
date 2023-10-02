@@ -71,8 +71,8 @@ import torch
 warnings.filterwarnings('ignore')
 
 ##########profanity filter
-def task(xx):
-    return[profanity.censor(y, '') for y in xx]
+def task(index , xx):
+    return(index,[profanity.censor(y, '') for y in xx])
 
 def multiprocessing_function(text_data):
     try:
