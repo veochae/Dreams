@@ -78,10 +78,10 @@ def load_nlp():
 def wordcloud(x, lim):
     text = " ".join(x)
     cloud = WordCloud(collocations = False, max_words = lim).generate(text)
-    plt.imshow(cloud, interpolation='bilinear')
+    fig, ax = plt.subplots(figsize = (12, 8))
+    ax.imshow(cloud, interpolation='bilinear')
     plt.axis("off")
-    plt.show()
-    st.pyplot()
+    st.pyplot(fig)
 
 ###################### dataframe to csv conversion
 def convert_df(df):
