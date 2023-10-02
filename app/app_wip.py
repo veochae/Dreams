@@ -865,7 +865,8 @@ def sentiment_analysis():
 
     with st.form("sentiment_analysis"):
         st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
-        dream = st.session_state['semi']['text'][st.session_state['row_n']]
+        with st.expander(f"Click Here to View the Selected Dream "):
+            dream = st.session_state['semi']['text'][st.session_state['row_n']]
         st.write(dream)        
         submitted_sentiment = st.form_submit_button("Let's Begin!")   
     
