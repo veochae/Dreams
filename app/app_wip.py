@@ -233,6 +233,7 @@ def data_collection():
             reddit, json_file = reddit_data(time_wanted, headers)
 
             my_bar = st.progress(0, text="Initiating Data Preprocessing")
+            time.sleep(3)
 
             my_bar.progress(40, "Dropping Empty Observations") 
             st.session_state['reddit'] = reddit.dropna()
@@ -439,7 +440,6 @@ def data_cleaning():
 
                     lemmatized = [lemmatizer(x) for x in x_stopwords]
                     
-
                     my_bar.progress(70, text = "Dreams Lemmatization Complete")
                     time.sleep(2)
 
@@ -533,92 +533,86 @@ def part_of_speech_tag():
     st.write("has two separate meanings. The former “run” is a verb that pertains to the action of running. The latter “run” pertains to the activity of running, a noun. However, in the sense of machine learning models, the two usages of “run” in both contexts are not distinguishable causing ambiguity.")
     st.write("So there has to be a way for the machine to understand the different ways the same word is utilized in different contexts! Therefore we introduce the POS Tagging.")
 
-    # try:
-    result = st.button("Click to Start POS Tagging")
-    if result:
-        complete_load = st.session_state['complete']
-        st.session_state['show'] = True
+    try:
+        result = st.button("Click to Start POS Tagging")
+        if result:
+            complete_load = st.session_state['complete']
+            st.session_state['show'] = True
 
 
-        @st.cache_data
-        def pos_preprocess(df):
-            my_bar = st.progress(0, text="Part of Speech Tagging Initialized")
-            tag_dict = {"word" :[], "tag":[]}
+            @st.cache_data
+            def pos_preprocess(df):
+                my_bar = st.progress(0, text="Part of Speech Tagging Initialized")
+                tag_dict = {"word" :[], "tag":[]}
 
-            for e,i in enumerate(df):
-                sent = nlp(i)
-                for j in sent:
-                    tag_dict['word'].append(j.text)
-                    tag_dict['tag'].append(j.tag_)
-                    my_bar.progress((1/len(df))*(e+1), text = f"{e+1} acquired POS Tags")
-
-
-            tag_df  = pd.DataFrame(tag_dict)
-            my_bar.progress(100, text = "POS Tagging Complete")
-
-            return tag_df
-        
-        tag_df = pos_preprocess(complete_load)
-
-        rows = st.columns(2)
-        rows[0].markdown("Sample POS Tag")
-        rows[0].dataframe(tag_df.head(30))
-        rows[1].markdown("POS Tag List")
-        rows[1].dataframe(pd.read_csv("https://gist.githubusercontent.com/veochae/447a8d4c7fa38a9494966e59564d4222/raw/9df88f091d6d1728eb347ee68ee2cdb297c0e5ff/spacy_tag.csv"))
+                for e,i in enumerate(df):
+                    sent = nlp(i)
+                    for j in sent:
+                        tag_dict['word'].append(j.text)
+                        tag_dict['tag'].append(j.tag_)
+                        my_bar.progress((1/len(df))*(e+1), text = f"{e+1} acquired POS Tags")
 
 
-        @st.cache_data
-        def barplot(x, z="", l = False):
-            t = np.unique(x, return_counts = True)
-            s = np.argsort(t[1])
+                tag_df  = pd.DataFrame(tag_dict)
+                my_bar.progress(100, text = "POS Tagging Complete")
 
-            if l == True:
-                x = t[0][s][-z:]
-                y = t[1][s][-z:]
-            else:   
-                x = t[0][s]
-                y = t[1][s]
+                return tag_df
+            
+            tag_df = pos_preprocess(complete_load)
 
-            fig6 = px.bar(x = x, 
-                        y = y, 
-                        labels = dict(x = "Part of Speech", y = 'Count'),
-                        title = "Count of Part of Speech in the Entire Corpus") 
+            rows = st.columns(2)
+            rows[0].markdown("Sample POS Tag")
+            rows[0].dataframe(tag_df.head(30))
+            rows[1].markdown("POS Tag List")
+            rows[1].dataframe(pd.read_csv("https://gist.githubusercontent.com/veochae/447a8d4c7fa38a9494966e59564d4222/raw/9df88f091d6d1728eb347ee68ee2cdb297c0e5ff/spacy_tag.csv"))
 
-            fig6.update_layout(xaxis={'categoryorder':'total ascending'})   
-                
-            st.plotly_chart(fig6,theme="streamlit", use_container_width=True)    
 
-        with st.container():
-            st.write("Next with the full list of POS Tags throughout all the Dreams that we have collected, we plot a barplot to see which Tags were heavily uitilized in the Dreams. As one can see from the barplot, Nouns were mostly utilized since Dreams have objects that have to be described in detail. Then, Adverbs and different tenses of verbs were heavily utilized in describing the Dreamers' actions during the dream.")
-            barplot(tag_df['tag'])
+            @st.cache_data
+            def barplot(x):
+                t = np.unique(x, return_counts = True)
+                s = np.argsort(t[1])
 
-    # try:
-    if st.session_state['show']:
-            st.write("Now that we know that each word can be understood by the machine, how about sentences? Can machines now understand full sentences?")
-            st.write("To help ease the understanding of why we need this, we can give Chat-GPT as an example. To the human brain, when we observe the two statements: ")
-            st.write("“I use Chat-GPT”, “Do you use Chat-GPT?” ")
-            st.write("We already know which one of the two statements is a question. Not only because of the question mark on the second statement, but because it is a sentence that starts with an auxillary ”Do” and a pronoun as the target of asking the question. Obviously, humans do not actively process the part of speech for each and every sentence one encounters, but how about when the machine has to learn sentence structure? Just like the young versions of ourselves first learning how to comprehend the sentence structure, machine has to learn the sentence structures of English as well. Now, we can use the individual POS Tags as a sequence in order to essentially create a formula of sentence structures. With the example above, because")
-            st.write("auxillary + pronoun + verb + … ")
-            st.write("is the sequential order of POS tags in the given sentence, the machine will now recognize that this sentence is a question.")
-            st.write("As such, POS tagging not only helps machines understand the individual usage of singular words, but also provides an even more powerful tool when used on an aggregated level!")
-        
-            df = st.session_state['semi']
+                x = t[0][s][::-1]
+                y = t[1][s][::-1]
+
+                fig6 = px.bar(x = x, 
+                            y = y, 
+                            labels = dict(x = "Part of Speech", y = 'Count'),
+                            title = "Count of Part of Speech in the Entire Corpus") 
+
+                fig6.update_layout(xaxis={'categoryorder':'total ascending'})   
+                    
+                st.plotly_chart(fig6,theme="streamlit", use_container_width=True)    
 
             with st.container():
-                print()
-                temp = np.str.split(df['text'][st.session_state['row_n']], ".")[0] + "."
-                model = "en_core_web_sm"
+                st.write("Next with the full list of POS Tags throughout all the Dreams that we have collected, we plot a barplot to see which Tags were heavily uitilized in the Dreams. As one can see from the barplot, Nouns were mostly utilized since Dreams have objects that have to be described in detail. Then, Adverbs and different tenses of verbs were heavily utilized in describing the Dreamers' actions during the dream.")
+                barplot(tag_df['tag'])
 
-                st.title("POS Taggging and NER Visualization")
-                text = st.text_area("Text to analyze", temp, height=200)
-                doc = spacy_streamlit.process_text(model, text)
+        # try:
+        if st.session_state['show']:
+                st.write("Now that we know that each word can be understood by the machine, how about sentences? Can machines now understand full sentences?")
+                st.write("To help ease the understanding of why we need this, we can give Chat-GPT as an example. To the human brain, when we observe the two statements: ")
+                st.write("“I use Chat-GPT”, “Do you use Chat-GPT?” ")
+                st.write("We already know which one of the two statements is a question. Not only because of the question mark on the second statement, but because it is a sentence that starts with an auxillary ”Do” and a pronoun as the target of asking the question. Obviously, humans do not actively process the part of speech for each and every sentence one encounters, but how about when the machine has to learn sentence structure? Just like the young versions of ourselves first learning how to comprehend the sentence structure, machine has to learn the sentence structures of English as well. Now, we can use the individual POS Tags as a sequence in order to essentially create a formula of sentence structures. With the example above, because")
+                st.write("auxillary + pronoun + verb + … ")
+                st.write("is the sequential order of POS tags in the given sentence, the machine will now recognize that this sentence is a question.")
+                st.write("As such, POS tagging not only helps machines understand the individual usage of singular words, but also provides an even more powerful tool when used on an aggregated level!")
+            
+                df = st.session_state['semi']
 
-                spacy_streamlit.visualize_parser(doc)
+                with st.container():
+                    temp = np.str.split(df['text'][st.session_state['row_n']], ".")[0] + "."
+                    model = "en_core_web_sm"
 
-            st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!", icon="ℹ️")
-                # spacy_streamlit.visualize(["en_core_web_sm"], df['text'][row_n])
-    # except:
-    #         st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
+                    st.title("POS Taggging and NER Visualization")
+                    text = st.text_area("Text to analyze", temp, height=200)
+                    doc = spacy_streamlit.process_text(model, text)
+
+                    spacy_streamlit.visualize_parser(doc)
+
+                st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!", icon="ℹ️")
+    except:
+            st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
 
 ########################################################################################
 #############################       namee entity recognition  page      #################################
