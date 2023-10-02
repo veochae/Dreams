@@ -76,7 +76,7 @@ def load_nlp():
 
 ##########wordcloud
 def wordcloud(x, lim):
-    text = " ".join(t)
+    text = " ".join(x)
     cloud = WordCloud(collocations = False, max_words = lim).generate(text)
     plt.imshow(cloud, interpolation='bilinear')
     plt.axis("off")
