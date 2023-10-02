@@ -964,7 +964,7 @@ def sentiment_analysis():
     st.write(dream)
 
     try:     
-        summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
+        summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
     except:
         st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
 
