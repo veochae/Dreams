@@ -387,6 +387,8 @@ def data_cleaning():
                     text = re.sub(" u ", ' you ', text)
                     text = re.sub("√¶", 'ae', text)  # Encoding error for áe. Replace it with ae
                     text = re.sub("√® ", 'e', text)   # Encoding error for é. Replace it with e
+                    text = re.sub("&#x200B;", "", text)
+                    text = re.sub("tl;dr", "too long did not read", text)
                     text = text.strip()
                     return text
 
