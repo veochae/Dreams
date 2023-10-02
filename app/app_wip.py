@@ -21,6 +21,7 @@ import math
 import json
 import time
 import warnings
+import multiprocessing
 
 #streamlit
 import spacy_streamlit
@@ -68,6 +69,20 @@ import torch
 #############################       required UDFs     #############################
 ########################################################################################
 warnings.filterwarnings('ignore')
+
+##########profanity filter
+def task(xx):
+    return[profanity.censor(y, '') for y in xx]
+
+def multiprocessing_function(text_data):
+    aaa = time.time()
+    with multiprocessing.Pool(processes=4) as pool:
+        res = pool.starmap(task, enumerate(text_data))    
+    res.sort(key=lambda x: x[0])
+    final_results = [result[1] for result in res]
+    bbb = time.time()
+    st.write(bbb-aaa)
+    return final_results
 
 ##########en-core-sm preload
 @st.cache_resource
@@ -135,9 +150,10 @@ def reddit_data(time_wanted, headers):
                 st.write("Data Collection Target Reached")
                 st.write(f'{len(df)} rows collected')
                 st.write(f'latest subreddit date: {datetime.fromtimestamp(latest)}')
-                temp1 = " [break] ".join(df.text)
-                temp2 = profanity.censor(temp1)
-                df.text = temp2.split("[break]")
+                df.text = multiprocessing_function(df.text)
+                # temp1 = " [break] ".join(df.text)
+                # temp2 = profanity.censor(temp1)
+                # df.text = temp2.split("[break]")
                 return df, res.json()['data']['children'][1]
 
     else: 
