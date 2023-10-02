@@ -926,11 +926,11 @@ def tf_idf():
 
                         col1,col2 = st.columns(2)
                         with col1:
-                            with st.expander:
+                            with st.expander("aa"):
                                 st.subheader(f"Dream 1: Dream {st.session_state['row_n']}")
                                 st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")                        
                         with col2:
-                            with st.expander:
+                            with st.expander("aa"):
                                 st.subheader(f"Dream 2: Dream {st.session_state['row_n_2']}")
                                 st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n_2']]}""")
                         
