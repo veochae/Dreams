@@ -360,6 +360,7 @@ def data_cleaning():
                     text = re.sub("\'d", ' had ', text)
                     text = re.sub("\'s", ' is ', text)
                     text = re.sub("\'ve", ' have ', text)
+                    text = re.sub("n't", r' not ', text)
                     text = re.sub(" im ", ' i am ', text)
                     text = re.sub(" iam ", ' i am ', text)
                     text = re.sub(" youre ", ' you are ', text)
@@ -384,7 +385,6 @@ def data_cleaning():
                     text = re.sub(' cuz ', ' because ', text)
                     text = re.sub(' dif ', ' different ', text)
                     text = re.sub(' dm ', ' direct message ', text)
-                    text = re.sub("n't", r' not ', text)
                     text = re.sub(" fav ", ' favorite ', text)
                     text = re.sub(" fave ", ' favorite ', text)
                     text = re.sub(" fml ", " fuck my life ", text)
@@ -533,7 +533,7 @@ def data_cleaning():
                                 st.session_state['submit_5'] = True
 
                     if st.session_state['submit_5']:
-                        wordcloud(st.session_state['clean_text']['text'], lim=100)
+                        wordcloud(st.session_state['clean_text'], lim=100)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
