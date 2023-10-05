@@ -355,14 +355,14 @@ def data_cleaning():
                 st.header("Breakdown of Data Cleaning Process")
                 st.info("Type in Keyword you would like to see in the Dream" ,icon="ℹ️")
                 st.session_state['keyword'] = st.text_input("Keyword:")
-                filtered = df[df['text'].str.contains(st.session_state['keyword'])]
+                filtered = semi[semi['text'].str.contains(st.session_state['keyword'])]
                 
                 if "keyword" in st.session_state.keys():
                     st.dataframe(filtered)
                     st.session_state['filtered'] = filtered
                     
                 else:
-                    st.dataframe(df)
+                    st.dataframe(semi)
 
                 st.session_state['row_n'] = int(st.text_input("Type in Index Number of the Dream you would like to examine"))            
                 
@@ -470,21 +470,17 @@ def data_cleaning():
                     my_bar = st.progress(0, text="Initializing Text Cleaning")
 
                     clean_text = df['text'].apply(lambda x:clean(x.lower()))         #first clean the text on lower cased list of dreams
-                    clean_text.dropna()
 
                     my_bar.progress(10, text = "Initial Dreams Cleaning Complete")
                     time.sleep(2)
 
                     tokenized = clean_text.apply(lambda x: tokenization(x))          #tokenize the cleaned text
                     clean_text = tokenized.apply(lambda x: " ".join(x))              #rejoin the words (just in case white space still present)
-                    clean_text.dropna()
-                    tokenized.dropna()
                             
                     my_bar.progress(30, text = "Dreams Tokenization Complete")
                     time.sleep(2)
 
                     x_stopwords = tokenized.apply(lambda x: remove_stopwords(x))     #remove stopwords from tokenized list
-                    x_stopwords.dropna()
                                     
                     my_bar.progress(50, text = "Dreams Stopwords Removal Complete")
                     time.sleep(2)
