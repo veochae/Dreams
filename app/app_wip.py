@@ -72,7 +72,7 @@ warnings.filterwarnings('ignore')
 
 ##########profanity filter
 def task(index , xx):
-    return(index,profanity.censor(xx, ""))
+    return(index,profanity.censor(xx, "*"))
 
 def multiprocessing_function(text_data):
     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
@@ -105,7 +105,6 @@ def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
 
 ###################### reddit data extraction
-@st.cache_data
 def reddit_data(time_wanted, headers):
     progress_text = "Validating the Credentials, Please wait."
     my_bar = st.progress(0, text=progress_text)
@@ -154,7 +153,7 @@ def reddit_data(time_wanted, headers):
                 with col11:
                     st.success(f'**Data Count**: {len(df)} Dreams')
                 with col22:
-                    st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
+                    st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
                 time1 = time.time()
                 df.text = multiprocessing_function(df.text)
                 time2 = time.time()
@@ -267,13 +266,13 @@ def data_collection():
 
             headers['Authorization'] = f'bearer {token}'    
 
-            reddit, json_file = reddit_data(time_wanted, headers)
+            st.session_state['reddit'], st.session_state['json_file'] = reddit_data(time_wanted, headers)
 
             my_bar = st.progress(0, text="Initiating Data Preprocessing")
             time.sleep(3)
 
             my_bar.progress(40, "Dropping Empty Observations") 
-            st.session_state['reddit'] = reddit.dropna()
+            st.session_state['reddit'] = st.session_state['reddit'].dropna()
 
             # reddit_data['text'] = reddit_data['text'].apply(apply_censor)
             # reddit['text'] = [profanity.censor(i) for i in reddit['text']]
@@ -286,10 +285,10 @@ def data_collection():
             my_bar.progress(100, "Job Complete")
 
             st.write("Curious how the raw data look like? Take a look below to see it for one of the dreams that was just pulled from Reddit. To best understand how JSON works, think of the folder directories in your local computers. Within your Desktop folder, say you have a folder for each class you take. And within each class folder, imagine you have different assignment folders, containing assignments completed. As such JSON divides information in a hierarchical format: the deeper nested values are specific details pertaining to the encompassing information. Please press on the rotated green triangle below to assess the JSON file. This is a good opportunity for you to get familiar with JSON, by the way!")
-            st.json(json_file, expanded= False)
+            st.json(st.session_state['json_file'], expanded= False)
 
             st.write("Finally, the below is the dataframe based on the JSON file. Note that from the JSON data the app extracts subreddit thread name, the title of the post, the dream, and the date at which the post was made. The analyses taking part in this app exclude any comments that may be made by users following up on a post. ")
-            st.dataframe(reddit.head(30))
+            st.dataframe(st.session_state['reddit'].head(30))
 
             st.write("Ever wondered why one would ever need JSON if dataframes seem so much cleaner? You see, although dataframes are intuitive – their size and the consequent burden on memory can become extremely large as the number of observations or features increase! Further, dataframes typically store various meta data, such as the data type, etc. On the contrary, the JSON format only stores the text values of the data. Therefore, it is a structured word file that can be interpreted in hierarchical fashion when imported into an Integrated Development Environment (IDE). This saves tremendous amount of space when it comes to storing large datasets. And because typically the data in APIs are extremely large, JSON is the go-to format!")
         
@@ -302,7 +301,7 @@ def data_collection():
 ########################################################################################
 
 def data_cleaning():
-    st.title("Data Manipulation")
+    st.title("Data Preprocessing")
 
     try:
         st.write("With the raw dataset in hand, now we move on to the critical stage of analysis: Data Manipulation.")
@@ -315,7 +314,7 @@ def data_cleaning():
         st.write("Below, once the reader starts the cleaning process, the progress bar will show the different stages in which the data is being processed through. Then, for each of the cleaning steps above, with the reader's choice of dream, the reader will be able to see the direct changes made to the dreams!")
         st.write("Have fun playing with the different data cleaning tasks below! You are about to get into something even more interesting once you are done with this.")
             
-        result_dc = st.button("Click to Start Data Manipulation")
+        result_dc = st.button("Click to Start Data Preprocessing")
         stopword = nltk.corpus.stopwords.words('english')
 
         if result_dc:
@@ -617,11 +616,9 @@ def part_of_speech_tag():
             tag_df = pos_preprocess(complete_load)
 
             rows = st.columns(2)
-            rows[0].markdown("Sample POS Tag")
-            rows[0].dataframe(tag_df.head(30))
-            rows[1].markdown("POS Tag List")
-            rows[1].dataframe(pd.read_csv("https://gist.githubusercontent.com/veochae/447a8d4c7fa38a9494966e59564d4222/raw/9df88f091d6d1728eb347ee68ee2cdb297c0e5ff/spacy_tag.csv"))
-
+            rows[0].markdown("POS Tag List")
+            rows[0].dataframe(pd.read_csv("https://gist.githubusercontent.com/veochae/447a8d4c7fa38a9494966e59564d4222/raw/9df88f091d6d1728eb347ee68ee2cdb297c0e5ff/spacy_tag.csv"))
+            rows[0].markdown("The table on the left is the Spacy pacakge defined Part of Speech Tags. Each acronym stands for a particular part of speech, and essentially, each word is tagged with one of the tags in the list on the left!")
 
             @st.cache_data
             def barplot(x):
@@ -661,6 +658,8 @@ def part_of_speech_tag():
                     model = "en_core_web_sm"
 
                     st.title("POS Taggging Visualization")
+                    st.write("By now, you have probably seen how long each dreams are. So to show all the dreams and its POS Visualization, it is hard to comprehend because it is so big! So below, we will show how POS tagging works visually for the frist sentence of the dream that you have chosen!")
+                    st.write("Also, the text section right below here is interactive! Please enter any kind of text or sentences you would like to examine and it will adjust the visualization according to your provided sentence. Enjoy!")
                     text = st.text_area("Text to analyze", temp, height=200)
                     doc = spacy_streamlit.process_text(model, text)
 
@@ -695,6 +694,7 @@ def named_entity_recognition():
                     model = "en_core_web_sm"
 
                     st.title("NER Visualization")
+                    st.write("Just like the POS Visualization, this NER visualization is also interactive! Type in any sentence, preferably ones with noticeable entities, to see how the visualization interacts with your input!")
                     text = st.text_area("Text to analyze", temp, height=200)
                     doc = spacy_streamlit.process_text(model, text)
 
@@ -732,6 +732,7 @@ def tf_idf():
         st.latex(idf_latex)
         st.write("**TF-IDF**: TF-IDF is the amalgamation of TF and IDF as you can tell by the name! By using the equation below, TF-IDF shows how important a word is in a document in comparison to when used in another document. For instance, when we search for the word **entrepreneurship**, a document pertaining to Babson College will have a higher TF-IDF score for the word in comparison to a document about Olin College, because entrepreneurship is more relevant in the document for Babson!")
         st.latex(tf_idf_latex)
+        st.write("Check out this [link](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) for more information about the equations!")
         st.write("Now, let's start the below section to explore TF-IDF!")        
         with st.expander(f"Click Here to View the Selected Dream "):
             st.write(f"""{st.session_state['semi']['text'][st.session_state['row_n']]}""")
@@ -812,7 +813,7 @@ def tf_idf():
 
                     return pd.DataFrame(tf_idf_li)
 
-                tf_idf_df = main(corpus, tokenized)
+                st.session_state['tf_idf_df'] = main(corpus, tokenized)
 
                 def barplot(tf_idf_df, number_of_words):
                     rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
@@ -826,7 +827,7 @@ def tf_idf():
                                     labels = dict(words = "Words", values = 'TF-IDF Score'))
                     st.plotly_chart(fig,theme="streamlit", use_container_width=True)   
 
-                barplot(tf_idf_df = tf_idf_df, number_of_words = 10)
+                barplot(tf_idf_df = st.session_state['tf_idf_df'], number_of_words = 10)
                 change = 2
 
                 if change == 2:
@@ -875,7 +876,7 @@ def tf_idf():
                     try:
                         st.session_state['row_n_2'] = int(st.text_input("Second Dream Index:"))
                         
-                        barplot_2(tf_idf_df = tf_idf_df, number_of_words = 10)
+                        barplot_2(tf_idf_df = st.session_state['tf_idf_df'], number_of_words = 10)
 
                         col1,col2 = st.columns(2)
                         with col1:
@@ -904,6 +905,7 @@ def set_up_openai():
         submitted = st.form_submit_button("Submit")   
         if submitted:
             st.session_state['openai_key'] = key_open
+            st.success("Your API Key has been Processed!")
 
 ########################################################################################
 #############################       Sentiment Analysis      #################################
