@@ -77,7 +77,7 @@ def task(index , xx):
 def multiprocessing_function(text_data):
     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
-        with multiprocessing.Pool(processes=4) as pool:
+        with multiprocessing.Pool(processes=6) as pool:
             res = pool.starmap(task, enumerate(text_data)) 
         res.sort(key=lambda x: x[0])
         final_results = [result[1] for result in res]
