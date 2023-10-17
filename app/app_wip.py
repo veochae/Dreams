@@ -223,6 +223,7 @@ def data_collection():
     st.write("To collect the data on dreams in real time, posted by the Reddit users, you first need to access the Reddit Application Programming Interface (API). Information on how to do that can be found here. That is a necessary step which fortunately won’t take more than a minute or so … for sure it won’t be too long to put you to sleep before the main event! The below will serve as a guideline for the readers to gain access to the Reddit Developer's account.")
     st.write("THIS IS SPACE FOR REDDIT DEV ACCOUNT INFROMATION")
     st.write("THIS IS SPACE FOR REDDIT DEV ACCOUNT INFROMATION")
+    st.write("Click on this [link](https://www.reddit.com/prefs/apps) to get to the Reddit API OAUTH2 Page!")
     st.write("Now that you have gained access to the Reddit developer's account, you are ready to use the Reddit API in order to gather dreams that will then be used as the data for NLP. The subreddit to be used is r/Dreams, which can be easily searched on search engines for viewing purposes. In the below text boxes, please input your Reddit information in order to collect the dreams. ")
 
     st.write("The process of Data Collection follows the below details: ")
@@ -1091,6 +1092,23 @@ def data_download():
     except: st.warning("You must complete the Data Cleaning Process to View the Page")
 
 ########################################################################################
+#############################       About Creators      #################################
+########################################################################################        
+
+def about_creators():
+    st.title("About the Creators")
+    st.success("The app has been ideated and created by Professor Davit Khachatryan and Veo Chae")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.header("Davit Khachatryan")
+        st.info("**Email:** dkhachatryan@babson.edu")
+    with col2:
+        st.header("Dong Hyun (Veo) Chae")
+        st.info("**Email:** veochae@gmail.com")
+
+
+
+########################################################################################
 #############################       sidebar  page      #################################
 ########################################################################################
 
@@ -1104,7 +1122,8 @@ page_names_to_funcs = {
     "OpenAI API Setup": set_up_openai,
     "Sentiment Analysis": sentiment_analysis,
     "Dream Summary and Continuation": summary_continue,
-    "Data Download": data_download
+    "Data Download": data_download,
+    "About the Creators": about_creators
 }
 
 demo_name = st.sidebar.selectbox("Please Select a Page", page_names_to_funcs.keys())
