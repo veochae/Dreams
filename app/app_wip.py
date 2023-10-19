@@ -602,12 +602,12 @@ def part_of_speech_tag():
 
             return tag_df
         
+        complete_load = st.session_state['complete']
         tag_df = pos_preprocess(complete_load)
         st.write("Tag_DF Generated")
 
 
         if result:
-            complete_load = st.session_state['complete']
             st.session_state['show'] = True
 
             cola, colb = st.columns(2)
