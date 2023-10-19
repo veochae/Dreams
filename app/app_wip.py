@@ -603,6 +603,7 @@ def part_of_speech_tag():
             return tag_df
         
         tag_df = pos_preprocess(complete_load)
+        st.write("Tag_DF Generated")
 
 
         if result:
