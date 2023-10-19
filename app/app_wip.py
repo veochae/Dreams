@@ -740,7 +740,8 @@ def tf_idf():
         try:
             if st.session_state['result_ti']:
                 corpus = st.session_state['corpus']
-                token = st.session_state['lemmatized']          
+                token = st.session_state['lemmatized']     
+                st.dataframe(lemmatized)     
                 tokenized = [list(set(np.str.split(" ",li))) for li in token]
 
                 #define term frequency (tf) function
