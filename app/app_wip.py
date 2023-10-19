@@ -886,7 +886,7 @@ def tf_idf():
                     try:
                         st.session_state['row_n_2'] = int(st.text_input("Second Dream Index:"))
                         
-                        barplot_2(tf_idf_df = st.session_state['tf_idf_df'], number_of_words = 10)
+                        barplot_2(tf_idf_df = st.session_state['tf_idf_df'], number_of_words = 10, number_of_words2 = 10)
 
                         col1,col2 = st.columns(2)
                         with col1:
