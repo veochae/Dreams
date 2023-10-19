@@ -354,7 +354,7 @@ def data_cleaning():
 
                 st.header("Breakdown of Data Cleaning Process")
                 st.info("Type in Keyword you would like to see in the Dream" ,icon="ℹ️")
-                st.session_state['keyword'] = st.text_input("Keyword:")
+                st.session_state['keyword'] = " " + st.text_input("Keyword:") + " "
                 filtered = semi[semi['text'].str.contains(st.session_state['keyword'])]
                 
                 if "keyword" in st.session_state.keys():
@@ -561,10 +561,6 @@ def data_cleaning():
                         with st.form("Resulting Wordcloud"):
                             st.header("Resulting Wordcloud")
                             wordcloud(st.session_state['clean_text'], lim=100)
-                            submit_6 = st.form_submit_button("All Done!")
-                        
-                        if submit_6:
-                            pass
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
@@ -591,35 +587,34 @@ def part_of_speech_tag():
         st.write("has two separate meanings. The former “run” is a verb that pertains to the action of running. The latter “run” pertains to the activity of running, a noun. However, in the sense of machine learning models, the two usages of “run” in both contexts are not distinguishable causing ambiguity.")
         st.write("So there has to be a way for the machine to understand the different ways the same word is utilized in different contexts! Therefore we introduce the POS Tagging.")        
         result = st.button("Click to Start POS Tagging")
+
+        @st.cache_data
+        def pos_preprocess(df):
+            tag_dict = {"word" :[], "tag":[]}
+
+            for e,i in enumerate(df):
+                sent = nlp(i)
+                for j in sent:
+                    tag_dict['word'].append(j.text)
+                    tag_dict['tag'].append(j.tag_)
+
+            tag_df  = pd.DataFrame(tag_dict)
+
+            return tag_df
+        
+        tag_df = pos_preprocess(complete_load)
+
+
         if result:
             complete_load = st.session_state['complete']
             st.session_state['show'] = True
 
-
-            @st.cache_data
-            def pos_preprocess(df):
-                my_bar = st.progress(0, text="Part of Speech Tagging Initialized")
-                tag_dict = {"word" :[], "tag":[]}
-
-                for e,i in enumerate(df):
-                    sent = nlp(i)
-                    for j in sent:
-                        tag_dict['word'].append(j.text)
-                        tag_dict['tag'].append(j.tag_)
-                        my_bar.progress((1/len(df))*(e+1), text = f"{e+1} acquired POS Tags")
-
-
-                tag_df  = pd.DataFrame(tag_dict)
-                my_bar.progress(100, text = "POS Tagging Complete")
-
-                return tag_df
-            
-            tag_df = pos_preprocess(complete_load)
-
-            rows = st.columns(2)
-            rows[0].markdown("POS Tag List")
-            rows[0].dataframe(pd.read_csv("https://gist.githubusercontent.com/veochae/447a8d4c7fa38a9494966e59564d4222/raw/9df88f091d6d1728eb347ee68ee2cdb297c0e5ff/spacy_tag.csv"))
-            rows[0].markdown("The table on the left is the Spacy pacakge defined Part of Speech Tags. Each acronym stands for a particular part of speech, and essentially, each word is tagged with one of the tags in the list on the left!")
+            cola, colb = st.columns(2)
+            with cola:
+                st.markdown("POS Tag List")
+                st.dataframe(pd.read_csv("https://gist.githubusercontent.com/veochae/447a8d4c7fa38a9494966e59564d4222/raw/9df88f091d6d1728eb347ee68ee2cdb297c0e5ff/spacy_tag.csv"))
+            with colb:
+                st.markdown("The table on the left is the Spacy pacakge defined Part of Speech Tags. Each acronym stands for a particular part of speech, and essentially, each word is tagged with one of the tags in the list on the left!")
 
             @st.cache_data
             def barplot(x):
@@ -745,8 +740,8 @@ def tf_idf():
         try:
             if st.session_state['result_ti']:
                 corpus = st.session_state['corpus']
-                token = st.session_state['tokenized']           
-                tokenized = [list(set(li)) for li in token]
+                token = st.session_state['lemmatized']          
+                tokenized = [list(set(re.split(" ",li))) for li in token]
 
                 #define term frequency (tf) function
                 def tf(corpus, token_set):
@@ -817,6 +812,10 @@ def tf_idf():
                 st.session_state['tf_idf_df'] = main(corpus, tokenized)
 
                 def barplot(tf_idf_df, number_of_words):
+                    if len(tf_idf_df.iloc[st.session_state['row_n'],:].tolist()) < number_of_words:
+                        number_of_words = len(tf_idf_df.iloc[st.session_state['row_n'],:].tolist())
+                    else:
+                        pass
                     rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
                     words = rendered_dream.index.tolist()
                     rendered_dream['words'] = words
@@ -832,12 +831,22 @@ def tf_idf():
                 change = 2
 
                 if change == 2:
-                    def barplot_2(tf_idf_df, number_of_words):
+                    def barplot_2(tf_idf_df, number_of_words, number_of_words2):
+                        if len(tf_idf_df.iloc[st.session_state['row_n'],:].tolist()) < number_of_words:
+                            number_of_words = len(tf_idf_df.iloc[st.session_state['row_n'],:].tolist())
+                        else:
+                            pass
+
+                        if len(tf_idf_df.iloc[st.session_state['row_n_2'],:].tolist()) < number_of_words:
+                            number_of_words2 = len(tf_idf_df.iloc[st.session_state['row_n_2'],:].tolist())
+                        else:
+                            pass
+
                         rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
                         words = rendered_dream.index.tolist()
                         rendered_dream['words'] = words
 
-                        rendered_dream_2 = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n_2'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
+                        rendered_dream_2 = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n_2'],:].sort_values(axis = 0, ascending = False)[:number_of_words2]})
                         words_2 = rendered_dream_2.index.tolist()
                         rendered_dream_2['words'] = words_2          
 
