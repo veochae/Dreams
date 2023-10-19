@@ -604,17 +604,16 @@ def part_of_speech_tag():
         
         complete_load = st.session_state['complete']
         tag_df = pos_preprocess(complete_load)
-        st.write("Tag_DF Generated")
-
 
         if result:
             st.session_state['show'] = True
 
             cola, colb = st.columns(2)
             with cola:
-                st.markdown("POS Tag List")
+                st.header("POS Tag List")
                 st.dataframe(pd.read_csv("https://gist.githubusercontent.com/veochae/447a8d4c7fa38a9494966e59564d4222/raw/9df88f091d6d1728eb347ee68ee2cdb297c0e5ff/spacy_tag.csv"))
             with colb:
+                st.header("What is this Table?")
                 st.markdown("The table on the left is the Spacy pacakge defined Part of Speech Tags. Each acronym stands for a particular part of speech, and essentially, each word is tagged with one of the tags in the list on the left!")
 
             @st.cache_data
@@ -742,7 +741,7 @@ def tf_idf():
             if st.session_state['result_ti']:
                 corpus = st.session_state['corpus']
                 token = st.session_state['lemmatized']          
-                tokenized = [list(set(re.split(" ",li))) for li in token]
+                tokenized = [list(set(np.str.split(" ",li))) for li in token]
 
                 #define term frequency (tf) function
                 def tf(corpus, token_set):
