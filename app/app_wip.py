@@ -558,7 +558,7 @@ def data_cleaning():
                                 st.session_state['submit_5'] = True
 
                     if st.session_state['submit_5']:
-                        with st.container("Resulting Wordcloud"):
+                        with st.container():
                             st.header("Resulting Wordcloud")
                             wordcloud(st.session_state['clean_text'], lim=100)
                         
