@@ -842,11 +842,11 @@ def tf_idf():
                         else:
                             pass
 
-                        rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
+                        rendered_dream = pd.DataFrame({"values": st.session_state['tf_idf_df'].iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
                         words = rendered_dream.index.tolist()
                         rendered_dream['words'] = words
 
-                        rendered_dream_2 = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n_2'],:].sort_values(axis = 0, ascending = False)[:number_of_words2]})
+                        rendered_dream_2 = pd.DataFrame({"values": st.session_state['tf_idf_df'].iloc[st.session_state['row_n_2'],:].sort_values(axis = 0, ascending = False)[:number_of_words2]})
                         words_2 = rendered_dream_2.index.tolist()
                         rendered_dream_2['words'] = words_2          
 
