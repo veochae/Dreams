@@ -155,7 +155,10 @@ def reddit_data(time_wanted, headers):
                 with col22:
                     st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
                 time1 = time.time()
-                df.text = multiprocessing_function(df.text)
+                try:
+                    df.text = multiprocessing_function(df.text)
+                except:
+                    pass
                 time2 = time.time()
                 col33, col44 = st.columns([3,2])
                 with col33:
@@ -876,13 +879,11 @@ def tf_idf():
                             
                         st.plotly_chart(fig,theme="streamlit", use_container_width=True)   
 
-                    try:
-                        st.info(f"Current Keyword is `{st.session_state['keyword']}`", icon="ℹ️")
-                        st.success("If you wish to change the selected Dream or Keyword, please go back to the Data Cleaning Section of the App.")
-                        st.dataframe(pd.DataFrame(st.session_state['filtered']))
-                    except:
-                        st.dataframe(pd.DataFrame(st.session_state['semi']))
+                    st.success("If you wish to change the **first** Dream or Keyword, please go back to the Data Cleaning Section of the App.")
+
                     st.info("Choose another dream that you would like to examine" ,icon="ℹ️")
+                    st.dataframe(pd.DataFrame(st.session_state['semi']))
+            
                     try:
                         st.session_state['row_n_2'] = int(st.text_input("Second Dream Index:"))
                         
