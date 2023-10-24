@@ -830,63 +830,63 @@ def tf_idf():
                                     labels = dict(words = "Words", values = 'TF-IDF Score'))
                     st.plotly_chart(fig,theme="streamlit", use_container_width=True)   
 
+                def barplot_2(tf_idf_df, number_of_words, number_of_words2):
+                    if len(tf_idf_df.iloc[st.session_state['row_n'],:].tolist()) < number_of_words:
+                        number_of_words = len(tf_idf_df.iloc[st.session_state['row_n'],:].tolist())
+                    else:
+                        pass
+
+                    if len(tf_idf_df.iloc[st.session_state['row_n_2'],:].tolist()) < number_of_words:
+                        number_of_words2 = len(tf_idf_df.iloc[st.session_state['row_n_2'],:].tolist())
+                    else:
+                        pass
+
+                    rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
+                    words = rendered_dream.index.tolist()
+                    rendered_dream['words'] = words
+
+                    rendered_dream_2 = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n_2'],:].sort_values(axis = 0, ascending = False)[:number_of_words2]})
+                    words_2 = rendered_dream_2.index.tolist()
+                    rendered_dream_2['words'] = words_2          
+
+                    fig = make_subplots(rows=1, cols=2)
+
+                    fig.add_trace(go.Bar(x = rendered_dream['words'],
+                                        y = rendered_dream['values'],
+                                        name = f"Dream {st.session_state['row_n']}"),
+                                        row = 1, col = 1)
+                    
+                    fig.add_trace(go.Bar(x = rendered_dream_2['words'],
+                                        y = rendered_dream_2['values'],
+                                        name = f"Dream {st.session_state['row_n_2']}"),
+                                    row = 1, col = 2)         
+                    
+                    fig.update_layout(
+                                        title="TF-IDF Side by Side Barplot",
+                                        xaxis_title="Words",
+                                        yaxis_title="TF-IDF Values",
+                                        legend_title="Dreams"
+                                        # font=dict(
+                                        #     family="Courier New, monospace",
+                                        #     size=18,
+                                        #     color="RebeccaPurple"
+                                        # )
+                                    )
+                        
+                    st.plotly_chart(fig,theme="streamlit", use_container_width=True)   
+
                 barplot(tf_idf_df = st.session_state['tf_idf_df'], number_of_words = 10)
                 change = 2
 
                 if change == 2:
-                    def barplot_2(tf_idf_df, number_of_words, number_of_words2):
-                        if len(tf_idf_df.iloc[st.session_state['row_n'],:].tolist()) < number_of_words:
-                            number_of_words = len(tf_idf_df.iloc[st.session_state['row_n'],:].tolist())
-                        else:
-                            pass
-
-                        if len(tf_idf_df.iloc[st.session_state['row_n_2'],:].tolist()) < number_of_words:
-                            number_of_words2 = len(tf_idf_df.iloc[st.session_state['row_n_2'],:].tolist())
-                        else:
-                            pass
-
-                        rendered_dream = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n'],:].sort_values(axis = 0, ascending = False)[:number_of_words]})
-                        words = rendered_dream.index.tolist()
-                        rendered_dream['words'] = words
-
-                        rendered_dream_2 = pd.DataFrame({"values": tf_idf_df.iloc[st.session_state['row_n_2'],:].sort_values(axis = 0, ascending = False)[:number_of_words2]})
-                        words_2 = rendered_dream_2.index.tolist()
-                        rendered_dream_2['words'] = words_2          
-
-                        fig = make_subplots(rows=1, cols=2)
-
-                        fig.add_trace(go.Bar(x = rendered_dream['words'],
-                                            y = rendered_dream['values'],
-                                            name = f"Dream {st.session_state['row_n']}"),
-                                            row = 1, col = 1)
-                        
-                        fig.add_trace(go.Bar(x = rendered_dream_2['words'],
-                                            y = rendered_dream_2['values'],
-                                            name = f"Dream {st.session_state['row_n_2']}"),
-                                        row = 1, col = 2)         
-                        
-                        fig.update_layout(
-                                            title="TF-IDF Side by Side Barplot",
-                                            xaxis_title="Words",
-                                            yaxis_title="TF-IDF Values",
-                                            legend_title="Dreams"
-                                            # font=dict(
-                                            #     family="Courier New, monospace",
-                                            #     size=18,
-                                            #     color="RebeccaPurple"
-                                            # )
-                                        )
-                            
-                        st.plotly_chart(fig,theme="streamlit", use_container_width=True)   
-
                     st.success("If you wish to change the **first** Dream or Keyword, please go back to the Data Cleaning Section of the App.")
 
                     st.info("Choose another dream that you would like to examine" ,icon="ℹ️")
                     st.dataframe(pd.DataFrame(st.session_state['semi']))
             
+                    st.session_state['row_n_2'] = int(st.text_input("Second Dream Index:"))
+
                     try:
-                        st.session_state['row_n_2'] = int(st.text_input("Second Dream Index:"))
-                        
                         barplot_2(tf_idf_df = st.session_state['tf_idf_df'], number_of_words = 10, number_of_words2 = 10)
 
                         col1,col2 = st.columns(2)
