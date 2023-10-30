@@ -225,7 +225,7 @@ def data_collection():
     st.write("Before anything else, you are going to first acquire the data which later will be analyzed using NLP. For that matter, shortly, you will be collecting data in real time from Reddit, an online environment for sharing and discussing information. Note that Reddit is organized in threads called “subreddits” which essentially are topics, where the discussion actually takes place. As you may have guessed – one such subreddit – in fact the only subreddit that you will use relates to reported dreams. It is a community where users share their dreams seeking interpretations or simply for the sake of sharing.")
     st.write("To collect the data on dreams in real time, posted by the Reddit users, you first need to access the Reddit Application Programming Interface (API). Information on how to do that can be found here. That is a necessary step which fortunately won’t take more than a minute or so … for sure it won’t be too long to put you to sleep before the main event! The below will serve as a guideline for the readers to gain access to the Reddit Developer's account.")
     st.warning("Please refrain from using Chrome for the process below! If you are a Mac user, please try using Safari, and if Windows, try using Edge!")
-    st.video("https://www.youtube.com/watch?v=OY6e_vvuMgo")
+    st.video("https://youtu.be/k6TD-pOsh8s")
     st.write("Click on this [link](https://www.reddit.com/prefs/apps) to get to the Reddit API OAUTH2 Page!")
     st.write("Now that you have gained access to the Reddit developer's account, you are ready to use the Reddit API in order to gather dreams that will then be used as the data for NLP. The subreddit to be used is r/Dreams, which can be easily searched on search engines for viewing purposes. In the below text boxes, please input your Reddit information in order to collect the dreams. ")
 
@@ -536,7 +536,7 @@ def data_cleaning():
                     if st.session_state['submit_2']:
                         with st.form("Tokenization"):
                             st.header("Tokenization")
-                            st.write(" , ".join(st.session_state['tokenized'][ind]))
+                            st.write(" , ".join(st.session_state['tokenized'][ind][:-1]))
 
                             submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
                             if submit_3:
@@ -911,7 +911,7 @@ def tf_idf():
 ######################################################################################## 
 def set_up_openai():
     st.title("Setting Up your Open AI API")
-    st.video("https://youtu.be/sqbiY-sA4qk")
+    st.video("https://youtu.be/VMjJ4BrYVaE")
     with st.form("open_ai_cred"):
         key_open = st.text_input("OpenAI API Key")
         submitted = st.form_submit_button("Submit")   
