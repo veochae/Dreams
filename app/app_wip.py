@@ -635,7 +635,7 @@ def data_cleaning():
                                 return pd.DataFrame(tf_idf_li)
                             
                             
-                            st.session_state['tf_idf_df'] = main(corpus, lemmatized)
+                            st.session_state['tf_idf_df'] = main(st.session_state['corpus'], st.session_state['lemmatized'])
                             st.write(np.mean(st.session_state['tf_idf_df']['dream']))
                             st.write(np.mean(st.session_state['tf_idf_df']['one']))
                             st.write(np.mean(st.session_state['tf_idf_df']['weird']))
