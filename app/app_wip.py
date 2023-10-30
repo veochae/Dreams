@@ -646,8 +646,8 @@ def data_cleaning():
                             st.write(np.percentile(np.nonzero(np.array(tf_idf_mean)),95))
                             st.write(np.percentile(np.nonzero(np.array(tf_idf_mean)),90))
                             st.write(np.percentile(np.nonzero(np.array(tf_idf_mean)),80))
-                            st.write(np.percentile(np.min(np.array(tf_idf_mean)),80))
-                            st.write(np.percentile(np.max(np.array(tf_idf_mean)),80))
+                            st.write(np.min(np.nonzero(np.array(tf_idf_mean))))
+                            st.write(np.max(np.nonzero(np.array(tf_idf_mean))))
                             st.write(np.mean(np.nonzero(np.array(tf_idf_mean))))
 
                             t_f = [False if z < st.write(np.mean(np.nonzero(np.array(tf_idf_mean)))) else True for z in tf_idf_mean]
