@@ -638,15 +638,11 @@ def data_cleaning():
                             st.session_state['tf_idf_df'] = main(st.session_state['corpus'], st.session_state['lemmatized'])
                             
                             tf_idf_mean = st.session_state['tf_idf_df'].describe().iloc[1,:].tolist()
-                            st.write(tf_idf_mean)
 
                             t_f = [False if z < np.mean(np.nonzero(np.array(tf_idf_mean))) else True for z in tf_idf_mean]
 
-
                             not_words = [j for e,j in enumerate(st.session_state['tf_idf_df'].columns) if t_f[e] == False]
-                            st.write(not_words[:20])
-                            words = [k for k in st.session_state['clean_text'] if k not in not_words]
-                            st.write(words[:20])
+                            words = [k for k in st.session_state['lemmatized'] if k not in not_words]
 
                             wordcloud(words, lim=100, collocation_threshold = 10)
                         
