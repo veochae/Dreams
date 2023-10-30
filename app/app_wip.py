@@ -633,8 +633,12 @@ def data_cleaning():
                                 my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
 
                                 return pd.DataFrame(tf_idf_li)
-
+                            
+                            
                             st.session_state['tf_idf_df'] = main(corpus, tokenized)
+                            st.write(st.session_state['tf_idf_df']['dream'])
+                            st.write(st.session_state['tf_idf_df']['one'])
+                            st.write(st.session_state['tf_idf_df']['weird'])
                             tf_idf_mean = st.session_state['tf_idf_df'].describe().iloc[1,:].tolist()
                             t_f = [False if z < np.percentile(tf_idf_mean,80) else True for z in tf_idf_mean]
 
