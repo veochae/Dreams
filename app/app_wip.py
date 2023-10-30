@@ -563,7 +563,7 @@ def data_cleaning():
                     if st.session_state['submit_5']:
                         with st.container():
                             st.header("Resulting Wordcloud")
-                            wordcloud(st.session_state['clean_text'], lim=100, collocation_threshold = 10)
+                            wordcloud(st.session_state['clean_text'][20:], lim=100, collocation_threshold = 10)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
