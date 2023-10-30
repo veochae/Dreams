@@ -641,7 +641,7 @@ def data_cleaning():
                             t_f = [False if z < np.median(tf_idf_mean) else True for z in tf_idf_mean]
                             not_words = [j for e,j in enumerate(st.session_state['tf_idf_df'].columns) if t_f[e] == False]
 
-                            wordcloud(st.session_state['clean_text'], lim=100, stopword = not_words)
+                            wordcloud(st.session_state['complete'], lim=100, stopword = not_words)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
