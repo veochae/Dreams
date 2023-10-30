@@ -636,10 +636,6 @@ def data_cleaning():
                             
                             
                             st.session_state['tf_idf_df'] = main(st.session_state['corpus'], st.session_state['lemmatized'])
-                            st.write(np.mean(st.session_state['tf_idf_df']['dream']))
-                            st.write(np.mean(st.session_state['tf_idf_df']['one']))
-                            st.write(np.mean(st.session_state['tf_idf_df']['weird']))
-
                             
                             tf_idf_mean = st.session_state['tf_idf_df'].describe().iloc[1,:].tolist()
                             st.write(np.percentile(np.nonzero(np.array(tf_idf_mean)),99))
