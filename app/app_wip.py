@@ -646,7 +646,7 @@ def data_cleaning():
                             st.write(np.max(np.nonzero(np.array(tf_idf_mean))))
                             st.write(np.mean(np.nonzero(np.array(tf_idf_mean))))
 
-                            t_f = [False if z < st.write(np.mean(np.nonzero(np.array(tf_idf_mean)))) else True for z in tf_idf_mean]
+                            t_f = [False if z < np.mean(np.nonzero(np.array(tf_idf_mean))) else True for z in tf_idf_mean]
 
 
                             not_words = [j for e,j in enumerate(st.session_state['tf_idf_df'].columns) if t_f[e] == False]
