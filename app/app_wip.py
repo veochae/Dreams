@@ -92,9 +92,9 @@ def load_nlp():
     return spacy.load('en_core_web_sm')
 
 ##########wordcloud
-def wordcloud(x, lim, collocation_threshold, stopword):
+def wordcloud(x, lim, stopword):
     text = " ".join(x)
-    cloud = WordCloud(collocations = False, stopwords = stopword, max_words = lim,min_word_length = 3, collocation_threshold = collocation_threshold).generate(text)
+    cloud = WordCloud(collocations = False, stopwords = stopword, max_words = lim,min_word_length = 3).generate(text)
     fig, ax = plt.subplots(figsize = (12, 8))
     ax.imshow(cloud, interpolation='bilinear')
     plt.axis("off")
@@ -638,11 +638,10 @@ def data_cleaning():
                             st.session_state['tf_idf_df'] = main(st.session_state['corpus'], st.session_state['lemmatized'])
                             
                             tf_idf_mean = st.session_state['tf_idf_df'].describe().iloc[1,:].tolist()
-
                             t_f = [False if z < np.mean(np.nonzero(np.array(tf_idf_mean))) else True for z in tf_idf_mean]
                             not_words = [j for e,j in enumerate(st.session_state['tf_idf_df'].columns) if t_f[e] == False]
 
-                            wordcloud(st.session_state['clean_text'], lim=100, stopword = not_words ,collocation_threshold = 10)
+                            wordcloud(st.session_state['clean_text'], lim=100, stopword = not_words)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
