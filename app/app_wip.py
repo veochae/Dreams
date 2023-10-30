@@ -563,7 +563,86 @@ def data_cleaning():
                     if st.session_state['submit_5']:
                         with st.container():
                             st.header("Resulting Wordcloud")
-                            wordcloud(st.session_state['clean_text'][20:], lim=100, collocation_threshold = 10)
+
+                            corpus = st.session_state['corpus']
+                            token = st.session_state['lemmatized']     
+                            tokenized = [list(set(li)) for li in token]
+
+                            #define term frequency (tf) function
+                            def tf(corpus, token_set):
+                                tf_dict = {}
+                                n = len(token_set)
+                                row_dict = corpus
+
+                                for word, count in row_dict.items():
+                                    tf_dict[word] = count / float(n)
+                                
+                                return tf_dict
+
+                            #define inverse data frequency (idf) function
+                            def idf(documents):
+                                n = len(documents)
+                                idf_dict = dict.fromkeys(documents[0].keys(),0)
+
+                                for document in documents:
+                                    for word, val in document.items():
+                                        if val > 0:
+                                            idf_dict[word] += 1
+                                    
+                                for word, val in idf_dict.items():
+                                    idf_dict[word] = math.log(n / float(val))
+
+                                    #if one wants to match the sklearn version of the tfidfvectorizor
+                                    #idf_dict[word] = math.log((n+1) / (1+float(val)))+1
+
+                                return idf_dict
+
+                            #define tf-idf function
+                            def tf_idf(tf, idf):
+                                tf_idf_dict = {}
+
+                                for word, val in tf.items():
+                                    tf_idf_dict[word] = val * idf[word]
+
+                                return tf_idf_dict
+
+                            #main function to execute all above
+                            def main(corpus, tokenized):
+                                my_bar = st.progress(0,"Initializing tf-idf calculation")
+                                tf_li = []
+                                tf_idf_li = []
+                                
+                                documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
+                                time.sleep(2)
+
+                                my_bar.progress(35, "Calculating tf")
+                                for l, r in enumerate(documents):
+                                    tf_temp = tf(r, tokenized[l])
+                                    tf_li.append(tf_temp)
+                                
+                                time.sleep(2)
+                                my_bar.progress(70, "Calculating idf")
+                                idf_dict = idf(documents)
+
+                                time.sleep(2)
+                                my_bar.progress(95, "Calculating tf_idf")
+                                for t in tf_li:
+                                    tf_idf_li.append(tf_idf(t, idf_dict))
+                                
+
+                                my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
+
+                                return pd.DataFrame(tf_idf_li)
+
+                            st.session_state['tf_idf_df'] = main(corpus, tokenized)
+
+                            tf_idf_mean = st.session_state['tf_idf_df'].describe().iloc[1,:].tolist()
+                            t_f = [True if z < np.mean(tf_idf_mean) else False for z in tf_idf_mean]
+
+                            not_words = [j for e,j in enumerate(st.session_state['tf_idf_df'].columns) if t_f[e] == True]
+                            words = [k for k in st.session_state['clean_text'] if k not in not_words]
+
+                            wordcloud(words, lim=100, collocation_threshold = 10)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
@@ -742,78 +821,6 @@ def tf_idf():
             st.session_state['result_ti'] = True
         try:
             if st.session_state['result_ti']:
-                corpus = st.session_state['corpus']
-                token = st.session_state['lemmatized']     
-                tokenized = [list(set(li)) for li in token]
-
-                #define term frequency (tf) function
-                def tf(corpus, token_set):
-                    tf_dict = {}
-                    n = len(token_set)
-                    row_dict = corpus
-
-                    for word, count in row_dict.items():
-                        tf_dict[word] = count / float(n)
-                    
-                    return tf_dict
-
-                #define inverse data frequency (idf) function
-                def idf(documents):
-                    n = len(documents)
-                    idf_dict = dict.fromkeys(documents[0].keys(),0)
-
-                    for document in documents:
-                        for word, val in document.items():
-                            if val > 0:
-                                idf_dict[word] += 1
-                        
-                    for word, val in idf_dict.items():
-                        idf_dict[word] = math.log(n / float(val))
-
-                        #if one wants to match the sklearn version of the tfidfvectorizor
-                        #idf_dict[word] = math.log((n+1) / (1+float(val)))+1
-
-                    return idf_dict
-
-                #define tf-idf function
-                def tf_idf(tf, idf):
-                    tf_idf_dict = {}
-
-                    for word, val in tf.items():
-                        tf_idf_dict[word] = val * idf[word]
-
-                    return tf_idf_dict
-
-                #main function to execute all above
-                def main(corpus, tokenized):
-                    my_bar = st.progress(0,"Initializing tf-idf calculation")
-                    tf_li = []
-                    tf_idf_li = []
-                    
-                    documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
-                    time.sleep(2)
-
-                    my_bar.progress(35, "Calculating tf")
-                    for l, r in enumerate(documents):
-                        tf_temp = tf(r, tokenized[l])
-                        tf_li.append(tf_temp)
-                    
-                    time.sleep(2)
-                    my_bar.progress(70, "Calculating idf")
-                    idf_dict = idf(documents)
-
-                    time.sleep(2)
-                    my_bar.progress(95, "Calculating tf_idf")
-                    for t in tf_li:
-                        tf_idf_li.append(tf_idf(t, idf_dict))
-                    
-
-                    my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
-
-                    return pd.DataFrame(tf_idf_li)
-
-                st.session_state['tf_idf_df'] = main(corpus, tokenized)
-
                 def barplot(tf_idf_df, number_of_words):
                     if len(tf_idf_df.iloc[st.session_state['row_n'],:].tolist()) < number_of_words:
                         number_of_words = len(tf_idf_df.iloc[st.session_state['row_n'],:].tolist())
