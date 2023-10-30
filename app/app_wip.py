@@ -647,6 +647,8 @@ def data_cleaning():
                             st.write(np.percentile(np.nonzero(np.array(tf_idf_mean)),95))
                             st.write(np.percentile(np.nonzero(np.array(tf_idf_mean)),90))
                             st.write(np.percentile(np.nonzero(np.array(tf_idf_mean)),80))
+                            st.write(np.percentile(np.min(np.array(tf_idf_mean)),80))
+                            st.write(np.percentile(np.max(np.array(tf_idf_mean)),80))
                             st.write(np.mean(np.nonzero(np.array(tf_idf_mean))))
 
                             not_words = [j for e,j in enumerate(st.session_state['tf_idf_df'].columns) if t_f[e] == False]
