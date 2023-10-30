@@ -642,12 +642,8 @@ def data_cleaning():
                             t_f = [False if z < np.mean(np.nonzero(np.array(tf_idf_mean))) else True for z in tf_idf_mean]
                             st.write('haha')
                             not_words = [j for e,j in enumerate(st.session_state['tf_idf_df'].columns) if t_f[e] == False]
-                            st.write('haha2')
-                            words = [k for k in np.str.split(" ",sum(st.session_state['lemmatized'],[])) if k not in not_words]
-                            st.write('haha3')
-                            st.write(words[:10])
 
-                            wordcloud(words, lim=100, collocation_threshold = 10)
+                            wordcloud(st.session_state['lemmatized'], lim=100, collocation_threshold = 10)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
