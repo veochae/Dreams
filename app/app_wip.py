@@ -645,6 +645,7 @@ def data_cleaning():
                             st.write('haha2')
                             words = [k for k in sum(st.session_state['lemmatized'],[]) if k not in not_words]
                             st.write('haha3')
+                            st.write(words[:10])
 
                             wordcloud(words, lim=100, collocation_threshold = 10)
                         
