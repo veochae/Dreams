@@ -94,7 +94,7 @@ def load_nlp():
 ##########wordcloud
 def wordcloud(x, lim, collocation_threshold):
     text = " ".join(x)
-    cloud = WordCloud(collocations = False, max_words = lim,min_word_length = 3, collocations = True,collocation_threshold = collocation_threshold).generate(text)
+    cloud = WordCloud(collocations = False, max_words = lim,min_word_length = 3, collocation_threshold = collocation_threshold).generate(text)
     fig, ax = plt.subplots(figsize = (12, 8))
     ax.imshow(cloud, interpolation='bilinear')
     plt.axis("off")
