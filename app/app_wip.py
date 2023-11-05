@@ -561,6 +561,7 @@ def data_cleaning():
                             corpus = st.session_state['corpus']
                             token = st.session_state['lemmatized']     
                             tokenized = [list(set(li)) for li in token]
+                            st.write(tokenized)
 
                             #define term frequency (tf) function
                             def tf(corpus, token_set):
