@@ -92,9 +92,9 @@ def load_nlp():
     return spacy.load('en_core_web_sm')
 
 ##########wordcloud
-def wordcloud(x, lim, stopword):
+def wordcloud(x, lim):
     text = " ".join(x)
-    cloud = WordCloud(collocations = False, stopwords = stopword, max_words = lim,min_word_length = 3).generate(text)
+    cloud = WordCloud(collocations = False, max_words = lim, min_word_length = 3).generate(text)
     fig, ax = plt.subplots(figsize = (12, 8))
     ax.imshow(cloud, interpolation='bilinear')
     plt.axis("off")
@@ -150,6 +150,7 @@ def reddit_data(time_wanted, headers):
                 latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
                 st.success("Data Collection Completed!")
                 col11, col22 = st.columns([2,4])
+                df.date = [datetime.fromtimestamp(d) for d in df.date] 
                 with col11:
                     st.success(f'**Data Count**: {len(df)} Dreams')
                 with col22:
@@ -229,12 +230,6 @@ def data_collection():
     st.write("Click on this [link](https://www.reddit.com/prefs/apps) to get to the Reddit API OAUTH2 Page!")
     st.write("Now that you have gained access to the Reddit developer's account, you are ready to use the Reddit API in order to gather dreams that will then be used as the data for NLP. The subreddit to be used is r/Dreams, which can be easily searched on search engines for viewing purposes. In the below text boxes, please input your Reddit information in order to collect the dreams. ")
 
-    st.write("The process of Data Collection follows the below details: ")
-    st.write("1. Your authentication is granted with correct Client Id, Secret Key, Username, and Password. This implies that Reddit knows who is accessing their database and can identify whether you have access to the data of observance. If you do not input the correct credentials, your requests will be denied.")
-    st.write("2. With the correct credentials approved by Reddit, now we start collecting the Dreams. Majority of the major platform APIs prevent users from extracting large quantites of data at once. This is in order to prevent injection of malware viruses into the system, as well as to prevent data mining using a data bot. In order to constrain such possibilities, Reddit has placed a maximum number of data that can be collected at each run of request for data. Thus, to not manually rerun and append data each and every run, the script embeded in this app will take short 'time-off' after each run in order to not be restricted by Reddit data collection regulations. For each run, the amount of collected data will be displayed in the progress bar.")
-    st.write("3. Contrary to what users may believe, the raw data that is collected from Reddit is in json format. For clarity, json file is a nested dictionary format, where all infromation is stored like a hierarchical tree, not a dataframe. Thus, we select only portions of the json data that is required for this anlaysis and create a dataframe.")
-    st.write("4. After the intial raw data collection process, the embedded script performs initial cleaning on the dataset. This process includes the rudimentary process such as dropping Null values and profanity checks.")
-    st.write(" ")
     st.write("Note that the raw data collected from Reddit are in JSON (JavaScript Object Notation) format. For clarity, a JSON file has a nested format, where information is stored like a hierarchical tree (not a dataframe!). As an important pre-processing step the necessary portions of that JSON data will be selected and put into a dataframe. But worry not – that is going to be done for you automatically in the back end of this app (to keep you awake, after all!) One last detail: after the raw data gets pulled from Reddit, there will be an initial data cleaning step to drop the Null values and perform profanity checks before displaying the data. ")
     st.write("Ready? Go!")
 
@@ -294,7 +289,7 @@ def data_collection():
             st.write("Finally, the below is the dataframe based on the JSON file. Note that from the JSON data the app extracts subreddit thread name, the title of the post, the dream, and the date at which the post was made. The analyses taking part in this app exclude any comments that may be made by users following up on a post. ")
             st.dataframe(st.session_state['reddit'].head(30))
 
-            st.write("Ever wondered why one would ever need JSON if dataframes seem so much cleaner? You see, although dataframes are intuitive – their size and the consequent burden on memory can become extremely large as the number of observations or features increase! Further, dataframes typically store various meta data, such as the data type, etc. On the contrary, the JSON format only stores the text values of the data. Therefore, it is a structured word file that can be interpreted in hierarchical fashion when imported into an Integrated Development Environment (IDE). This saves tremendous amount of space when it comes to storing large datasets. And because typically the data in APIs are extremely large, JSON is the go-to format!")
+            st.write("Why, do you think, one would ever need JSON if dataframes seem so much cleaner? JSON-formatted data and dataframes happen to serve different purposes! While dataframe is the go-to format for presenting data for statistical and machine learning analyses, JSON happens to be the common format for data interchange between applications or between a client and a server. To make this more intuitive, imagine you are building a mobile application for financial trading and the app uses information collected in real time from a certain server that hosts financial data. That data can efficiently be provided/sent from the server in JSON format which, upon further cleaning and preprocessing can be represented in a dataframe and be used in statistical and machine learning analyses that would be used in the app that you are building. So, different formats for different purposes!")
         
             st.info("Next click on the next tab on the left to move on to the Data Cleaning Section!" ,icon="ℹ️")
         except KeyError:
@@ -611,6 +606,7 @@ def data_cleaning():
                                 my_bar = st.progress(0,"Initializing tf-idf calculation")
                                 tf_li = []
                                 tf_idf_li = []
+                                wordcloud_words = []
                                 
                                 documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
                                 time.sleep(2)
@@ -628,21 +624,16 @@ def data_cleaning():
                                 my_bar.progress(95, "Calculating tf_idf")
                                 for t in tf_li:
                                     tf_idf_li.append(tf_idf(t, idf_dict))
+                                    wordcloud_words.append(sorted(tf_idf_li[-1], key=tf_idf_li[-1].get, reverse=True)[:3])
                                 
-
                                 my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
 
-                                return pd.DataFrame(tf_idf_li)
+                                return pd.DataFrame(tf_idf_li), wordcloud_words
                             
                             
-                            st.session_state['tf_idf_df'] = main(st.session_state['corpus'], st.session_state['lemmatized'])
+                            st.session_state['tf_idf_df'],wordcloud_words = main(st.session_state['corpus'], st.session_state['lemmatized'])
 
-                            tf_idf_mean = st.session_state['tf_idf_df'].describe().iloc[1,:].tolist()
-                            t_f = [False if z < np.mean(tf_idf_mean[np.nonzero(np.array(tf_idf_mean))]) else True for z in tf_idf_mean]
-                            not_words = [j for e,j in enumerate(st.session_state['tf_idf_df'].columns) if t_f[e] == False]
-                            st.write('haha')
-                            st.write(not_words[:10])
-                            wordcloud(st.session_state['complete'], lim=100, stopword = not_words)
+                            wordcloud(wordcloud_words, lim=100)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
@@ -684,11 +675,13 @@ def part_of_speech_tag():
 
             return tag_df
         
-        complete_load = st.session_state['complete']
-        tag_df = pos_preprocess(complete_load)
+
 
         if result:
             st.session_state['show'] = True
+            st.info("Tagging POS Tags for all Dreams. This may take about 1Minute.")
+            complete_load = st.session_state['complete']
+            tag_df = pos_preprocess(complete_load)
 
             cola, colb = st.columns(2)
             with cola:
@@ -696,7 +689,7 @@ def part_of_speech_tag():
                 st.dataframe(pd.read_csv("https://gist.githubusercontent.com/veochae/447a8d4c7fa38a9494966e59564d4222/raw/9df88f091d6d1728eb347ee68ee2cdb297c0e5ff/spacy_tag.csv"))
             with colb:
                 st.header("What is this Table?")
-                st.markdown("The table on the left is the Spacy pacakge defined Part of Speech Tags. Each acronym stands for a particular part of speech, and essentially, each word is tagged with one of the tags in the list on the left!")
+                st.markdown("The table on the left shows various tags with which words from a corpus will get tagged with as a result of the POS tagging process. These are standard tags used in POS tagging and are not corpus-specific.")
 
             @st.cache_data
             def barplot(x):
@@ -724,8 +717,8 @@ def part_of_speech_tag():
                 st.write("Now that we know that each word can be understood by the machine, how about sentences? Can machines now understand full sentences?")
                 st.write("To help ease the understanding of why we need this, we can give Chat-GPT as an example. To the human brain, when we observe the two statements: ")
                 st.write("“I use Chat-GPT”, “Do you use Chat-GPT?” ")
-                st.write("We already know which one of the two statements is a question. Not only because of the question mark on the second statement, but because it is a sentence that starts with an auxillary ”Do” and a pronoun as the target of asking the question. Obviously, humans do not actively process the part of speech for each and every sentence one encounters, but how about when the machine has to learn sentence structure? Just like the young versions of ourselves first learning how to comprehend the sentence structure, machine has to learn the sentence structures of English as well. Now, we can use the individual POS Tags as a sequence in order to essentially create a formula of sentence structures. With the example above, because")
-                st.write("auxillary + pronoun + verb + … ")
+                st.write("We already know which one of the two statements is a question. Not only because of the question mark on the second statement, but because it is a sentence that starts with an auxiliary ”Do” and a pronoun as the target of asking the question. Obviously, humans do not actively process the part of speech for each and every sentence one encounters, but how about when the machine has to learn sentence structure? Just like the young versions of ourselves first learning how to comprehend the sentence structure, machine has to learn the sentence structures of English as well. Now, we can use the individual POS Tags as a sequence in order to essentially create a formula of sentence structures. With the example above, because")
+                st.write("auxiliary + pronoun + verb + … ")
                 st.write("is the sequential order of POS tags in the given sentence, the machine will now recognize that this sentence is a question.")
                 st.write("As such, POS tagging not only helps machines understand the individual usage of singular words, but also provides an even more powerful tool when used on an aggregated level!")
             
@@ -736,8 +729,7 @@ def part_of_speech_tag():
                     model = "en_core_web_sm"
 
                     st.title("POS Taggging Visualization")
-                    st.write("By now, you have probably seen how long each dreams are. So to show all the dreams and its POS Visualization, it is hard to comprehend because it is so big! So below, we will show how POS tagging works visually for the frist sentence of the dream that you have chosen!")
-                    st.write("Also, the text section right below here is interactive! Please enter any kind of text or sentences you would like to examine and it will adjust the visualization according to your provided sentence. Enjoy!")
+                    st.write("To illustrate how POS tagging works in action, for the interest of space we will only tag the first sentence of the dream that you have chosen at the start. As you can see, that first sentence is shown in the text window below, followed by a visualization illustrating the POS tags. Note that this interface is fully interactive, so after you review the results from POS tagging for the first sentence in the below display, feel free to type in any text (perhaps the first sentence from your own past dream?;) and see how it gets tagged and visualized.")
                     text = st.text_area("Text to analyze", temp, height=200)
                     doc = spacy_streamlit.process_text(model, text)
 
@@ -758,11 +750,10 @@ def named_entity_recognition():
         st.info(f"Chosen Dream: Dream {st.session_state['row_n']}" ,icon="ℹ️")
         if st.session_state['show']:
                 st.write("As the next step of translating human language to machine comprehensible context, we go through the named entity recognition. Well first, we have to know what Named Entity is! ")
-                st.write("Named Entities are words or collection of words that signify a particular subject in a given text. In essence, the particular subjects would entail names, locations, companies, products, monetary values, percentages, time, etc. The key difference from the POS Tagging to Named Entity Recognition is that it provides more context to the sentence the algorithm is trying to understand. ")
+                st.write("One can think of a named entity as a label that would be assigned to various sections of a text. But compared to POS tagging, in Named Entity Recognition (NER) what gets identified are instances of names, locations, companies, products, monetary values, percentages, time, etc. So, Named Entity Recognition is yet another step, in addition to POS tagging, to provide further context about text to the machine.")
                 st.write("For instance, let’s take the example of two sentences below:")
                 st.write("“I like Google” and “I like Wellesley”")
-                st.write("From the POS tagging, the machine learning algorithm understands that Google and Wellesley are nouns. However, it only recognizes that the two words are nouns, but not what the each word entails. Named Entity Recognition will flag the two words into Company and Location respectively. That way, the machine can now have a contextualized understanding of the sentence that one is a statement about a company, and the counterpart about a location. ")
-                st.write("So how is this used in real life you may ask! There are countless possible usages of Named Entity Recognition, but one of the most prominent used cases would be Netflix’s recommendation system. When you watch a show or movie on Netflix, based on the description of the show, Netflix can extract the entities in the description and recommend another entertainment piece that has the most similar entities in its description. Other used cases can be a simpler one where we can summarize a unstructured text data (such as a news article) to a structured format. In other words, instead of reading the entire article, NER allows for extraction of the 5Ws: Who, What, Why, When and Where.")
+                st.write("As you should know by now, POS tags are going to mark both Google and Wellesley as nouns. As useful as that may seem, POS tagging has not provided any further information regarding what each of those two nouns represents. Named Entity Recognition will flag the two words into Company and Location respectively. That way, the machine will now have a more detailed information behind each word in the sentence. In particular,  one (Google) will get comprehended as a company, and the counterpart (Wellesley) as a location!")
                 st.write("Now, with that being said, let’s try this new technique on the dream that you have chosen from the previous section!")
             
                 df = st.session_state['semi']
@@ -793,22 +784,21 @@ def named_entity_recognition():
 def tf_idf():
 
     tf_latex = r'\text{TF}(w, d) = \frac{\text{Count of } w \text{ in } d}{\text{Total number of words in } d}'
-    idf_latex = r'\text{IDF}(w) = \log\left(\frac{N}{n_w}\right)'
+    idf_latex = r'\text{IDF}(w) = \ln\left(\frac{N}{n_w}\right)'
     tf_idf_latex = r'\text{TF-IDF}(w, d) = \text{TF}(w, d) \times \text{IDF}(w)'
-    text = r"""\text{Number of Words}: N \\ \text{Number of documents containing } w: n_x"""
+    text = r"""\text{Number of Words}: N \\ \text{Number of documents containing } w: n_w"""
     
     st.title("TF-IDF Analysis")
     try:
         st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")    
-        st.write("Ever wondered how LinkedIn scans your resume or how Google recommendation works?")
-        st.write("Certainly, there are many other advanced methods that take place in both of the tech giants' machine learning methods, but in their core, TF-IDF exists.")
-        st.write("TF-IDF stands for Term Frequency and Inverse Document Frequency, and it's a numerical representation used in NLP to understand the importance of words in a document or collection of documents. Let's break it down piece by piece to what TF and IDF each does:")
-        st.write("**Term Frequency (TF)**: Term Frequency in the simplest sense measures how often a word appears in a document. It takes the document, and counts how many times each word is appearing in the specific document. The mathematical representation used in this following app is as follows:")
+        st.write("Suppose we now want to understand which words are specific to a given dream, say the dream that you have selected at the start. Similarly, if a marketing analyst is analyzing product reviews, they may want to understand which words are particular to a given review. The same way, a hiring manager analyzing resumes may find it useful to know which skills or qualifications are specific to a given applicant based on the resume. For all these tasks and many more a tool referred to as TF-IDF can come in handy.")
+        st.write("TF-IDF stands for Term Frequency - Inverse Document Frequency, and it is a numerical representation used in NLP to understand how specific a given word is to a given document. Let's now study the building blocks of this metric.")
+        st.write("**Term Frequency (TF)**: Term Frequency in the simplest sense measures how often a word appears in a document. It takes the document, and counts how many times each word is appearing in the specific document. Although there are several variations for TF, here is the formula used in this app:")
         st.latex(tf_latex)
-        st.write("**Inverse Document Frequency (IDF)**: Inverse Document Frequency, unlike the TF, takes all the documents in hand. Not specific to a singular document, but the entire set of documents you are trying to analyze. By providing this measure, we can see which words are less common throughout the documents. So in essence, IDF allows us to distinguish which words were rather specific to each document!")
+        st.write("**Inverse Document Frequency (IDF)**: Inverse Document Frequency, unlike the TF, takes into consideration all the documents making up the corpus. The purpose of IDF is to measure how common (equivalently, how rare) a word is across the entire corpus. Again, there are a few variations for IDF, and in the current app the following version is used:")
         st.latex(text)
         st.latex(idf_latex)
-        st.write("**TF-IDF**: TF-IDF is the amalgamation of TF and IDF as you can tell by the name! By using the equation below, TF-IDF shows how important a word is in a document in comparison to when used in another document. For instance, when we search for the word **entrepreneurship**, a document pertaining to Babson College will have a higher TF-IDF score for the word in comparison to a document about Olin College, because entrepreneurship is more relevant in the document for Babson!")
+        st.write("**TF-IDF**: TF-IDF is the amalgamation of TF and IDF as you can tell by the name! In essence TF-IDF for a given term used in a certain document is simply the term frequency of the word scaled or adjusted according to how common the word is across the entire corpus. For a word that appears frequently in the document in question, but also happens to appear commonly throughout the entire corpus, it’s frequency will be scaled down, thus resulting in a relatively lower TF-IDF score. Conversely, a word appearing frequently in a document but being rare across the corpus will have its frequency adjusted/scaled upwards thus resulting in relative higher TF-IDF score. For instance, when we search for the word **entrepreneurship**, a document pertaining to Babson College will have a higher TF-IDF score for the word in comparison to a document about Olin College, because entrepreneurship is more relevant in the document for Babson!")
         st.latex(tf_idf_latex)
         st.write("Check out this [link](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) for more information about the equations!")
         st.write("Now, let's start the below section to explore TF-IDF!")        
@@ -932,13 +922,11 @@ def set_up_openai():
 def sentiment_analysis():
     st.title("Sentiment Analysis")
     try:
-        st.write("In recent days, companies ask for more detailed reviews about their products than ever before. Ever wondered why?")
-        st.write("It's because using Sentiment Analysis, the companies can start to realize how the customers **feel** about their products!")
-        st.write("In the earlier days of the sentiment analysis, it was quite simple. You would classify a piece of text as **positive**, **negative**, or **neutral**. We won't dive into too much detail about how that has been done, but if you are curious, checkout this [link](https://www.geeksforgeeks.org/python-sentiment-analysis-using-vader/)!")
-        st.write("Now, coming back to the modern days, the sentiment analysis have evolved into something more specific and granular: **Emotion Analysis**.")
-        st.write("Instead of just figuring out whether the customers' reactions were positive or negative, we start to look at multiple emotions such as: fear, joy, happiness, surprise, love, anger, sadness ,etc.")
-        st.write("The pretrained model that we use for the purpose of this exercise is from hugging face, using more than 100,000 tweets as its training data. Essentially, all of those tweets were tagged with different emotions. And the neural networks is trained to recognize different speech patterns and words that comprises the emotions that has been prelabelled. Now, having **learned** about human emotions over 100,000 text files, the model can start to predict what emotion the writer of the text is trying to show.")
-        st.write("So, without further explanation, let's see what kind of emotion the dream you have chosen shows!")
+        st.write("While in the earlier days of ecommerce online sellers would be satisfied with any reviews of the products and services they were offering, in recent years companies have shifted into asking for more detailed reviews. Why? Because using Sentiment Analysis companies can learn how the customers feel about their products, and the more detailed the review the higher the chances of accurately uncovering customer feelings!")
+        st.write("In the earlier days of the Sentiment Analysis, it was quite simple. One would classify a piece of text as positive, negative, or neutral. We won't dive into too much detail about how that has been done, but if you are curious, checkout this link! Coming back to the modern days, Sentiment Analysis has evolved into something more specific and granular: Emotion Analysis")
+        st.write("Instead of uncovering whether the customers' reactions were positive or negative, one starts to look at multiple (and more granular) feelings such as: fear, joy, happiness, surprise, love, anger, sadness, etc.")
+        st.write("The pretrained model that we use for the purpose of this exercise is from Hugging Face – a popular platform for [NLP](https://huggingface.co/). In particular, using over 100,000 labeled tweets as its training data, neural networks were trained to recognize different speech patterns that lend themselves to various feelings and emotions. Having learned about human emotion based on training data, the model can now be applied to any piece of text – including text on reported dreams – to predict emotion!")
+        st.write("So, without further ado, let's uncover the emotions present in the dream that you selected at the outset!")
 
         with st.form("sentiment_analysis"):
             st.info(f"Chosen Dream: Dream {st.session_state['row_n']}",icon="ℹ️")
@@ -994,10 +982,8 @@ def summary_continue():
     st.title("Dreams with GPT") 
 
     try:
-        st.write("Now we are at the final stage and the most modern stage of NLP: **Generative Pre-trained Transformers** ")
-        st.write("You are probably most familiar with Chat GPT as it is rapidly utilized all over regardless of the industries!")
-        st.write("GPTs, most simply put, are neural networks that tries to emulate the human brain. Remember how neural networks work? It connects different nodes to resemble the human neurons and each of their interactions. Now, GPT 3.5 for instance, try to create 175 billion parameters. Although recreating a human brain would take trillions of parameters, GPT is yet the closest computer program that is closest to emulating the human brain.")
-        st.write("And as a byproduct of of the textual GPTs, there also is DALL-E, which is image generative AI. DALL·E is like a creative image generator with a touch of AI magic. It can take written descriptions and turn them into unique images. Imagine describing an idea in words, and DALL·E brings it to life as an artwork.")
+        st.write("Now we are ready to jump right into the heart of advanced, state-of-the-art AI: Generative Pre-trained Transformers (GPT) and DALL·E. You are probably most familiar with Chat GPT as it has quickly diffused into multiple applications and industries.")
+        st.write("On a very high level, GPT is a large language model that utilizes neural networks (among other things) and is used for various language-related tasks from machine translation to text summarization and continuation. DALL·E on the other hand is a generative AI technology for creating images. You can think of DALL·E as a creative image generator powered by the recent advances in generative AI and large language models. It can take written descriptions and turn them into unique images. Just describe an idea in words, and DALL·E brings it to life as an artwork.")
         st.write("Using the Chat GPT 3.5 Davinci and DALL-E, below we summarize, expand and visualize the dream that you have been observing throughout this app.")
 
         openai.api_key = st.session_state['openai_key']    
