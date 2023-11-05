@@ -636,7 +636,6 @@ def data_cleaning():
                             
                             
                             st.session_state['tf_idf_df'],wordcloud_words = main(corpus, tokenized)
-                            st.write(wordcloud_words)
                             wordcloud(wordcloud_words, lim=100)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
