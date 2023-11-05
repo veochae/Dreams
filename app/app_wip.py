@@ -628,7 +628,7 @@ def data_cleaning():
                                 my_bar.progress(95, "Calculating tf_idf")
                                 for t in tf_li:
                                     tf_idf_li.append(tf_idf(t, idf_dict))
-                                    wordcloud_words.append(sorted(tf_idf_li[-1], key=tf_idf_li[-1].get, reverse=True)[:3])
+                                    wordcloud_words += sorted(tf_idf_li[-1], key=tf_idf_li[-1].get, reverse=True)[:3]
                                 
                                 my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
 
