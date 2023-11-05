@@ -328,7 +328,6 @@ def data_cleaning():
                     df= df.dropna()
                     my_bar.progress(10, text = "Transforming Date Time Objects")
                     time.sleep(2)
-                    df['date'] = [datetime.fromtimestamp(time) for time in df['date']]
                     my_bar.progress(30, text = "Profanity Censor in Progress")
                     time.sleep(2)
                     # df['text'] = [profanity.censor(i) for i in df['text']]
