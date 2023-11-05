@@ -612,9 +612,14 @@ def data_cleaning():
                                 time.sleep(2)
 
                                 my_bar.progress(35, "Calculating tf")
+                                t = 0
                                 for l, r in enumerate(documents):
-                                    tf_temp = tf(r, tokenized[l])
-                                    tf_li.append(tf_temp)
+                                    try:
+                                        tf_temp = tf(r, tokenized[l])
+                                        tf_li.append(tf_temp)
+                                        t+=1
+                                    except:
+                                        print(t)
                                 
                                 time.sleep(2)
                                 my_bar.progress(70, "Calculating idf")
