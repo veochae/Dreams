@@ -558,10 +558,6 @@ def data_cleaning():
                         with st.container():
                             st.header("Resulting Wordcloud")
 
-                            corpus = st.session_state['corpus']
-                            token = st.session_state['lemmatized']     
-                            tokenized = [list(set(li)) for li in token]
-
                             #define term frequency (tf) function
                             def tf(corpus, token_set):
                                 tf_dict = {}
@@ -630,7 +626,7 @@ def data_cleaning():
                                 return pd.DataFrame(tf_idf_li), wordcloud_words
                             
                             
-                            st.session_state['tf_idf_df'],wordcloud_words = main(st.session_state['corpus'], st.session_state['lemmatized'])
+                            st.session_state['tf_idf_df'],wordcloud_words = main(st.session_state['corpus'], [list(set(li)) for li in st.session_state['lemmatized']])
 
                             wordcloud(wordcloud_words, lim=100)
                         
