@@ -639,12 +639,14 @@ def data_cleaning():
                             
 
                 extract_array_sample(st.session_state['row_n'])  
-        except:
+        except Exception as e:
             st.warning("Please Complete the Previous Stage Before Moving On")
+            raise e
 
-    except:
+    except Exception as e:
         st.warning("Please Complete the Previous Stage Before Moving On")
-                
+        raise e
+
 ########################################################################################
 ###############       POS Tagging / NER Visualization  page      #######################
 ########################################################################################
