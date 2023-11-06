@@ -44,6 +44,7 @@ def nltk_downloads():
 
 nltk_downloads()
 import spacy
+from spacy import displacy
 from datetime import datetime, date
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -743,8 +744,6 @@ def part_of_speech_tag():
                     doc = spacy_streamlit.process_text(model, text)
 
                     spacy_streamlit.visualize_parser(doc)
-
-                    from spacy import displacy
 
                     nlp = load_nlp()
 
