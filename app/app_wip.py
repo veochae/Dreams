@@ -648,13 +648,11 @@ def data_cleaning():
                             
 
                 extract_array_sample(st.session_state['row_n'])  
-        except Exception as e:
+        except:
             st.warning("Please Complete the Previous Stage Before Moving On")
-            raise e
 
-    except Exception as e:
+    except:
         st.warning("Please Complete the Previous Stage Before Moving On")
-        raise e
 
 ########################################################################################
 ###############       POS Tagging / NER Visualization  page      #######################
@@ -750,12 +748,10 @@ def part_of_speech_tag():
                     doc = nlp(text)
 
                     for token in doc:
-
                         if token.dep_ != "anything":
-
                             token.dep_ = ""
 
-                    displacy.render(doc, style='dep', jupyter=True, options={'distance': 90})
+                    displacy.render(doc, style='dep', jupyter=False, options={'distance': 90})
 
                 st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!", icon="ℹ️")
     except:
