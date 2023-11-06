@@ -739,7 +739,20 @@ def part_of_speech_tag():
                     st.title("POS Taggging Visualization")
                     st.write("To illustrate how POS tagging works in action, for the interest of space we will only tag the first sentence of the dream that you have chosen at the start. As you can see, that first sentence is shown in the text window below, followed by a visualization illustrating the POS tags. Note that this interface is fully interactive, so after you review the results from POS tagging for the first sentence in the below display, feel free to type in any text (perhaps the first sentence from your own past dream?;) and see how it gets tagged and visualized.")
                     text = st.text_area("Text to analyze", temp, height=200)
-                    doc = spacy_streamlit.process_text(model, text)
+
+                    custom_style = {
+                                    "tokens": {
+                                        "margin": "0",  # Adjust the margin around each token
+                                        "padding": "0",  # Adjust the padding around each token
+                                        "font-size": "14px",  # Adjust the font size
+                                    },
+                                    "ner": {
+                                        "margin": "0",  # Adjust the margin around each NER entity
+                                        "padding": "0",  # Adjust the padding around each NER entity
+                                        "font-size": "14px",  # Adjust the font size
+                                    },
+                                }
+                    doc = spacy_streamlit.process_text(model, text, style = custom_style)
 
                     spacy_streamlit.visualize_parser(doc)
 
