@@ -226,7 +226,7 @@ def data_collection():
     st.write("Before anything else, you are going to first acquire the data which later will be analyzed using NLP. For that matter, shortly, you will be collecting data in real time from Reddit, an online environment for sharing and discussing information. Note that Reddit is organized in threads called “subreddits” which essentially are topics, where the discussion actually takes place. As you may have guessed – one such subreddit – in fact the only subreddit that you will use relates to reported dreams. It is a community where users share their dreams seeking interpretations or simply for the sake of sharing.")
     st.write("To collect the data on dreams in real time, posted by the Reddit users, you first need to access the Reddit Application Programming Interface (API). Information on how to do that can be found here. That is a necessary step which fortunately won’t take more than a minute or so … for sure it won’t be too long to put you to sleep before the main event! The below will serve as a guideline for the readers to gain access to the Reddit Developer's account.")
     st.warning("Please refrain from using Chrome for the process below! If you are a Mac user, please try using Safari, and if Windows, try using Edge!")
-    st.video("https://youtu.be/k6TD-pOsh8s")
+    st.video("https://youtu.be/_xK1OEfd3iI")
     st.write("Click on this [link](https://www.reddit.com/prefs/apps) to get to the Reddit API OAUTH2 Page!")
     st.write("Now that you have gained access to the Reddit developer's account, you are ready to use the Reddit API in order to gather dreams that will then be used as the data for NLP. The subreddit to be used is r/Dreams, which can be easily searched on search engines for viewing purposes. In the below text boxes, please input your Reddit information in order to collect the dreams. ")
 
@@ -557,6 +557,9 @@ def data_cleaning():
                     if st.session_state['submit_5']:
                         with st.container():
                             st.header("Resulting Wordcloud")
+                            st.write("Just from the first look of the wordcloud below, you might be thinking to yourself: 'That was not what I expected!' And yes, your assumptions may be correct. The most common words in each of the dreams would be words such as **dream** or **sleep**; words that would commonly appear when a person writes about his or her dream.")
+                            st.write("But dreams are interesting that each dream is unique. So in order to see what words people use to describe their dreams in the each of their unique ways, the words were selected based on high TF-IDF scores.")
+                            st.write("Of course, it's okay if you are not familar with TF-IDF at the moment! We will discuss it further in the sections following. But in the meantime, take a look at the wordcloud to see what words were utilized to portray the dreams in the dataset!")
 
                             corpus = st.session_state['corpus']
                             token = st.session_state['lemmatized']     
@@ -636,6 +639,7 @@ def data_cleaning():
                             
                             
                             st.session_state['tf_idf_df'],wordcloud_words = main(corpus, tokenized)
+
                             wordcloud(wordcloud_words, lim=100)
                         
                         st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
@@ -739,6 +743,20 @@ def part_of_speech_tag():
                     doc = spacy_streamlit.process_text(model, text)
 
                     spacy_streamlit.visualize_parser(doc)
+
+                    from spacy import displacy
+
+                    nlp = load_nlp()
+
+                    doc = nlp(text)
+
+                    for token in doc:
+
+                        if token.dep_ != "anything":
+
+                            token.dep_ = ""
+
+                    displacy.render(doc, style='dep', jupyter=True, options={'distance': 90})
 
                 st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!", icon="ℹ️")
     except:
