@@ -751,8 +751,9 @@ def part_of_speech_tag():
                         if token.dep_ != "anything":
                             token.dep_ = ""
 
-                    svg = displacy.render(doc, style='dep', jupyter=False, options={'distance': 90})
-                    st.image(svg, use_column_width='auto')
+                c = st.container()
+                svg = displacy.render(doc, style='dep', jupyter=False, options={'distance': 90})
+                c.image(svg, use_column_width='auto')
 
                 st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!", icon="ℹ️")
     except Exception as e:
