@@ -767,8 +767,9 @@ def part_of_speech_tag():
                     displacy.render(doc, style='dep', jupyter=False, options={'distance': 90})
 
                 st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!", icon="ℹ️")
-    except:
+    except Exception as e:
             st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
+            raise e
 
 ########################################################################################
 #############################       namee entity recognition  page      #################################
