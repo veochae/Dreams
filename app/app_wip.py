@@ -920,8 +920,9 @@ def tf_idf():
         except Exception as e:
             st.warning("Please Press to Start!")
             raise e
-    except:
+    except Exception as e:
         st.warning("Please Complete the Previous Step Before Moving On")
+        raise e
 
 ########################################################################################
 #############################       Setup for OpenAI      #################################
