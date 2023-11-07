@@ -743,22 +743,22 @@ def part_of_speech_tag():
 
                     spacy_streamlit.visualize_parser(doc)
 
-                    nlp = load_nlp()
+                #     nlp = load_nlp()
 
-                    doc = nlp(text)
+                #     doc = nlp(text)
 
-                    for token in doc:
-                        if token.dep_ != "anything":
-                            token.dep_ = ""
+                #     for token in doc:
+                #         if token.dep_ != "anything":
+                #             token.dep_ = ""
 
-                c = st.container()
-                svg = displacy.render(doc, style='dep', jupyter=False, options={'distance': 90})
-                c.image(svg, use_column_width='auto')
+                # c = st.container()
+                # svg = displacy.render(doc, style='dep', jupyter=False, options={'distance': 90})
+                # c.image(svg, use_column_width='auto')
 
                 st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!", icon="ℹ️")
-    except Exception as e:
-            st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
-            raise e
+    except:
+        st.warning("Please Complete the Before Step Afore Starting The Current Stage")    
+            
 
 ########################################################################################
 #############################       namee entity recognition  page      #################################
