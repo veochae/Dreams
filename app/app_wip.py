@@ -558,9 +558,7 @@ def data_cleaning():
                     if st.session_state['submit_5']:
                         with st.container():
                             st.header("Resulting Wordcloud")
-                            st.write("Just from the first look of the wordcloud below, you might be thinking to yourself: 'That was not what I expected!' And yes, your assumptions may be correct. The most common words in each of the dreams would be words such as **dream** or **sleep**; words that would commonly appear when a person writes about his or her dream.")
-                            st.write("But dreams are interesting that each dream is unique. So in order to see what words people use to describe their dreams in the each of their unique ways, the words were selected based on high TF-IDF scores.")
-                            st.write("Of course, it's okay if you are not familar with TF-IDF at the moment! We will discuss it further in the sections following. But in the meantime, take a look at the wordcloud to see what words were utilized to portray the dreams in the dataset!")
+                            st.write("Just from the first look of the wordcloud below, you might be thinking to yourself: 'That was not what I expected!' You might have thought that the words showing up would be dream, sleep, night, etc. -- words that would commonly appear when someone writes about their dream. But to see that on a wordcloud wouldn’t be very illuminating on what dreamers have been dreaming recently, would it? Dreams are interesting for the unique and extraordinary stories they tell. In order to see what unique elements appeared commonly throughout the recently reported dreams, the words were selected based on high TF-IDF scores. For now it's okay if you are not yet familiar with TF-IDF! We will discuss it further in the sections following. But in the meantime, take a look at the wordcloud to see what our dreamers have been dreaming about recently. Dream on!")
 
                             corpus = st.session_state['corpus']
                             token = st.session_state['lemmatized']     
@@ -919,10 +917,8 @@ def tf_idf():
                 else: pass
         except Exception as e:
             st.warning("Please Press to Start!")
-            raise e
     except Exception as e:
         st.warning("Please Complete the Previous Step Before Moving On")
-        raise e
 
 ########################################################################################
 #############################       Setup for OpenAI      #################################
@@ -944,7 +940,7 @@ def sentiment_analysis():
     st.title("Sentiment Analysis")
     try:
         st.write("While in the earlier days of ecommerce online sellers would be satisfied with any reviews of the products and services they were offering, in recent years companies have shifted into asking for more detailed reviews. Why? Because using Sentiment Analysis companies can learn how the customers feel about their products, and the more detailed the review the higher the chances of accurately uncovering customer feelings!")
-        st.write("In the earlier days of the Sentiment Analysis, it was quite simple. One would classify a piece of text as positive, negative, or neutral. We won't dive into too much detail about how that has been done, but if you are curious, checkout this link! Coming back to the modern days, Sentiment Analysis has evolved into something more specific and granular: Emotion Analysis")
+        st.write("In the earlier days of the Sentiment Analysis, it was quite simple. One would classify a piece of text as positive, negative, or neutral. We won't dive into too much detail about how that has been done, but if you are curious, checkout this [link](https://huggingface.co/blog/sentiment-analysis-python)! Coming back to the modern days, Sentiment Analysis has evolved into something more specific and granular: Emotion Analysis")
         st.write("Instead of uncovering whether the customers' reactions were positive or negative, one starts to look at multiple (and more granular) feelings such as: fear, joy, happiness, surprise, love, anger, sadness, etc.")
         st.write("The pretrained model that we use for the purpose of this exercise is from Hugging Face – a popular platform for [NLP](https://huggingface.co/). In particular, using over 100,000 labeled tweets as its training data, neural networks were trained to recognize different speech patterns that lend themselves to various feelings and emotions. Having learned about human emotion based on training data, the model can now be applied to any piece of text – including text on reported dreams – to predict emotion!")
         st.write("So, without further ado, let's uncover the emotions present in the dream that you selected at the outset!")
