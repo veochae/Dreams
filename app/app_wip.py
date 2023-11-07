@@ -352,8 +352,8 @@ def data_cleaning():
 
                 st.header("Breakdown of Data Cleaning Process")
                 st.info("Type in Keyword you would like to see in the Dream" ,icon="ℹ️")
-                st.session_state['keyword'] = st.text_input("Keyword:")
-                filtered = semi[semi['text'].str.contains(" " + st.session_state['keyword']+ " ") ]
+                st.session_state['keyword'] = re.escape(st.text_input("Keyword:"))
+                filtered = semi[semi['text'].str.contains(fr"\b{st.session_state['keyword']}\b", regex=True)]
                 
                 if "keyword" in st.session_state.keys():
                     st.dataframe(filtered)
