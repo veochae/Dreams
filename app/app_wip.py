@@ -917,8 +917,9 @@ def tf_idf():
                     except:
                         st.warning("Please Input the Second Dream Row Number")
                 else: pass
-        except:
+        except Exception as e:
             st.warning("Please Press to Start!")
+            raise e
     except:
         st.warning("Please Complete the Previous Step Before Moving On")
 
