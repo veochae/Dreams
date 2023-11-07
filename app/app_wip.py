@@ -683,8 +683,6 @@ def part_of_speech_tag():
 
             return tag_df
         
-
-
         if result:
             st.session_state['show'] = True
             st.info("Tagging POS Tags for all Dreams. This may take about 1Minute.")
@@ -739,21 +737,21 @@ def part_of_speech_tag():
                     st.title("POS Taggging Visualization")
                     st.write("To illustrate how POS tagging works in action, for the interest of space we will only tag the first sentence of the dream that you have chosen at the start. As you can see, that first sentence is shown in the text window below, followed by a visualization illustrating the POS tags. Note that this interface is fully interactive, so after you review the results from POS tagging for the first sentence in the below display, feel free to type in any text (perhaps the first sentence from your own past dream?;) and see how it gets tagged and visualized.")
                     text = st.text_area("Text to analyze", temp, height=200)
-                    doc = spacy_streamlit.process_text(model, text)
+                    # doc = spacy_streamlit.process_text(model, text)
 
-                    spacy_streamlit.visualize_parser(doc)
+                    # spacy_streamlit.visualize_parser(doc)
 
-                #     nlp = load_nlp()
+                    nlp = load_nlp()
 
-                #     doc = nlp(text)
+                    doc = nlp(text)
 
-                #     for token in doc:
-                #         if token.dep_ != "anything":
-                #             token.dep_ = ""
+                    for token in doc:
+                        if token.dep_ != "anything":
+                            token.dep_ = ""
 
-                # c = st.container()
-                # svg = displacy.render(doc, style='dep', jupyter=False, options={'distance': 90})
-                # c.image(svg, use_column_width='auto')
+                c = st.container()
+                svg = displacy.render(doc, style='dep', jupyter=False, options={'distance': 90})
+                c.image(svg, use_column_width='auto')
 
                 st.info("Next click on the next tab on the left to move on to the Named Entity Recognition Section!", icon="ℹ️")
     except:
