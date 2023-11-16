@@ -329,9 +329,6 @@ def data_cleaning():
                     df= df.dropna()
                     my_bar.progress(10, text = "Transforming Date Time Objects")
                     time.sleep(2)
-                    my_bar.progress(30, text = "Profanity Censor in Progress")
-                    time.sleep(2)
-                    # df['text'] = [profanity.censor(i) for i in df['text']]
                     my_bar.progress(50, text = "Calculating Length of each Text")
                     time.sleep(2)
                     #calculating length of each dream
@@ -339,7 +336,7 @@ def data_cleaning():
                     my_bar.progress(70, text = "Getting Semi Dataset")
                     time.sleep(2)
                     # if less than or equal to 5th percentile, assign t_f column False
-                    df['t_f'] = [True if j > np.percentile(df['length'], 5) else False for j in df['length']]
+                    df['t_f'] = [True if j > np.percentile(df['length'], 10) else False for j in df['length']]
                     my_bar.progress(90, text = "Making Deep Copy of Semi")
                     time.sleep(2)
                     #only keep t_f == True rows
