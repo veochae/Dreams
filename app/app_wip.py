@@ -953,11 +953,11 @@ def sentiment_analysis():
             try:
                 openai.api_key = st.session_state['openai_key']
 
-                try:     
-                    summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
-                except Exception as e:
-                    st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
-                    print(e)
+                # try:     
+                summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
+                # except Exception as e:
+                #     st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
+                #     print(e)
 
                 classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
                 prediction = classifier(summary)
