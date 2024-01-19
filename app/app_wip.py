@@ -955,8 +955,9 @@ def sentiment_analysis():
 
                 try:     
                     summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
-                except:
+                except Exception as e:
                     st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
+                    raise(e)
 
                 classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
                 prediction = classifier(summary)
@@ -984,8 +985,9 @@ def sentiment_analysis():
                                 )    
 
                 st.plotly_chart(fig10,theme="streamlit", use_container_width=True) 
-            except:
+            except Exception as e:
                 st.warning("Either OpenAI Key is incorrect or you have chosen inappropriate dream")
+                raise(e)
     except:
         st.warning("Please Complete the Previous Step Before Moving On")
 ########################################################################################
