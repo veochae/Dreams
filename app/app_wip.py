@@ -950,44 +950,44 @@ def sentiment_analysis():
             submitted_sentiment = st.form_submit_button("Let's Begin!")   
         
         if submitted_sentiment:
-            try:
-                openai.api_key = st.session_state['openai_key']
+        # try:
+            openai.api_key = st.session_state['openai_key']
 
-                # try:     
-                summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
-                # except Exception as e:
-                #     st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
-                #     print(e)
+            # try:     
+            summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
+            # except Exception as e:
+            #     st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
+            #     print(e)
 
-                classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
-                prediction = classifier(summary)
-                emotion = [x['label'] for x in prediction[0]]
-                score = [y['score'] for y in prediction[0]]
+            classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
+            prediction = classifier(summary)
+            emotion = [x['label'] for x in prediction[0]]
+            score = [y['score'] for y in prediction[0]]
 
-                st.session_state['emotion'] = emotion[score.index(np.max(score))]
+            st.session_state['emotion'] = emotion[score.index(np.max(score))]
 
-                fig10 = make_subplots(rows=1, cols=1)
+            fig10 = make_subplots(rows=1, cols=1)
 
-                fig10.add_trace(go.Bar(x = emotion,
-                                        y = score,
-                                        name = f"Dream {st.session_state['row_n']}"))
+            fig10.add_trace(go.Bar(x = emotion,
+                                    y = score,
+                                    name = f"Dream {st.session_state['row_n']}"))
 
-                fig10.update_layout(
-                                    title="Sentiment Classification Results",
-                                    xaxis_title="Criteria",
-                                    yaxis_title="Sentiment Scores",
-                                    legend_title="Dreams"
-                                    # font=dict(
-                                    #     family="Courier New, monospace",
-                                    #     size=18,
-                                    #     color="RebeccaPurple"
-                                    # )
-                                )    
+            fig10.update_layout(
+                                title="Sentiment Classification Results",
+                                xaxis_title="Criteria",
+                                yaxis_title="Sentiment Scores",
+                                legend_title="Dreams"
+                                # font=dict(
+                                #     family="Courier New, monospace",
+                                #     size=18,
+                                #     color="RebeccaPurple"
+                                # )
+                            )    
 
-                st.plotly_chart(fig10,theme="streamlit", use_container_width=True) 
-            except Exception as e:
-                st.warning("Either OpenAI Key is incorrect or you have chosen inappropriate dream")
-                print(e)
+            st.plotly_chart(fig10,theme="streamlit", use_container_width=True) 
+            # except Exception as e:
+            #     st.warning("Either OpenAI Key is incorrect or you have chosen inappropriate dream")
+            #     print(e)
     except:
         st.warning("Please Complete the Previous Step Before Moving On")
 ########################################################################################
