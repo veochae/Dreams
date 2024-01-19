@@ -178,7 +178,7 @@ def reddit_data(time_wanted, headers):
 ############### chat-gpt incorporated function
 def summarize_dream(prompt, length):
     response = openai.Completion.create(
-        engine="text-davinci-003",                  #most advanced version of text related algo in open ai
+        engine="gpt-3.5-turbo-instruct",                  #most advanced version of text related algo in open ai
         prompt=prompt,                              #what is being inputted to gpt
         max_tokens=length,                            #maximum number of words
         n=1,                                        #number of outputs
