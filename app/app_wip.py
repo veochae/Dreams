@@ -194,17 +194,7 @@ def summarize_dream(prompt, length):
 ########################################################################################
 
 def introduction():
-    
-    col4, col5, col6 = st.columns([1,8,1])
-
-    with col4:
-        st.write("")
-
-    with col5:
-        st.title("Analyzing Dreams Using Natural Language Processing")
-
-    with col6:
-        st.write("")
+    st.markdown("<h1 style='text-align: center; color: Black;'>Analyzing Dreams Using Natural Language Processing</h1>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1,6,1])
 
@@ -217,6 +207,35 @@ def introduction():
     with col3:
         st.write("")
 
+    st.subheader("Brief Background on REM Sleep")
+    st.write("While dreams may be experienced during all stages of sleep, recallable dreams are almost exclusively associated with the Rapid Eye Movement (REM) sleep. According to Nathaniel Kleitman and Eugene Aserinsky – the physiologists who discovered REM stage of sleep in 1953 – 75% of people awakened from REM sleep report detailed dreams that oftentimes are accompanied by detailed visual imagery (Aserinsky and Kleitman, 1953). In human infants REM sleep may account for up to 75% of total sleep. However, by the time one reaches adolescence this number drops to about 20-25% (Coolidge 2022).")
+    st.write("An interesting phenomenon occurring during REM sleep is the temporary muscle “paralysis”. It has been hypothesized that this muscle paralysis has an important role – to prevent dreamers from acting out their dreams while asleep and Rampin et al. (1991) studied the role of inhibitory brain neurons as they relate to the muscle paralysis. In studies involving cats, it has been shown that by selectively “disabling” those inhibitory neurons results in cats acting out the content from their REM sleep. One of the most common dreams, the falling dream, has also been hypothesized to be related to sleeper’s misinterpretation of their muscle paralysis (Van de Castle, 1994).")
+    st.write(" ")
+    st.subheader("Dreams throughout History")
+    st.write("The interest to ponder upon, retell, interpret, and document dreams has concerned humanity for millennia. Many of the oldest “documented” dreams pertain to Gods communicating through dreams. For example, the Chester Beatty Egyptian Papyrus dating back to 1,250 BCE contains around 200 of ancient Egyptian dreams. Similarly, ancient Mesopotamians including the Sumerians did not take dreams lightly. For example, the Sumerian king Gudea (ruling around 2,220 BCE) would have his dreams put on clay tablets (Coolidge 2022).")
+    st.write("Jewish and Christian traditions have ample stories regarding God’s communication with people, e.g. Jacob’s dream and Pharaoh’s dreams in the Old Testament of the Bible; Joseph’s dream in the New Testament of the Bible, etc. Talmud, a comprehensive book of Jewish laws, has 217 references to dreams, including one of the oldest recurring dreams related to loss of teeth (Coolidge 2022).")
+    st.write("Dreams also feature notably in Buddhism, e.g. the dream of the future Buddha’s mother Maha-Maya regarding her conception with the future Buddha. Hindu sacred writings such as Vedas and Upanishads in addition to works such as Mahabharata, Ramayana, and Bhagavad Gita – all contain numerous references to dreams.")
+    st.write(" ")
+    st.subheader("Scientific Approaches to Dream Analysis")
+    st.image("./one.png")
+    st.write("Sigmund Freud (born in 1856), and Austrian neurologist and the founder of psychoanalysis is often regarded as the first scientist to propose foundation for dream analysis. In his seminal Interpretation of Dreams (1913), Freud posited that each dream has both an evident (manifest) meaning and a more hidden (latent/symbolic) meaning. According to Freud each dream is made up of multiple unconscious dream-thoughts, which are morphed into each other in the process of “condensation”. In addition, during dream formation those unconscious matters undergo a process of “displacement” where fearful elements are transformed to more acceptable forms before entering the dream content. Freud’s initial hypothesis was that dreams serve as a mechanism for wish fulfillment, be it a conscious or an unconscious wish. Freud later altered this hypotheses in an attempt to explain nightmares, troubled dreams, etc. In this altered viewpoint, Freud hypothesized that a repeated nightmares are Ego’s attempt to master something that is an issue in one’s life (Coolidge 2022).")
+    st.image("./two.png")
+    st.write("Carl Gustav Jung (born in 1875) was a Swiss psychiatrist. Jung was a contemporary of Freud and in his earlier years as a psychiatrist developed a strong professional bond with Freud.")
+    st.write("According to Jung, for a dream:")
+    st.info("Its dimensions in time and space are quite different; to understand it you must examine it from every aspect just as you may take an unknown object in your hands and turn it over and over until you are familiar with every detail of its shape (Jung 1970).")
+    st.write("Jung strongly believed that dreams have a compensatory nature in that they attempt to compensate for one-sidedness or forms of bias that are present in one’s life. He rejected the idea that dreams can be interpreted with a glossary assigning a meaning to each dream regardless of who the dreamer is. To him the dreams were inseparable from the dreamer.")
+    st.write("According to Jung:")
+    st.info("The whole dream-work is essentially subjective, and a dream is a theatre in which the dreamer is himself the scene, the player, the prompter, the producer, the author, the public, and the critic (Jung, 1970).")
+    st.write("For Jung dreams potentially contained useful self-reflection that were important to attend to and understand. He believed that through dreams one could come into contact with the most archaic, primordial forms of wisdom. Jung envisioned this wisdom to be in the form of a two-million year old person within each of us that has evolved throughout the two-million years of evolution (Coolidge 2022). ")
+    st.write("Thus, Jung believed that not only one’s own (“personal”) unconscious gets manifested in dreams, but also the “collective” unconscious which is the accumulation and culmination of the two-million-year-old evolutionary path that humans have gone through. ")
+    st.write(" ")
+    st.subheader("References")
+    st.write("Aserinsky, E., & Kleitman, N. (1953). Regularly occurring periods of eye motility, and concomitant phenomena, during sleep. Science, 118(3062), 273-274.")
+    st.write("Coolidge, F. L. (2022). The Science of Dream Interpretation. Academic Press.")
+    st.write("Freud, S. (1913). The Interpretation of Dreams, Third Edition. Trans. by A. A. Brill. New York: The Macmillan Company.")
+    st.write("Jung, C. (1970). Psychological reflections. Princeton University Press.")
+    st.write("Rampin, C., Cespuglio, R., Chastrette, N., & Jouvet, M. (1991). Immobilisation stress induces a paradoxical sleep rebound in rat. Neuroscience letters, 126(2), 113-118.")
+    st.write("Van De Castle, R. (1994). Our Dreaming Mind. London: Aquarian Book.")
 
 ########################################################################################
 #############################       data collection page      ##########################
