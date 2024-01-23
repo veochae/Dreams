@@ -217,9 +217,21 @@ def introduction():
     st.write("Dreams also feature notably in Buddhism, e.g. the dream of the future Buddha’s mother Maha-Maya regarding her conception with the future Buddha. Hindu sacred writings such as Vedas and Upanishads in addition to works such as Mahabharata, Ramayana, and Bhagavad Gita – all contain numerous references to dreams.")
     st.write(" ")
     st.subheader("Scientific Approaches to Dream Analysis")
-    st.image("./one.png")
+    col11, col22, col33 = st.columns([1,6,1])
+    with col11:
+        st.write("")
+    with col22:        
+        st.image("./one.png")
+    with col33:
+        st.write("")
     st.write("Sigmund Freud (born in 1856), and Austrian neurologist and the founder of psychoanalysis is often regarded as the first scientist to propose foundation for dream analysis. In his seminal Interpretation of Dreams (1913), Freud posited that each dream has both an evident (manifest) meaning and a more hidden (latent/symbolic) meaning. According to Freud each dream is made up of multiple unconscious dream-thoughts, which are morphed into each other in the process of “condensation”. In addition, during dream formation those unconscious matters undergo a process of “displacement” where fearful elements are transformed to more acceptable forms before entering the dream content. Freud’s initial hypothesis was that dreams serve as a mechanism for wish fulfillment, be it a conscious or an unconscious wish. Freud later altered this hypotheses in an attempt to explain nightmares, troubled dreams, etc. In this altered viewpoint, Freud hypothesized that a repeated nightmares are Ego’s attempt to master something that is an issue in one’s life (Coolidge 2022).")
-    st.image("./two.png")
+    col111, col222, col333 = st.columns([1,6,1])
+    with col111:
+        st.write("")
+    with col222:        
+        st.image("./two.png")
+    with col333:
+        st.write("")
     st.write("Carl Gustav Jung (born in 1875) was a Swiss psychiatrist. Jung was a contemporary of Freud and in his earlier years as a psychiatrist developed a strong professional bond with Freud.")
     st.write("According to Jung, for a dream:")
     st.info("Its dimensions in time and space are quite different; to understand it you must examine it from every aspect just as you may take an unknown object in your hands and turn it over and over until you are familiar with every detail of its shape (Jung 1970).")
