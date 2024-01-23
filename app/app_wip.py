@@ -255,6 +255,7 @@ def introduction():
 
 def data_collection():
     st.title("Data Collection")
+    st.write("Equipped with the background on dreams and dreaming, now you should be ready to roll up your sleeves and get right into dream data collection!")
     st.write("Before anything else, you are going to first acquire the data which later will be analyzed using NLP. For that matter, shortly, you will be collecting data in real time from Reddit, an online environment for sharing and discussing information. Note that Reddit is organized in threads called “subreddits” which essentially are topics, where the discussion actually takes place. As you may have guessed – one such subreddit – in fact the only subreddit that you will use relates to reported dreams. It is a community where users share their dreams seeking interpretations or simply for the sake of sharing.")
     st.write("To collect the data on dreams in real time, posted by the Reddit users, you first need to access the Reddit Application Programming Interface (API). Information on how to do that can be found here. That is a necessary step which fortunately won’t take more than a minute or so … for sure it won’t be too long to put you to sleep before the main event! The below will serve as a guideline for the readers to gain access to the Reddit Developer's account.")
     st.warning("Please refrain from using Chrome for the process below! If you are a Mac user, please try using Safari, and if Windows, try using Edge!")
