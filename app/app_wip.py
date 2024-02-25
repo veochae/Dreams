@@ -353,6 +353,13 @@ def data_cleaning():
         if 'submit_5' in st.session_state.keys():
             st.write("Success")
 
+
+            reset = st.button("Click here to reset and choose another keyword")
+            if reset:
+                del st.session_state['submit_5']
+            else:
+                pass
+
         else:
             if result_dc:
                 st.session_state['result_dc'] = True
