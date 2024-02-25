@@ -82,10 +82,11 @@ def multiprocessing_function(text_data):
             res = pool.starmap(task, enumerate(text_data)) 
         res.sort(key=lambda x: x[0])
         final_results = [result[1] for result in res]
+        return final_results
     except Exception as e:
         print("exception in worker process", e)
-        raise e
-    return final_results
+        return final_results
+        
 
 ##########en-core-sm preload
 @st.cache_resource
@@ -411,6 +412,7 @@ def data_cleaning():
 
                     # Replace contractions and special characters
                     text = re.sub("\'m", ' am ', text)
+                    text = re.sub("&amp", "", text)
                     text = re.sub("\'re", ' are ', text)
                     text = re.sub("\'d", ' had ', text)
                     text = re.sub("\'s", ' is ', text)
