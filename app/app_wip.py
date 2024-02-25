@@ -83,9 +83,6 @@ def multiprocessing_function(text_data):
     except Exception as e:
         print("exception in worker process", e)
         return text_data
-    finally:
-        pool.close()
-        pool.join()
 
     res.sort(key=lambda x: x[0])
     final_results = [result[1] for result in res]
