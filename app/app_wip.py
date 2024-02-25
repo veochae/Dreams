@@ -72,10 +72,10 @@ import torch
 warnings.filterwarnings('ignore')
 
 ##########profanity filter
-def task(index , xx):
-    return(index,profanity.censor(xx, "*"))
-
 def multiprocessing_function(text_data):
+    def task(index , xx):
+        return(index,profanity.censor(xx, "*"))
+    
     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
         with multiprocessing.Pool(processes=6) as pool:
