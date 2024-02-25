@@ -490,7 +490,8 @@ def data_cleaning():
                 del st.session_state['submit_5']
 
             else:
-                extract_array_sample(st.session_state['row_n'])  
+                extract_array_sample(st.session_state['row_n'])
+                st.info("Why not? Press the Reset Button One More Time :)")  
 
         else:
             result_dc = st.button("Click to Start Data Preprocessing")
