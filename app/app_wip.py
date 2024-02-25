@@ -334,6 +334,140 @@ def data_collection():
 ########################################################################################
 
 def data_cleaning():
+    def extract_array_sample(ind):
+        with st.form("Original Text"):
+            st.header("Original Text")
+            st.write(st.session_state['semi']['text'][ind])
+
+            submit_1 = st.form_submit_button("Continue to Initial Cleaning Process")   
+        
+            if submit_1: 
+                st.session_state['submit_1'] = True
+
+        if st.session_state['submit_1']:
+            with st.form("Initial Data Cleaning"):
+                st.header("Simple Text Cleaning")
+                st.write(st.session_state['clean_text'][ind])
+
+                submit_2 = st.form_submit_button("Continue to Tokenization")           
+                if submit_2:
+                    st.session_state['submit_2'] = True
+
+        if st.session_state['submit_2']:
+            with st.form("Tokenization"):
+                st.header("Tokenization")
+                st.write(" , ".join(st.session_state['tokenized'][ind][:-1]))
+
+                submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
+                if submit_3:
+                    st.session_state['submit_3'] = True
+
+        if st.session_state['submit_3']:         
+            with st.form("Stopwords Removal"):
+                st.header("Removing Stopwords")
+                st.write(" ".join(st.session_state['x_stopwords'][ind]))
+
+                submit_4 = st.form_submit_button("Continue to Lemmatization")  
+                if submit_4:
+                    st.session_state['submit_4'] = True
+
+        if st.session_state['submit_4']:               
+            with st.form("Lemmatization"):
+                st.header("Lemmatization")
+                st.write(" ".join(st.session_state['lemmatized'][ind]))
+
+                submit_5 = st.form_submit_button("Click to View the final WordCloud!")
+                if submit_5:
+                    st.session_state['submit_5'] = True
+
+        if st.session_state['submit_5']:
+            with st.container():
+                st.header("Resulting Wordcloud")
+                st.write("Just from the first look of the wordcloud below, you might be thinking to yourself: 'That was not what I expected!' You might have thought that the words showing up would be dream, sleep, night, etc. -- words that would commonly appear when someone writes about their dream. But to see that on a wordcloud wouldn’t be very illuminating on what dreamers have been dreaming recently, would it? Dreams are interesting for the unique and extraordinary stories they tell. In order to see what unique elements appeared commonly throughout the recently reported dreams, the words were selected based on high TF-IDF scores. For now it's okay if you are not yet familiar with TF-IDF! We will discuss it further in the sections following. But in the meantime, take a look at the wordcloud to see what our dreamers have been dreaming about recently. Dream on!")
+
+                corpus = st.session_state['corpus']
+                token = st.session_state['lemmatized']     
+                tokenized = [list(set(li)) for li in token]
+
+                #define term frequency (tf) function
+                def tf(corpus, token_set):
+                    tf_dict = {}
+                    n = len(token_set)
+                    row_dict = corpus
+
+                    for word, count in row_dict.items():
+                        tf_dict[word] = count / float(n)
+                    
+                    return tf_dict
+
+                #define inverse data frequency (idf) function
+                def idf(documents):
+                    n = len(documents)
+                    idf_dict = dict.fromkeys(documents[0].keys(),0)
+
+                    for document in documents:
+                        for word, val in document.items():
+                            if val > 0:
+                                idf_dict[word] += 1
+                        
+                    for word, val in idf_dict.items():
+                        idf_dict[word] = math.log(n / float(val))
+
+                        #if one wants to match the sklearn version of the tfidfvectorizor
+                        #idf_dict[word] = math.log((n+1) / (1+float(val)))+1
+
+                    return idf_dict
+
+                #define tf-idf function
+                def tf_idf(tf, idf):
+                    tf_idf_dict = {}
+
+                    for word, val in tf.items():
+                        tf_idf_dict[word] = val * idf[word]
+
+                    return tf_idf_dict
+
+                #main function to execute all above
+                def main(corpus, tokenized):
+                    my_bar = st.progress(0,"Initializing tf-idf calculation")
+                    tf_li = []
+                    tf_idf_li = []
+                    wordcloud_words = []
+                    
+                    documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
+                    time.sleep(2)
+
+                    my_bar.progress(35, "Calculating tf")
+                    t = 0
+                    for l, r in enumerate(documents):
+                        try:
+                            tf_temp = tf(r, tokenized[l])
+                            tf_li.append(tf_temp)
+                            t+=1
+                        except:
+                            print(t)
+                    
+                    time.sleep(2)
+                    my_bar.progress(70, "Calculating idf")
+                    idf_dict = idf(documents)
+
+                    time.sleep(2)
+                    my_bar.progress(95, "Calculating tf_idf")
+                    for t in tf_li:
+                        tf_idf_li.append(tf_idf(t, idf_dict))
+                        wordcloud_words += sorted(tf_idf_li[-1], key=tf_idf_li[-1].get, reverse=True)[:3]
+                    
+                    my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
+
+                    return pd.DataFrame(tf_idf_li), wordcloud_words
+                
+                st.session_state['tf_idf_df'],st.session_state['wordcloud_words'] = main(corpus, tokenized)
+
+                wordcloud(st.session_state['wordcloud_words'], lim=100)
+            
+            st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
+
+
     st.title("Data Preprocessing")
 
     try:
@@ -350,10 +484,9 @@ def data_cleaning():
         stopword = nltk.corpus.stopwords.words('english')
 
         if 'submit_5' in st.session_state.keys():
-            st.write("Success")
-
-
             reset = st.button("Click here to reset and choose another keyword")
+            extract_array_sample(st.session_state['row_n'])  
+
             if reset:
                 del st.session_state['submit_5']
 
@@ -553,139 +686,7 @@ def data_cleaning():
                     st.session_state['corpus'] = corpus
                     st.session_state['semi'] = semi
 
-                    def extract_array_sample(ind):
-                        with st.form("Original Text"):
-                            st.header("Original Text")
-                            st.write(st.session_state['semi']['text'][ind])
-
-                            submit_1 = st.form_submit_button("Continue to Initial Cleaning Process")   
-                        
-                            if submit_1: 
-                                st.session_state['submit_1'] = True
-
-                        if st.session_state['submit_1']:
-                            with st.form("Initial Data Cleaning"):
-                                st.header("Simple Text Cleaning")
-                                st.write(st.session_state['clean_text'][ind])
-
-                                submit_2 = st.form_submit_button("Continue to Tokenization")           
-                                if submit_2:
-                                    st.session_state['submit_2'] = True
-
-                        if st.session_state['submit_2']:
-                            with st.form("Tokenization"):
-                                st.header("Tokenization")
-                                st.write(" , ".join(st.session_state['tokenized'][ind][:-1]))
-
-                                submit_3 = st.form_submit_button("Continue to Stopwords Removal")         
-                                if submit_3:
-                                    st.session_state['submit_3'] = True
-
-                        if st.session_state['submit_3']:         
-                            with st.form("Stopwords Removal"):
-                                st.header("Removing Stopwords")
-                                st.write(" ".join(st.session_state['x_stopwords'][ind]))
-
-                                submit_4 = st.form_submit_button("Continue to Lemmatization")  
-                                if submit_4:
-                                    st.session_state['submit_4'] = True
-
-                        if st.session_state['submit_4']:               
-                            with st.form("Lemmatization"):
-                                st.header("Lemmatization")
-                                st.write(" ".join(st.session_state['lemmatized'][ind]))
-
-                                submit_5 = st.form_submit_button("Click to View the final WordCloud!")
-                                if submit_5:
-                                    st.session_state['submit_5'] = True
-
-                        if st.session_state['submit_5']:
-                            with st.container():
-                                st.header("Resulting Wordcloud")
-                                st.write("Just from the first look of the wordcloud below, you might be thinking to yourself: 'That was not what I expected!' You might have thought that the words showing up would be dream, sleep, night, etc. -- words that would commonly appear when someone writes about their dream. But to see that on a wordcloud wouldn’t be very illuminating on what dreamers have been dreaming recently, would it? Dreams are interesting for the unique and extraordinary stories they tell. In order to see what unique elements appeared commonly throughout the recently reported dreams, the words were selected based on high TF-IDF scores. For now it's okay if you are not yet familiar with TF-IDF! We will discuss it further in the sections following. But in the meantime, take a look at the wordcloud to see what our dreamers have been dreaming about recently. Dream on!")
-
-                                corpus = st.session_state['corpus']
-                                token = st.session_state['lemmatized']     
-                                tokenized = [list(set(li)) for li in token]
-
-                                #define term frequency (tf) function
-                                def tf(corpus, token_set):
-                                    tf_dict = {}
-                                    n = len(token_set)
-                                    row_dict = corpus
-
-                                    for word, count in row_dict.items():
-                                        tf_dict[word] = count / float(n)
-                                    
-                                    return tf_dict
-
-                                #define inverse data frequency (idf) function
-                                def idf(documents):
-                                    n = len(documents)
-                                    idf_dict = dict.fromkeys(documents[0].keys(),0)
-
-                                    for document in documents:
-                                        for word, val in document.items():
-                                            if val > 0:
-                                                idf_dict[word] += 1
-                                        
-                                    for word, val in idf_dict.items():
-                                        idf_dict[word] = math.log(n / float(val))
-
-                                        #if one wants to match the sklearn version of the tfidfvectorizor
-                                        #idf_dict[word] = math.log((n+1) / (1+float(val)))+1
-
-                                    return idf_dict
-
-                                #define tf-idf function
-                                def tf_idf(tf, idf):
-                                    tf_idf_dict = {}
-
-                                    for word, val in tf.items():
-                                        tf_idf_dict[word] = val * idf[word]
-
-                                    return tf_idf_dict
-
-                                #main function to execute all above
-                                def main(corpus, tokenized):
-                                    my_bar = st.progress(0,"Initializing tf-idf calculation")
-                                    tf_li = []
-                                    tf_idf_li = []
-                                    wordcloud_words = []
-                                    
-                                    documents = [corpus.iloc[i,:].to_dict() for i in range(corpus.shape[0])]
-                                    time.sleep(2)
-
-                                    my_bar.progress(35, "Calculating tf")
-                                    t = 0
-                                    for l, r in enumerate(documents):
-                                        try:
-                                            tf_temp = tf(r, tokenized[l])
-                                            tf_li.append(tf_temp)
-                                            t+=1
-                                        except:
-                                            print(t)
-                                    
-                                    time.sleep(2)
-                                    my_bar.progress(70, "Calculating idf")
-                                    idf_dict = idf(documents)
-
-                                    time.sleep(2)
-                                    my_bar.progress(95, "Calculating tf_idf")
-                                    for t in tf_li:
-                                        tf_idf_li.append(tf_idf(t, idf_dict))
-                                        wordcloud_words += sorted(tf_idf_li[-1], key=tf_idf_li[-1].get, reverse=True)[:3]
-                                    
-                                    my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
-
-                                    return pd.DataFrame(tf_idf_li), wordcloud_words
-                                
-                                
-                                st.session_state['tf_idf_df'],wordcloud_words = main(corpus, tokenized)
-
-                                wordcloud(wordcloud_words, lim=100)
-                            
-                            st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
+ 
 
                                 
 
