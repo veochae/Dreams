@@ -347,7 +347,6 @@ def data_cleaning():
         st.write("Below, once the reader starts the cleaning process, the progress bar will show the different stages in which the data is being processed through. Then, for each of the cleaning steps above, with the reader's choice of dream, the reader will be able to see the direct changes made to the dreams!")
         st.write("Have fun playing with the different data cleaning tasks below! You are about to get into something even more interesting once you are done with this.")
             
-        result_dc = st.button("Click to Start Data Preprocessing")
         stopword = nltk.corpus.stopwords.words('english')
 
         if 'submit_5' in st.session_state.keys():
@@ -357,10 +356,13 @@ def data_cleaning():
             reset = st.button("Click here to reset and choose another keyword")
             if reset:
                 del st.session_state['submit_5']
+
             else:
                 pass
 
         else:
+            result_dc = st.button("Click to Start Data Preprocessing")
+
             if result_dc:
                 st.session_state['result_dc'] = True
             try:
