@@ -80,12 +80,16 @@ def multiprocessing_function(text_data):
     try:
         with multiprocessing.Pool(processes=6) as pool:
             res = pool.starmap(task, enumerate(text_data)) 
-        res.sort(key=lambda x: x[0])
-        final_results = [result[1] for result in res]
-        return final_results
     except Exception as e:
         print("exception in worker process", e)
-        return final_results
+        return text_data
+    finally:
+        pool.close()
+        pool.join()
+
+    res.sort(key=lambda x: x[0])
+    final_results = [result[1] for result in res]
+    return final_results
         
 
 ##########en-core-sm preload
