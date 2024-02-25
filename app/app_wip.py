@@ -66,6 +66,8 @@ import openai
 #tensorflow
 import torchvision
 import torch
+
+from utils import task
 ########################################################################################
 #############################       required UDFs     #############################
 ########################################################################################
@@ -73,8 +75,6 @@ warnings.filterwarnings('ignore')
 
 ##########profanity filter
 def multiprocessing_function(text_data):
-    def task(index , xx):
-        return(index,profanity.censor(xx, "*"))
     
     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
