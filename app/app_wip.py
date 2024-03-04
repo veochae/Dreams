@@ -197,7 +197,7 @@ def summarize_dream(api_key, prompt):
 def exapnd_dream(prompt):
     generator = pipeline('text-generation', model='openai-gpt')
     set_seed(42)
-    length = len(prompt)
+    length = len(prompt)//4
     end = generator(prompt, max_length=length*2, num_return_sequences=1)
     return end[0]['generated_text']
 
