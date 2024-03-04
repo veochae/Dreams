@@ -197,7 +197,8 @@ def summarize_dream(api_key, prompt):
 def exapnd_dream(prompt):
     generator = pipeline('text-generation', model='openai-gpt')
     set_seed(42)
-    end = generator(prompt, max_length=150, num_return_sequences=1)
+    length = len(prompt)
+    end = generator(prompt, max_length=length*2, num_return_sequences=1)
     return end[0]['generated_text']
 
 
@@ -1087,12 +1088,14 @@ def summary_continue():
         if st.session_state['dream_submit']: 
 
             st.header("Dream Summary")
+            st.session_state['summary'] = summarize_dream(st.session_state['hugging_face_key'],dream)
             st.write(st.session_state['summary'])
 
             st.header("Dream Continuation")
             st.session_state['continuation'] = exapnd_dream(st.session_state['summary'])
             start_point = len(st.session_state['summary'])
-            st.write(st.session_state['continuation'][start_point+1:])
+            st.session_state['continuation'] = st.session_state['continuation'][start_point+1:]
+            st.write(st.session_state['continuation'])
 
             st.header("Dream Visualization")
 
