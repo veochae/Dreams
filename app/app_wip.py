@@ -31,6 +31,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import io
+from PIL import Image
 from wordcloud import WordCloud,STOPWORDS
 import nltk
 @st.cache_resource
@@ -58,7 +60,7 @@ import plotly.express as px
 from better_profanity import profanity
 
 #huggingface
-from transformers import pipeline
+from transformers import pipeline, set_seed
 
 #openai
 import openai
@@ -177,19 +179,43 @@ def reddit_data(time_wanted, headers):
         st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
         return df
 
-############### chat-gpt incorporated function
-def summarize_dream(prompt, length):
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",                  #most advanced version of text related algo in open ai
-        prompt=prompt,                              #what is being inputted to gpt
-        max_tokens=length,                            #maximum number of words
-        n=1,                                        #number of outputs
-        stop=None,                                  #stop when
-        temperature=0.5,                            #how much "risk" do you want the gpt to take
-    )
+############### hugging face incorporated function
+def summarize_dream(api_key, prompt):
+    API_URL = "https://api-inference.huggingface.co/models/philschmid/bart-large-cnn-samsum"
+    headers = {"Authorization": f"Bearer {api_key}"}
 
-    text = response.choices[0].text.strip()
-    return text
+    def query(payload):
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.json()
+        
+    output = query({
+        "inputs": prompt,
+    })
+
+    return output['summary_text']
+
+def exapnd_dream(prompt):
+    generator = pipeline('text-generation', model='openai-gpt')
+    set_seed(42)
+    end = generator(prompt, max_length=300, num_return_sequences=1)
+    return end['generated_text']
+
+
+def text_to_image(api_key, artist, prompt):
+    API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
+    headers = {"Authorization": f"Bearer {api_key}"}
+
+    def query(payload):
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.content
+    image_bytes = query({
+        "inputs": f"In style of {artist} paint:[{prompt}]",
+    })
+    # You can access the image with PIL.Image for example
+
+    image = Image.open(io.BytesIO(image_bytes)) 
+
+    return image   
 
 ########################################################################################
 #############################       introduction page      #############################
@@ -970,13 +996,13 @@ def tf_idf():
 #############################       Setup for OpenAI      #################################
 ######################################################################################## 
 def set_up_openai():
-    st.title("Setting Up your Open AI API")
+    st.title("Setting Up your Hugging Face API")
     st.video("https://youtu.be/VMjJ4BrYVaE")
-    with st.form("open_ai_cred"):
-        key_open = st.text_input("OpenAI API Key")
+    with st.form("hugging_face_cred"):
+        key_open = st.text_input("Hugging Face API Key")
         submitted = st.form_submit_button("Submit")   
         if submitted:
-            st.session_state['openai_key'] = key_open
+            st.session_state['hugging_face_key'] = key_open
             st.success("Your API Key has been Processed!")
 
 ########################################################################################
@@ -999,42 +1025,39 @@ def sentiment_analysis():
             submitted_sentiment = st.form_submit_button("Let's Begin!")   
         
         if submitted_sentiment:
-            try:
-                openai.api_key = st.session_state['openai_key']
-
-                try:     
-                    summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = 280)
-                except Exception as e:
-                    st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
-
-                classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
-                prediction = classifier(summary)
-                emotion = [x['label'] for x in prediction[0]]
-                score = [y['score'] for y in prediction[0]]
-
-                st.session_state['emotion'] = emotion[score.index(np.max(score))]
-
-                fig10 = make_subplots(rows=1, cols=1)
-
-                fig10.add_trace(go.Bar(x = emotion,
-                                        y = score,
-                                        name = f"Dream {st.session_state['row_n']}"))
-
-                fig10.update_layout(
-                                    title="Sentiment Classification Results",
-                                    xaxis_title="Criteria",
-                                    yaxis_title="Sentiment Scores",
-                                    legend_title="Dreams"
-                                    # font=dict(
-                                    #     family="Courier New, monospace",
-                                    #     size=18,
-                                    #     color="RebeccaPurple"
-                                    # )
-                                )    
-
-                st.plotly_chart(fig10,theme="streamlit", use_container_width=True) 
+            try:     
+                summary = summarize_dream(st.session_state['hugging_face_key'],dream)
+                st.session_state['summary'] = summary
             except Exception as e:
-                st.warning("Either OpenAI Key is incorrect or you have chosen inappropriate dream")
+                st.warning("This Error is either: 1. The model has not been loaded yet 2. Not the correct API Key")
+
+            classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
+            prediction = classifier(summary)
+            emotion = [x['label'] for x in prediction[0]]
+            score = [y['score'] for y in prediction[0]]
+
+            st.session_state['emotion'] = emotion[score.index(np.max(score))]
+
+            fig10 = make_subplots(rows=1, cols=1)
+
+            fig10.add_trace(go.Bar(x = emotion,
+                                    y = score,
+                                    name = f"Dream {st.session_state['row_n']}"))
+
+            fig10.update_layout(
+                                title="Sentiment Classification Results",
+                                xaxis_title="Criteria",
+                                yaxis_title="Sentiment Scores",
+                                legend_title="Dreams"
+                                # font=dict(
+                                #     family="Courier New, monospace",
+                                #     size=18,
+                                #     color="RebeccaPurple"
+                                # )
+                            )    
+
+            st.plotly_chart(fig10,theme="streamlit", use_container_width=True) 
+ 
     except:
         st.warning("Please Complete the Previous Step Before Moving On")
 ########################################################################################
@@ -1049,8 +1072,6 @@ def summary_continue():
         st.write("On a very high level, GPT is a large language model that utilizes neural networks (among other things) and is used for various language-related tasks from machine translation to text summarization and continuation. DALL·E on the other hand is a generative AI technology for creating images. You can think of DALL·E as a creative image generator powered by the recent advances in generative AI and large language models. It can take written descriptions and turn them into unique images. Just describe an idea in words, and DALL·E brings it to life as an artwork.")
         st.write("Using the Chat GPT 3.5 Davinci and DALL-E, below we summarize, expand and visualize the dream that you have been observing throughout this app.")
 
-        openai.api_key = st.session_state['openai_key']    
-
         with st.form("asdf"):
             st.header("Original Text")
             try:
@@ -1064,21 +1085,13 @@ def summary_continue():
                 st.session_state['dream_submit'] = True
 
         if st.session_state['dream_submit']: 
-            if len(dream) <= 280:
-                length = int(np.ceil(len(dream) * 0.3))
-            else:
-                length = 280     
-            # try:     
-            summary = summarize_dream("Summarize this dream to less than 280 words from the storyteller's perspective \n" + "Dream: " + dream, length = length)
-            # except:
-                # st.warning("This Error is either: 1. Do not have enough API balance 2. Not the correct API Key")
-            continuation = summarize_dream("Tell me what happens after this story in the first person point of view: \n" + dream, length = 280)
 
             st.header("Dream Summary")
-            st.write(summary)
+            st.write(st.session_state['summary'])
 
             st.header("Dream Continuation")
-            st.write(continuation)
+            st.session_state['continuation'] = exapnd_dream(dream)
+            st.write(st.session_state['continuation'])
 
             st.header("Dream Visualization")
 
@@ -1093,14 +1106,9 @@ def summary_continue():
                 continued = True
             
             if continued:
-                dalle = summarize_dream("Summarize this dream into one sentence to be inputted into DALLE: \n"+dream, length = 100)
-                time.sleep(5)
-                response = openai.Image.create(
-                            prompt=f"Produce a painting in the style of '{st.session_state['artist']}' resembling '{st.session_state['emotion']}' about the following scenario '{dalle}'",
-                            n=1,
-                            size="1024x1024")
+                response = text_to_image(st.session_state['hugging_face_key'], st.session_state['artist'], st.session_state['summary'])
                 
-                st.image(response['data'][0]['url'])
+                st.image(response)
                 dream_submit = False
             else:
                 st.warning("Please select an artist")
