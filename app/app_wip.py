@@ -1090,7 +1090,7 @@ def summary_continue():
             st.write(st.session_state['summary'])
 
             st.header("Dream Continuation")
-            st.session_state['continuation'] = exapnd_dream(dream)
+            st.session_state['continuation'] = exapnd_dream(st.session_state['summary'])
             start_point = len(st.session_state['summary'])
             st.write(st.session_state['continuation'][start_point+1:])
 
