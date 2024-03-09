@@ -196,7 +196,11 @@ def summarize_dream(api_key, prompt):
         "inputs": prompt,
     }, API_URL, headers)
 
-    return output[0]['summary_text']
+    try:
+        return output[0]['summary_text']
+    except Exception as e:
+        st.write(e)
+
 
 def exapnd_dream(prompt):
     generator = pipeline('text-generation', model='openai-gpt')
