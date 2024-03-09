@@ -14,14 +14,14 @@
 #python native packages
 import requests
 import re
-import os
-import glob
-import sys
 import math
-import json
 import time
 import warnings
 import multiprocessing
+#import os
+#import glob
+#import sys
+#import json
 
 #streamlit
 import spacy_streamlit
@@ -33,7 +33,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import io
 from PIL import Image
-from wordcloud import WordCloud,STOPWORDS
+from wordcloud import WordCloud #,STOPWORDS
 import nltk
 @st.cache_resource
 def nltk_downloads():
@@ -47,7 +47,7 @@ def nltk_downloads():
 nltk_downloads()
 import spacy
 from spacy import displacy
-from datetime import datetime, date
+from datetime import datetime #, date
 from sklearn.feature_extraction.text import CountVectorizer
 
 
@@ -63,27 +63,25 @@ from better_profanity import profanity
 from transformers import pipeline, set_seed
 
 #openai
-import openai
+#import openai
 
 #tensorflow
 import torchvision
 import torch
 
-# from utils import task
+from utils import task
 ########################################################################################
 #############################       required UDFs     #############################
 ########################################################################################
 warnings.filterwarnings('ignore')
 
 ##########profanity filter
-def task(index , xx):
-    return(index,profanity.censor(xx, "*"))
-
 def multiprocessing_function(text_data):
     
     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
         with multiprocessing.Pool(processes=6) as pool:
+            st.write("working 1")
             res = pool.starmap(task, enumerate(text_data)) 
     except Exception as e:
         print("exception in worker process", e)
