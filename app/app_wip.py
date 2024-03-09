@@ -180,17 +180,21 @@ def reddit_data(time_wanted, headers):
         return df
 
 ############### hugging face incorporated function
+def query(payload, API_URL, headers):
+    response = requests.post(API_URL, headers, json=payload)
+    return response.json()
+
+def query_image(payload, API_URL, headers):
+    response = requests.post(API_URL, headers, json=payload)
+    return response.content
+
 def summarize_dream(api_key, prompt):
     API_URL = "https://api-inference.huggingface.co/models/philschmid/bart-large-cnn-samsum"
     headers = {"Authorization": f"Bearer {api_key}"}
 
-    def query(payload):
-        response = requests.post(API_URL, headers=headers, json=payload)
-        return response.json()
-        
     output = query({
         "inputs": prompt,
-    })
+    }, API_URL, headers)
 
     return output[0]['summary_text']
 
@@ -202,16 +206,13 @@ def exapnd_dream(prompt):
     return end[0]['generated_text']
 
 
-def text_to_image(api_key, artist, prompt):
+def text_to_image(api_key, artist, prompt, emotion):
     API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
     headers = {"Authorization": f"Bearer {api_key}"}
 
-    def query(payload):
-        response = requests.post(API_URL, headers=headers, json=payload)
-        return response.content
-    image_bytes = query({
-        "inputs": f"In style of {artist} paint:[{prompt}]",
-    })
+    image_bytes = query_image({
+        "inputs": f"In style of {artist} depicting emotion of {emotion} paint:[{prompt}]",
+    }, API_URL, headers)
     # You can access the image with PIL.Image for example
 
     image = Image.open(io.BytesIO(image_bytes)) 
@@ -994,7 +995,7 @@ def tf_idf():
         st.warning("Please Complete the Previous Step Before Moving On")
 
 ########################################################################################
-#############################       Setup for OpenAI      #################################
+#############################       Setup for HuggingFace      #################################
 ######################################################################################## 
 def set_up_openai():
     st.title("Setting Up your Hugging Face API")
@@ -1110,7 +1111,7 @@ def summary_continue():
                 continued = True
             
             if continued:
-                response = text_to_image(st.session_state['hugging_face_key'], st.session_state['artist'], st.session_state['summary'])
+                response = text_to_image(st.session_state['hugging_face_key'], st.session_state['artist'], st.session_state['summary'], st.session_state['emotion'])
                 
                 st.image(response)
                 dream_submit = False
