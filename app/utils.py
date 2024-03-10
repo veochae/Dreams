@@ -9,7 +9,7 @@ from better_profanity import profanity
 import sys
 
 def task(index , xx):
-    print("working")
+    st.write("working")
     return(index,profanity.censor(xx, "*"))
 
 ##########profanity filter
