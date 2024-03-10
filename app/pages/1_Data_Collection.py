@@ -6,6 +6,9 @@ import warnings
 import multiprocessing
 import pandas as pd
 from better_profanity import profanity
+import sys
+
+sys.path.append("../")
 from utils import task
 
 ########################################################################################
