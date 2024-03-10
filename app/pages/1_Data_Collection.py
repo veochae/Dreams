@@ -19,6 +19,7 @@ import utils
 import os
 warnings.filterwarnings('ignore')
 st.write(os.getcwd())
+st.write(os.listdir())
 
 # def task(index , xx):
 #     print("working")
