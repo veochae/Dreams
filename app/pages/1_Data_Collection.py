@@ -149,24 +149,24 @@ if submitted:
         client_id = client_id
         secret_key = secret_key
 
-        auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
-        data = {
-            'grant_type': 'password',
-            'username': username,
-            'password': password
-        }
+        # auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
+        # data = {
+        #     'grant_type': 'password',
+        #     'username': username,
+        #     'password': password
+        # }
 
-        headers = {'User-Agent': 'MyAPI/0.0.1'}
+        # headers = {'User-Agent': 'MyAPI/0.0.1'}
 
-        res = requests.post('https://www.reddit.com/api/v1/access_token', 
-                            auth = auth, 
-                            data = data,
-                            headers = headers)
-        token = res.json()['access_token']
+        # res = requests.post('https://www.reddit.com/api/v1/access_token', 
+        #                     auth = auth, 
+        #                     data = data,
+        #                     headers = headers)
+        # token = res.json()['access_token']
 
-        headers['Authorization'] = f'bearer {token}'    
+        # headers['Authorization'] = f'bearer {token}'    
 
-        st.session_state['reddit'], st.session_state['json_file'] = subprocess.run(['python','utils.py',year,month,day,three,last,headers])
+        st.session_state['reddit'], st.session_state['json_file'] = subprocess.run(['python','utils.py',year,month,day,three,last,client_id,secret_key,username,password])
 
         my_bar = st.progress(0, text="Initiating Data Preprocessing")
         time.sleep(3)

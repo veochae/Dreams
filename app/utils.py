@@ -11,6 +11,26 @@ import sys
 sys.path.append("./")
 # from utils import task
 
+def access(client_id,secret_key,username,password):
+    auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
+    data = {
+        'grant_type': 'password',
+        'username': username,
+        'password': password
+    }
+
+    headers = {'User-Agent': 'MyAPI/0.0.1'}
+
+    res = requests.post('https://www.reddit.com/api/v1/access_token', 
+                        auth = auth, 
+                        data = data,
+                        headers = headers)
+    token = res.json()['access_token']
+
+    headers['Authorization'] = f'bearer {token}'    
+
+    return headers
+
 def task(index , xx):
     print("working")
     return(index,profanity.censor(xx, "*"))
@@ -36,8 +56,12 @@ def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
 
 ###################### reddit data extraction
-def reddit_data(time_wanted, headers):
+def reddit_data(time_wanted,client_id,secret_key,username,password):
+    
     progress_text = "Validating the Credentials, Please wait."
+
+    headers = access(client_id,secret_key,username,password)
+
     my_bar = st.progress(0, text=progress_text)
 
     #initial set collection
@@ -111,8 +135,11 @@ if __name__ == "__main__":
     day = sys.argv[3]
     three = sys.argv[4]
     last = sys.argv[5]
-    header = sys.argv[6]
+    client_id = sys.argv[6]
+    secret_key = sys.argv[6]
+    username = sys.argv[6]
+    password = sys.argv[6]
 
     time_wanted = datetime(int(year),int(month),int(day),int(three),int(three),int(three),int(last))
 
-    reddit_data(time_wanted,header)
+    reddit_data(time_wanted,client_id,secret_key,username,password)
