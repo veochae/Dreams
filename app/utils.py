@@ -103,4 +103,10 @@ def reddit_data(time_wanted, headers):
         st.success("Data Collection Completed!")
         st.success(f'**Data Count**:{len(df)}')
         st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
-        return df
+        return df, res.json()['data']['children'][1]
+    
+if __name__ == "__main__":
+    arg1 = sys.argv[1]
+    arg2 = sys.argv[2]
+
+    reddit_data(arg1,arg2)

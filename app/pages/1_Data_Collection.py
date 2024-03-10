@@ -8,18 +8,18 @@ import pandas as pd
 from better_profanity import profanity
 import sys
 import subprocess
+import os
 
-sys.path.append("../")
 
-import utils
+sys.path.append("./app/")
+sys.path.append("./app/pages")
 
 ########################################################################################
 #############################       data collection page      ##########################
 ########################################################################################
-import os
+
 warnings.filterwarnings('ignore')
-st.write(os.getcwd())
-st.write(os.listdir())
+
 
 # def task(index , xx):
 #     print("working")
@@ -162,7 +162,7 @@ if submitted:
 
         headers['Authorization'] = f'bearer {token}'    
 
-        st.session_state['reddit'], st.session_state['json_file'] = utils.reddit_data(time_wanted, headers)
+        st.session_state['reddit'], st.session_state['json_file'] = subprocess.run(['python','utils.py',time_wanted,headers])
 
         my_bar = st.progress(0, text="Initiating Data Preprocessing")
         time.sleep(3)
