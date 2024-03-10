@@ -12,28 +12,28 @@
 #############################       Package Requirements   #############################
 ########################################################################################
 #python native packages
-import requests
-import re
-import math
-import time
-import warnings
-import multiprocessing
+# import requests
+# import re
+# import math
+# import time
+# import warnings
+# import multiprocessing
 #import os
 #import glob
 #import sys
 #import json
 
 #streamlit
-import spacy_streamlit
+# import spacy_streamlit
 import streamlit as st
 
 #common add ons
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import io
-from PIL import Image
-from wordcloud import WordCloud #,STOPWORDS
+# import pandas as pd
+# import numpy as np
+# import matplotlib.pyplot as plt
+# import io
+# from PIL import Image
+# from wordcloud import WordCloud #,STOPWORDS
 import nltk
 @st.cache_resource
 def nltk_downloads():
@@ -45,22 +45,22 @@ def nltk_downloads():
     nltk.download('brown')    
 
 nltk_downloads()
-import spacy
-from spacy import displacy
-from datetime import datetime #, date
-from sklearn.feature_extraction.text import CountVectorizer
+# import spacy
+# from spacy import displacy
+# from datetime import datetime #, date
+# from sklearn.feature_extraction.text import CountVectorizer
 
 
-#plotly
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
-import plotly.express as px
+# #plotly
+# from plotly.subplots import make_subplots
+# import plotly.graph_objects as go
+# import plotly.express as px
 
-#other pacakges
-from better_profanity import profanity
+# #other pacakges
+# from better_profanity import profanity
 
-#huggingface
-from transformers import pipeline, set_seed
+# #huggingface
+# from transformers import pipeline, set_seed
 
 #openai
 #import openai
@@ -69,160 +69,159 @@ from transformers import pipeline, set_seed
 import torchvision
 import torch
 
-from utils import task
 ########################################################################################
 #############################       required UDFs     #############################
 ########################################################################################
 warnings.filterwarnings('ignore')
 
-##########profanity filter
-def multiprocessing_function(text_data):
+# ##########profanity filter
+# def multiprocessing_function(text_data):
     
-    st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
-    try:
-        with multiprocessing.Pool(processes=6) as pool:
-            st.write("working 1")
-            res = pool.starmap(task, enumerate(text_data)) 
-    except Exception as e:
-        print("exception in worker process", e)
-        return text_data
+#     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
+#     try:
+#         with multiprocessing.Pool(processes=6) as pool:
+#             st.write("working 1")
+#             res = pool.starmap(task, enumerate(text_data)) 
+#     except Exception as e:
+#         print("exception in worker process", e)
+#         return text_data
 
-    res.sort(key=lambda x: x[0])
-    final_results = [result[1] for result in res]
-    return final_results
+#     res.sort(key=lambda x: x[0])
+#     final_results = [result[1] for result in res]
+#     return final_results
         
 
-##########en-core-sm preload
-@st.cache_resource
-def load_nlp():
-    return spacy.load('en_core_web_sm')
+# ##########en-core-sm preload
+# @st.cache_resource
+# def load_nlp():
+#     return spacy.load('en_core_web_sm')
 
-##########wordcloud
-def wordcloud(x, lim):
-    text = " ".join(x)
-    cloud = WordCloud(collocations = False, max_words = lim, min_word_length = 3).generate(text)
-    fig, ax = plt.subplots(figsize = (12, 8))
-    ax.imshow(cloud, interpolation='bilinear')
-    plt.axis("off")
-    st.pyplot(fig)
+# ##########wordcloud
+# def wordcloud(x, lim):
+#     text = " ".join(x)
+#     cloud = WordCloud(collocations = False, max_words = lim, min_word_length = 3).generate(text)
+#     fig, ax = plt.subplots(figsize = (12, 8))
+#     ax.imshow(cloud, interpolation='bilinear')
+#     plt.axis("off")
+#     st.pyplot(fig)
 
-###################### dataframe to csv conversion
-def convert_df(df):
-   return df.to_csv(index=False).encode('utf-8')
+# ###################### dataframe to csv conversion
+# def convert_df(df):
+#    return df.to_csv(index=False).encode('utf-8')
 
-###################### reddit data extraction
-def reddit_data(time_wanted, headers):
-    progress_text = "Validating the Credentials, Please wait."
-    my_bar = st.progress(0, text=progress_text)
+# ###################### reddit data extraction
+# def reddit_data(time_wanted, headers):
+#     progress_text = "Validating the Credentials, Please wait."
+#     my_bar = st.progress(0, text=progress_text)
 
-    #initial set collection
-    res = requests.get('https://oauth.reddit.com/r/Dreams/new',
-                    headers = headers, params={'limit': '100', 'no_profanity':True})
+#     #initial set collection
+#     res = requests.get('https://oauth.reddit.com/r/Dreams/new',
+#                     headers = headers, params={'limit': '100', 'no_profanity':True})
 
-    df = pd.DataFrame()
+#     df = pd.DataFrame()
 
-    for post in res.json()['data']['children']:
-        df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
-                                                    'title': post['data']['title'],
-                                                    'text': post['data']['selftext'],
-                                                    'date': post['data']['created']},index=[0])],ignore_index=True )
+#     for post in res.json()['data']['children']:
+#         df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
+#                                                     'title': post['data']['title'],
+#                                                     'text': post['data']['selftext'],
+#                                                     'date': post['data']['created']},index=[0])],ignore_index=True )
     
-    #further back collection
-    latest_key = post['kind'] + '_' + post['data']['id']
+#     #further back collection
+#     latest_key = post['kind'] + '_' + post['data']['id']
 
-    my_bar.progress(3, text = "Credentials Validated!")
-    my_bar.progress(5, text = "Initizlizing Data Collection From Reddit")
-    while df.tail(1)['date'][df.tail(1)['date'].index[0]] > datetime.timestamp(time_wanted):
-        for req in range(100):
+#     my_bar.progress(3, text = "Credentials Validated!")
+#     my_bar.progress(5, text = "Initizlizing Data Collection From Reddit")
+#     while df.tail(1)['date'][df.tail(1)['date'].index[0]] > datetime.timestamp(time_wanted):
+#         for req in range(100):
         
-            res = requests.get('https://oauth.reddit.com/r/Dreams/new',
-                                headers = headers, 
-                                params={'limit': '100', 'after': latest_key, 'no_profanity':True})
+#             res = requests.get('https://oauth.reddit.com/r/Dreams/new',
+#                                 headers = headers, 
+#                                 params={'limit': '100', 'after': latest_key, 'no_profanity':True})
             
-            for post in res.json()['data']['children']:
-                df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
-                                                    'title': post['data']['title'],
-                                                    'text': post['data']['selftext'],
-                                                    'date': post['data']['created']},index=[0])], ignore_index= True)
+#             for post in res.json()['data']['children']:
+#                 df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
+#                                                     'title': post['data']['title'],
+#                                                     'text': post['data']['selftext'],
+#                                                     'date': post['data']['created']},index=[0])], ignore_index= True)
 
-            latest_key = post['kind'] + '_' + post['data']['id']
+#             latest_key = post['kind'] + '_' + post['data']['id']
 
-            if req * 15 <= 100:    
-                my_bar.progress(req *15, text = f"{df.shape[0]} Dreams Collected")
-            else:
-                my_bar.progress(100, text = f"{df.shape[0]} Dreams Collected")
+#             if req * 15 <= 100:    
+#                 my_bar.progress(req *15, text = f"{df.shape[0]} Dreams Collected")
+#             else:
+#                 my_bar.progress(100, text = f"{df.shape[0]} Dreams Collected")
 
-            if len(df) >= 985:
-                latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
-                st.success("Data Collection Completed!")
-                col11, col22 = st.columns([2,4])
-                df.date = [datetime.fromtimestamp(d) for d in df.date] 
-                with col11:
-                    st.success(f'**Data Count**: {len(df)} Dreams')
-                with col22:
-                    st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
-                time1 = time.time()
-                try:
-                    df.text = multiprocessing_function(df.text)
-                except:
-                    pass
-                time2 = time.time()
-                col33, col44 = st.columns([3,2])
-                with col33:
-                    st.success(f'**Data Filtering Complete!**')
-                with col44:
-                    st.success(f'**Time Consumed**: {round((time2-time1)/60,2)} minutes')
-                return df, res.json()['data']['children'][1]
+#             if len(df) >= 985:
+#                 latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
+#                 st.success("Data Collection Completed!")
+#                 col11, col22 = st.columns([2,4])
+#                 df.date = [datetime.fromtimestamp(d) for d in df.date] 
+#                 with col11:
+#                     st.success(f'**Data Count**: {len(df)} Dreams')
+#                 with col22:
+#                     st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
+#                 time1 = time.time()
+#                 try:
+#                     df.text = multiprocessing_function(df.text)
+#                 except:
+#                     pass
+#                 time2 = time.time()
+#                 col33, col44 = st.columns([3,2])
+#                 with col33:
+#                     st.success(f'**Data Filtering Complete!**')
+#                 with col44:
+#                     st.success(f'**Time Consumed**: {round((time2-time1)/60,2)} minutes')
+#                 return df, res.json()['data']['children'][1]
 
-    else: 
-        st.success("Data Collection Completed!")
-        st.success(f'**Data Count**:{len(df)}')
-        st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
-        return df
+#     else: 
+#         st.success("Data Collection Completed!")
+#         st.success(f'**Data Count**:{len(df)}')
+#         st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
+#         return df
 
-############### hugging face incorporated function
-def query(payload, API_URL, headers):
-    response = requests.post(API_URL, headers, json=payload)
-    return response.json()
+# ############### hugging face incorporated function
+# def query(payload, API_URL, headers):
+#     response = requests.post(API_URL, headers, json=payload)
+#     return response.json()
 
-def query_image(payload, API_URL, headers):
-    response = requests.post(API_URL, headers, json=payload)
-    return response.content
+# def query_image(payload, API_URL, headers):
+#     response = requests.post(API_URL, headers, json=payload)
+#     return response.content
 
-def summarize_dream(api_key, prompt):
-    API_URL = "https://api-inference.huggingface.co/models/philschmid/bart-large-cnn-samsum"
-    headers = {"Authorization": f"Bearer {api_key}"}
+# def summarize_dream(api_key, prompt):
+#     API_URL = "https://api-inference.huggingface.co/models/philschmid/bart-large-cnn-samsum"
+#     headers = {"Authorization": f"Bearer {api_key}"}
 
-    output = query({
-        "inputs": prompt,
-    }, API_URL, headers)
+#     output = query({
+#         "inputs": prompt,
+#     }, API_URL, headers)
 
-    try:
-        return output[0]['summary_text']
-    except Exception as e:
-        st.write(e)
-
-
-def exapnd_dream(prompt):
-    generator = pipeline('text-generation', model='openai-gpt')
-    set_seed(42)
-    length = len(prompt)//4
-    end = generator(prompt, max_length=length*2, num_return_sequences=1)
-    return end[0]['generated_text']
+#     try:
+#         return output[0]['summary_text']
+#     except Exception as e:
+#         st.write(e)
 
 
-def text_to_image(api_key, artist, prompt, emotion):
-    API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
-    headers = {"Authorization": f"Bearer {api_key}"}
+# def exapnd_dream(prompt):
+#     generator = pipeline('text-generation', model='openai-gpt')
+#     set_seed(42)
+#     length = len(prompt)//4
+#     end = generator(prompt, max_length=length*2, num_return_sequences=1)
+#     return end[0]['generated_text']
 
-    image_bytes = query_image({
-        "inputs": f"In style of {artist} depicting emotion of {emotion} paint:[{prompt}]",
-    }, API_URL, headers)
-    # You can access the image with PIL.Image for example
 
-    image = Image.open(io.BytesIO(image_bytes)) 
+# def text_to_image(api_key, artist, prompt, emotion):
+#     API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
+#     headers = {"Authorization": f"Bearer {api_key}"}
 
-    return image   
+#     image_bytes = query_image({
+#         "inputs": f"In style of {artist} depicting emotion of {emotion} paint:[{prompt}]",
+#     }, API_URL, headers)
+#     # You can access the image with PIL.Image for example
+
+#     image = Image.open(io.BytesIO(image_bytes)) 
+
+#     return image   
 
 ########################################################################################
 #############################       introduction page      #############################
