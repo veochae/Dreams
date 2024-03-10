@@ -10,7 +10,7 @@ import concurrent.futures
 import sys
 
 def task(index , xx):
-    st.write("working")
+    # st.write("working")
     return(index,profanity.censor(xx, "*"))
 
 ##########profanity filter
