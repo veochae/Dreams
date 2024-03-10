@@ -166,7 +166,7 @@ if submitted:
 
         # headers['Authorization'] = f'bearer {token}'    
 
-        st.session_state['reddit'], st.session_state['json_file'] = subprocess.run(['python','./app/utils.py',year,month,day,three,last,client_id,secret_key,username,password])
+        st.session_state['reddit'], st.session_state['json_file'] = subprocess.run([f"{sys.executable}",'./app/utils.py',year,month,day,three,last,client_id,secret_key,username,password])
 
         my_bar = st.progress(0, text="Initiating Data Preprocessing")
         time.sleep(3)
