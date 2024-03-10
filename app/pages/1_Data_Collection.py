@@ -9,10 +9,12 @@ from better_profanity import profanity
 import sys
 import subprocess
 import os
-import utils
 
 sys.path.append("./app/")
 sys.path.append("./app/pages")
+
+import utils
+
 
 ########################################################################################
 #############################       data collection page      ##########################
