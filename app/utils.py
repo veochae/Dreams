@@ -136,9 +136,9 @@ if __name__ == "__main__":
     three = sys.argv[4]
     last = sys.argv[5]
     client_id = sys.argv[6]
-    secret_key = sys.argv[6]
-    username = sys.argv[6]
-    password = sys.argv[6]
+    secret_key = sys.argv[7]
+    username = sys.argv[8]
+    password = sys.argv[9]
 
     time_wanted = datetime(int(year),int(month),int(day),int(three),int(three),int(three),int(last))
 
