@@ -106,7 +106,13 @@ def reddit_data(time_wanted, headers):
         return df, res.json()['data']['children'][1]
     
 if __name__ == "__main__":
-    arg1 = sys.argv[1]
-    arg2 = sys.argv[2]
+    year = sys.argv[1]
+    month = sys.argv[2]
+    day = sys.argv[3]
+    three = sys.argv[4]
+    last = sys.argv[5]
+    header = sys.argv[6]
 
-    reddit_data(arg1,arg2)
+    time_wanted = datetime(int(year),int(month),int(day),int(three),int(three),int(three),int(last))
+
+    reddit_data(time_wanted,header)

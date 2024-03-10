@@ -139,7 +139,11 @@ with st.form("reddit_cred"):
     submitted = st.form_submit_button("Submit")
 
 if submitted:
-    time_wanted = datetime(2023, 1, 20, 00, 00, 00, 342380)
+    year = '2023'
+    month = '1'
+    day = '20'
+    three = '00'
+    last =  '342380'
 
     try:
         client_id = client_id
@@ -162,7 +166,7 @@ if submitted:
 
         headers['Authorization'] = f'bearer {token}'    
 
-        st.session_state['reddit'], st.session_state['json_file'] = subprocess.run(['python','utils.py',time_wanted,headers])
+        st.session_state['reddit'], st.session_state['json_file'] = subprocess.run(['python','utils.py',year,month,day,three,last,headers])
 
         my_bar = st.progress(0, text="Initiating Data Preprocessing")
         time.sleep(3)
