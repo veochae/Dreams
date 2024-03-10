@@ -9,11 +9,12 @@ from better_profanity import profanity
 import sys
 import subprocess
 import os
+import concurrent.futures
 
 sys.path.append("./app/")
 sys.path.append("./app/pages")
 
-import utils
+# import utils
 
 
 ########################################################################################
@@ -22,25 +23,27 @@ import utils
 
 warnings.filterwarnings('ignore')
 
-# def task(index , xx):
-#     print("working")
-#     return(index,profanity.censor(xx, "*"))
+def task(index , xx):
+    st.write("working")
+    return(index,profanity.censor(xx, "*"))
 
-# ##########profanity filter
-# def multiprocessing_function(text_data):
-    
-#     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
-#     try:
-#         with multiprocessing.Pool(processes=6) as pool:
-#             st.write("working 1")
-#             res = pool.starmap(task, enumerate(text_data)) 
-#     except Exception as e:
-#         print("exception in worker process", e)
-#         return text_data
+##########profanity filter
+def multiprocessing_function(text_data):
+    st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
 
-#     res.sort(key=lambda x: x[0])
-#     final_results = [result[1] for result in res]
-#     return final_results
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+        futures = [executor.submit(task, index, text) for index, text in enumerate(text_data.tolist())]
+
+    try:
+        results = [future.result() for future in concurrent.futures.as_completed(futures)]
+    except Exception as e:
+        print("exception in worker process", e)
+        return text_data
+
+    # Sort the results based on the original index
+    results.sort(key=lambda x: x[0])
+    final_results = [result[1] for result in results]
+    return final_results
 
 # ###################### dataframe to csv conversion
 def convert_df(df):
@@ -99,7 +102,7 @@ def reddit_data(time_wanted, headers):
                     st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
                 time1 = time.time()
                 try:
-                    df.text = utils.multiprocessing_function(df.text)
+                    df.text = multiprocessing_function(df.text)
                 except:
                     pass
                 time2 = time.time()
