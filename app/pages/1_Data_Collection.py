@@ -8,14 +8,35 @@ import pandas as pd
 from better_profanity import profanity
 import sys
 
-sys.path.append("../")
-from utils import task
+# sys.path.append("../")
+# from utils import task
 
 ########################################################################################
 #############################       data collection page      ##########################
 ########################################################################################
 
 warnings.filterwarnings('ignore')
+
+def task(index , xx):
+    print("working")
+    return(index,profanity.censor(xx, "*"))
+
+##########profanity filter
+def multiprocessing_function(text_data):
+    
+    st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
+    try:
+        with multiprocessing.Pool(processes=6) as pool:
+            st.write("working 1")
+            res = pool.starmap(task, enumerate(text_data)) 
+    except Exception as e:
+        print("exception in worker process", e)
+        return text_data
+
+    res.sort(key=lambda x: x[0])
+    final_results = [result[1] for result in res]
+    return final_results
+
 ###################### dataframe to csv conversion
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
@@ -90,21 +111,7 @@ def reddit_data(time_wanted, headers):
         st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
         return df
     
-##########profanity filter
-def multiprocessing_function(text_data):
-    
-    st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
-    try:
-        with multiprocessing.Pool(processes=6) as pool:
-            st.write("working 1")
-            res = pool.starmap(task, enumerate(text_data)) 
-    except Exception as e:
-        print("exception in worker process", e)
-        return text_data
 
-    res.sort(key=lambda x: x[0])
-    final_results = [result[1] for result in res]
-    return final_results
 
 
 st.title("Data Collection")
