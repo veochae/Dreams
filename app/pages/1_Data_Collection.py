@@ -9,7 +9,7 @@ from better_profanity import profanity
 import sys
 import subprocess
 import os
-
+import utils
 
 sys.path.append("./app/")
 sys.path.append("./app/pages")
@@ -19,7 +19,6 @@ sys.path.append("./app/pages")
 ########################################################################################
 
 warnings.filterwarnings('ignore')
-
 
 # def task(index , xx):
 #     print("working")
@@ -42,81 +41,78 @@ warnings.filterwarnings('ignore')
 #     return final_results
 
 # ###################### dataframe to csv conversion
-# def convert_df(df):
-#    return df.to_csv(index=False).encode('utf-8')
+def convert_df(df):
+   return df.to_csv(index=False).encode('utf-8')
 
 # ###################### reddit data extraction
-# def reddit_data(time_wanted, headers):
-#     progress_text = "Validating the Credentials, Please wait."
-#     my_bar = st.progress(0, text=progress_text)
+def reddit_data(time_wanted, headers):
+    progress_text = "Validating the Credentials, Please wait."
+    my_bar = st.progress(0, text=progress_text)
 
-#     #initial set collection
-#     res = requests.get('https://oauth.reddit.com/r/Dreams/new',
-#                     headers = headers, params={'limit': '100', 'no_profanity':True})
+    #initial set collection
+    res = requests.get('https://oauth.reddit.com/r/Dreams/new',
+                    headers = headers, params={'limit': '100', 'no_profanity':True})
 
-#     df = pd.DataFrame()
+    df = pd.DataFrame()
 
-#     for post in res.json()['data']['children']:
-#         df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
-#                                                     'title': post['data']['title'],
-#                                                     'text': post['data']['selftext'],
-#                                                     'date': post['data']['created']},index=[0])],ignore_index=True )
+    for post in res.json()['data']['children']:
+        df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
+                                                    'title': post['data']['title'],
+                                                    'text': post['data']['selftext'],
+                                                    'date': post['data']['created']},index=[0])],ignore_index=True )
     
-#     #further back collection
-#     latest_key = post['kind'] + '_' + post['data']['id']
+    #further back collection
+    latest_key = post['kind'] + '_' + post['data']['id']
 
-#     my_bar.progress(3, text = "Credentials Validated!")
-#     my_bar.progress(5, text = "Initizlizing Data Collection From Reddit")
-#     while df.tail(1)['date'][df.tail(1)['date'].index[0]] > datetime.timestamp(time_wanted):
-#         for req in range(100):
+    my_bar.progress(3, text = "Credentials Validated!")
+    my_bar.progress(5, text = "Initizlizing Data Collection From Reddit")
+    while df.tail(1)['date'][df.tail(1)['date'].index[0]] > datetime.timestamp(time_wanted):
+        for req in range(100):
         
-#             res = requests.get('https://oauth.reddit.com/r/Dreams/new',
-#                                 headers = headers, 
-#                                 params={'limit': '100', 'after': latest_key, 'no_profanity':True})
+            res = requests.get('https://oauth.reddit.com/r/Dreams/new',
+                                headers = headers, 
+                                params={'limit': '100', 'after': latest_key, 'no_profanity':True})
             
-#             for post in res.json()['data']['children']:
-#                 df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
-#                                                     'title': post['data']['title'],
-#                                                     'text': post['data']['selftext'],
-#                                                     'date': post['data']['created']},index=[0])], ignore_index= True)
+            for post in res.json()['data']['children']:
+                df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
+                                                    'title': post['data']['title'],
+                                                    'text': post['data']['selftext'],
+                                                    'date': post['data']['created']},index=[0])], ignore_index= True)
 
-#             latest_key = post['kind'] + '_' + post['data']['id']
+            latest_key = post['kind'] + '_' + post['data']['id']
 
-#             if req * 15 <= 100:    
-#                 my_bar.progress(req *15, text = f"{df.shape[0]} Dreams Collected")
-#             else:
-#                 my_bar.progress(100, text = f"{df.shape[0]} Dreams Collected")
+            if req * 15 <= 100:    
+                my_bar.progress(req *15, text = f"{df.shape[0]} Dreams Collected")
+            else:
+                my_bar.progress(100, text = f"{df.shape[0]} Dreams Collected")
 
-#             if len(df) >= 985:
-#                 latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
-#                 st.success("Data Collection Completed!")
-#                 col11, col22 = st.columns([2,4])
-#                 df.date = [datetime.fromtimestamp(d) for d in df.date] 
-#                 with col11:
-#                     st.success(f'**Data Count**: {len(df)} Dreams')
-#                 with col22:
-#                     st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
-#                 time1 = time.time()
-#                 try:
-#                     df.text = multiprocessing_function(df.text)
-#                 except:
-#                     pass
-#                 time2 = time.time()
-#                 col33, col44 = st.columns([3,2])
-#                 with col33:
-#                     st.success(f'**Data Filtering Complete!**')
-#                 with col44:
-#                     st.success(f'**Time Consumed**: {round((time2-time1)/60,2)} minutes')
-#                 return df, res.json()['data']['children'][1]
+            if len(df) >= 985:
+                latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
+                st.success("Data Collection Completed!")
+                col11, col22 = st.columns([2,4])
+                df.date = [datetime.fromtimestamp(d) for d in df.date] 
+                with col11:
+                    st.success(f'**Data Count**: {len(df)} Dreams')
+                with col22:
+                    st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
+                time1 = time.time()
+                try:
+                    df.text = utils.multiprocessing_function(df.text)
+                except:
+                    pass
+                time2 = time.time()
+                col33, col44 = st.columns([3,2])
+                with col33:
+                    st.success(f'**Data Filtering Complete!**')
+                with col44:
+                    st.success(f'**Time Consumed**: {round((time2-time1)/60,2)} minutes')
+                return df, res.json()['data']['children'][1]
 
-#     else: 
-#         st.success("Data Collection Completed!")
-#         st.success(f'**Data Count**:{len(df)}')
-#         st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
-#         return df
-    
-
-
+    else: 
+        st.success("Data Collection Completed!")
+        st.success(f'**Data Count**:{len(df)}')
+        st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
+        return df
 
 st.title("Data Collection")
 st.write("Equipped with the background on dreams and dreaming, now you should be ready to roll up your sleeves and get right into dream data collection!")
@@ -139,34 +135,30 @@ with st.form("reddit_cred"):
     submitted = st.form_submit_button("Submit")
 
 if submitted:
-    year = '2023'
-    month = '1'
-    day = '20'
-    three = '00'
-    last =  '342380'
+    time_wanted = datetime(2023, 1, 20, 00, 00, 00, 342380)
 
     try:
         client_id = client_id
         secret_key = secret_key
 
-        # auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
-        # data = {
-        #     'grant_type': 'password',
-        #     'username': username,
-        #     'password': password
-        # }
+        auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
+        data = {
+            'grant_type': 'password',
+            'username': username,
+            'password': password
+        }
 
-        # headers = {'User-Agent': 'MyAPI/0.0.1'}
+        headers = {'User-Agent': 'MyAPI/0.0.1'}
 
-        # res = requests.post('https://www.reddit.com/api/v1/access_token', 
-        #                     auth = auth, 
-        #                     data = data,
-        #                     headers = headers)
-        # token = res.json()['access_token']
+        res = requests.post('https://www.reddit.com/api/v1/access_token', 
+                            auth = auth, 
+                            data = data,
+                            headers = headers)
+        token = res.json()['access_token']
 
-        # headers['Authorization'] = f'bearer {token}'    
+        headers['Authorization'] = f'bearer {token}'    
 
-        st.session_state['reddit'], st.session_state['json_file'] = subprocess.run([f"{sys.executable}",'./app/utils.py',year,month,day,three,last,client_id,secret_key,username,password])
+        st.session_state['reddit'], st.session_state['json_file'] = reddit_data(time_wanted, headers)
 
         my_bar = st.progress(0, text="Initiating Data Preprocessing")
         time.sleep(3)
