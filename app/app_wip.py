@@ -213,18 +213,26 @@ def query_image(payload, API_URL, headers):
     return response.content
 
 def summarize_dream(api_key, prompt):
-	API_URL = "https://api-inference.huggingface.co/models/philschmid/bart-large-cnn-samsum"
-	headers = {"Authorization": f"Bearer {api_key}"}
+    def query(payload):
+        try:
+            response = requests.post(API_URL, headers=headers, json=payload)
+            response.raise_for_status()  # Raise an exception for 4xx/5xx status codes
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"Error during API request: {e}")
+            return None
 
-	def query(payload):
-		response = requests.post(API_URL, headers=headers, json=payload)
-		return response.json()
-		
-	output = query({
-		"inputs": prompt,
-	})
+    API_URL = "https://api-inference.huggingface.co/models/philschmid/bart-large-cnn-samsum"
+    headers = {"Authorization": f"Bearer {api_key}"}
 
-	return output[0]['summary_text']
+    while True:
+        output = query({"inputs": prompt})
+
+        if output and "summary_text" in output[0].keys():
+            return output[0]['summary_text']
+        else:
+            print("Summary text not found in output, retrying in 10 seconds...")
+            time.sleep(10)
 
 
 def exapnd_dream(prompt):
@@ -1119,6 +1127,8 @@ def summary_continue():
 
             st.header("Dream Summary")
             st.session_state['summary'] = summarize_dream(st.session_state['hugging_face_key'],dream)
+
+
             st.write(st.session_state['summary'])
 
             st.header("Dream Continuation")
