@@ -1,15 +1,9 @@
 import streamlit as st
-from datetime import datetime #, date
-import requests
-import time
-import warnings
-import multiprocessing
-import pandas as pd
 from better_profanity import profanity
-import concurrent.futures
-import sys
+
 
 def task(index, xx):
+    st.write("here3")
     return index, profanity.censor(xx, "*")
 
 ##########profanity filter
