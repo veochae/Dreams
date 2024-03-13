@@ -9,9 +9,9 @@ from better_profanity import profanity
 import concurrent.futures
 import sys
 
-def task(index , xx):
-    # st.write("working")
-    return(index,profanity.censor(xx, "*"))
+def task(index, xx, counter):
+    counter.value += 1
+    return index, profanity.censor(xx, "*")
 
 ##########profanity filter
 # def multiprocessing_function(text_data):
