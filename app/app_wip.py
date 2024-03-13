@@ -21,7 +21,7 @@ import multiprocessing
 import os
 # import glob
 import sys
-st.write(os.getcwd())
+# st.write(os.getcwd())
 sys.path.append("./app/")
 sys.path.append("./app/pages")
 
