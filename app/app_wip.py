@@ -13,7 +13,7 @@
 ########################################################################################
 #python native packages
 import streamlit as st
-@st.cache_resources
+@st.cache_resource
 def importing():
     import requests
     import re
