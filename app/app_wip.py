@@ -78,6 +78,7 @@ import concurrent.futures
 
 st.write(os.getcwd())
 st.write(os.listdir())
+st.write(os.listdir("./app/"))
 
 ########################################################################################
 #############################       required UDFs     #############################
