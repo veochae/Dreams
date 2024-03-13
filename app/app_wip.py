@@ -77,8 +77,8 @@ modulename = 'utils'
 if modulename not in sys.modules:
     print("utils not impiorted")
 
-print(os.getcwd())
-print(os.listdir())
+st.write(os.getcwd())
+st.write(os.listdir())
 import concurrent.futures
 
 ########################################################################################
