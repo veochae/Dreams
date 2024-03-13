@@ -85,7 +85,7 @@ def multiprocessing_function(text_data):
     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
         with multiprocessing.Pool(processes=6) as pool:
-            res = pool.starmap(utils.task, enumerate(text_data)) 
+            res = pool.starmap(utils.task, enumerate(text_data.tolist())) 
     except Exception as e:
         print("exception in worker process", e)
         return text_data
