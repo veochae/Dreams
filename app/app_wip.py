@@ -12,65 +12,66 @@
 #############################       Package Requirements   #############################
 ########################################################################################
 #python native packages
-import requests
-import re
-import math
-import time
-import warnings
-import multiprocessing
-import os
-# import glob
-import sys
-
-# import json
-
-#streamlit
-import spacy_streamlit
 import streamlit as st
+@st.cache_resources
+def importing():
+    import requests
+    import re
+    import math
+    import time
+    import warnings
+    import multiprocessing
+    # import glob
 
-#common add ons
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from wordcloud import WordCloud #,STOPWORDS
-import nltk
+    # import json
 
-@st.cache_resource
-def nltk_downloads():
-    nltk.download('stopwords')
-    nltk.download('omw-1.4')
-    nltk.download('wordnet')
-    nltk.download("punkt")
-    nltk.download('averaged_perceptron_tagger')
-    nltk.download('brown')    
+    #streamlit
+    import spacy_streamlit
+    import streamlit as st
 
-nltk_downloads()
-import spacy
-from spacy import displacy
-from datetime import datetime #, date
-from sklearn.feature_extraction.text import CountVectorizer
+    #common add ons
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from wordcloud import WordCloud #,STOPWORDS
+    import nltk
 
-#plotly
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
-import plotly.express as px
+    @st.cache_resource
+    def nltk_downloads():
+        nltk.download('stopwords')
+        nltk.download('omw-1.4')
+        nltk.download('wordnet')
+        nltk.download("punkt")
+        nltk.download('averaged_perceptron_tagger')
+        nltk.download('brown')    
 
-# #other pacakges
-from better_profanity import profanity
+    nltk_downloads()
+    import spacy
+    from spacy import displacy
+    from datetime import datetime #, date
+    from sklearn.feature_extraction.text import CountVectorizer
 
-# #huggingface
-from transformers import pipeline, set_seed
+    #plotly
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+    import plotly.express as px
 
-#openai
-#import openai
+    # #other pacakges
+    from better_profanity import profanity
 
-#tensorflow
-import torchvision
-import torch
+    # #huggingface
+    from transformers import pipeline, set_seed
 
-import utils
+    #openai
+    #import openai
 
-st.write(utils.task(1,"fuck"))
+    #tensorflow
+    import torchvision
+    import torch
+
+    import utils
+
+importing()
 
 ########################################################################################
 #############################       required UDFs     #############################
@@ -241,7 +242,7 @@ def exapnd_dream(prompt):
 def text_to_image(api_key, artist, prompt, emotion):
     import io
     from PIL import Image
-    
+
     API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
     headers = {"Authorization": f"Bearer {api_key}"}
 
