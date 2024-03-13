@@ -72,7 +72,7 @@ from transformers import pipeline, set_seed
 import torchvision
 import torch
 
-import utils
+# import utils
 import concurrent.futures
 
 ########################################################################################
