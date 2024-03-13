@@ -204,27 +204,27 @@ def reddit_data(time_wanted, headers):
         return df
 
 ############### hugging face incorporated function
-def query(payload, API_URL, headers):
-    response = requests.post(API_URL, headers, json=payload)
-    return response.json()
+# def query(payload, API_URL, headers):
+#     response = requests.post(API_URL, headers, json=payload)
+#     return response.json()
 
 def query_image(payload, API_URL, headers):
     response = requests.post(API_URL, headers, json=payload)
     return response.content
 
 def summarize_dream(api_key, prompt):
-    API_URL = "https://api-inference.huggingface.co/models/philschmid/bart-large-cnn-samsum"
-    headers = {"Authorization": f"Bearer {api_key}"}
+	API_URL = "https://api-inference.huggingface.co/models/philschmid/bart-large-cnn-samsum"
+	headers = {"Authorization": f"Bearer {api_key}"}
 
-    output = query({
-        "inputs": prompt,
-    }, API_URL, headers)
+	def query(payload):
+		response = requests.post(API_URL, headers=headers, json=payload)
+		return response.json()
+		
+	output = query({
+		"inputs": prompt,
+	})
 
-    try:
-        return output[0]['summary_text']
-    except Exception as e:
-        summarize_dream(api_key, prompt)
-        st.write(e)
+	return output[0]['summary_text']
 
 
 def exapnd_dream(prompt):
