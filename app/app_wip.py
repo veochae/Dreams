@@ -47,7 +47,7 @@ def nltk_downloads():
     nltk.download("punkt")
     nltk.download('averaged_perceptron_tagger')
     nltk.download('brown')    
-st.write(os.getcwd())
+
 nltk_downloads()
 import spacy
 from spacy import displacy
@@ -76,6 +76,7 @@ import torch
 import utils
 import concurrent.futures
 
+st.write(os.getcwd())
 
 ########################################################################################
 #############################       required UDFs     #############################
