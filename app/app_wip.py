@@ -18,9 +18,10 @@ import math
 import time
 import warnings
 import multiprocessing
-# import os
+import os
 # import glob
 import sys
+os.getcwd()
 sys.path.append("./app/")
 sys.path.append("./app/pages")
 
@@ -83,21 +84,35 @@ warnings.filterwarnings('ignore')
 
 ##########profanity filter
 def multiprocessing_function(text_data):
-    st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
-        futures = [executor.submit(utils.task, index, text) for index, text in enumerate(text_data.tolist())]
-
+    
+    print("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
-        results = [future.result() for future in concurrent.futures.as_completed(futures)]
+        with multiprocessing.Pool(processes=6) as pool:
+            res = pool.starmap(utils.task, enumerate(text_data)) 
     except Exception as e:
         print("exception in worker process", e)
         return text_data
 
-    # Sort the results based on the original index
-    results.sort(key=lambda x: x[0])
-    final_results = [result[1] for result in results]
+    res.sort(key=lambda x: x[0])
+    final_results = [result[1] for result in res]
     return final_results
+
+# def multiprocessing_function(text_data):
+#     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
+
+#     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+#         futures = [executor.submit(utils.task, index, text) for index, text in enumerate(text_data.tolist())]
+
+#     try:
+#         results = [future.result() for future in concurrent.futures.as_completed(futures)]
+#     except Exception as e:
+#         print("exception in worker process", e)
+#         return text_data
+
+#     # Sort the results based on the original index
+#     results.sort(key=lambda x: x[0])
+#     final_results = [result[1] for result in results]
+#     return final_results
         
 
 ##########en-core-sm preload

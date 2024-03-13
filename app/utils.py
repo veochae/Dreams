@@ -14,22 +14,22 @@ def task(index , xx):
     return(index,profanity.censor(xx, "*"))
 
 ##########profanity filter
-def multiprocessing_function(text_data):
-    st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
+# def multiprocessing_function(text_data):
+#     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
-        futures = [executor.submit(task, index, text) for index, text in enumerate(text_data)]
+#     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+#         futures = [executor.submit(task, index, text) for index, text in enumerate(text_data)]
 
-    try:
-        results = [future.result() for future in concurrent.futures.as_completed(futures)]
-    except Exception as e:
-        print("exception in worker process", e)
-        return text_data
+#     try:
+#         results = [future.result() for future in concurrent.futures.as_completed(futures)]
+#     except Exception as e:
+#         print("exception in worker process", e)
+#         return text_data
 
-    # Sort the results based on the original index
-    results.sort(key=lambda x: x[0])
-    final_results = [result[1] for result in results]
-    return final_results
+#     # Sort the results based on the original index
+#     results.sort(key=lambda x: x[0])
+#     final_results = [result[1] for result in results]
+#     return final_results
 # sys.path.append("./")
 # # from utils import task
 
