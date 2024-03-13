@@ -71,11 +71,8 @@ import torchvision
 import torch
 
 import utils
-modulename = 'utils'
-if modulename not in sys.modules:
-    st.write("utils not impiorted")
-else:
-    st.write("success")
+
+st.write(utils.task(1,"fuck"))
 
 ########################################################################################
 #############################       required UDFs     #############################
