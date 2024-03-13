@@ -21,7 +21,7 @@ import multiprocessing
 import os
 # import glob
 import sys
-os.getcwd()
+st.write(os.getcwd())
 sys.path.append("./app/")
 sys.path.append("./app/pages")
 
@@ -85,7 +85,7 @@ warnings.filterwarnings('ignore')
 ##########profanity filter
 def multiprocessing_function(text_data):
     
-    print("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
+    st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
         with multiprocessing.Pool(processes=6) as pool:
             res = pool.starmap(utils.task, enumerate(text_data)) 
