@@ -77,6 +77,7 @@ import utils
 import concurrent.futures
 
 st.write(os.getcwd())
+st.write(os.listdir())
 
 ########################################################################################
 #############################       required UDFs     #############################
