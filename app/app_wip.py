@@ -21,8 +21,6 @@ import multiprocessing
 import os
 # import glob
 import sys
-sys.path.append("./app")
-sys.path.append("./app/pages")
 
 # import json
 
@@ -38,6 +36,7 @@ import io
 from PIL import Image
 from wordcloud import WordCloud #,STOPWORDS
 import nltk
+
 @st.cache_resource
 def nltk_downloads():
     nltk.download('stopwords')
@@ -52,7 +51,6 @@ import spacy
 from spacy import displacy
 from datetime import datetime #, date
 from sklearn.feature_extraction.text import CountVectorizer
-
 
 #plotly
 from plotly.subplots import make_subplots
@@ -79,10 +77,6 @@ if modulename not in sys.modules:
 else:
     st.write("success")
 
-st.write(os.getcwd())
-st.write(os.listdir())
-import concurrent.futures
-
 ########################################################################################
 #############################       required UDFs     #############################
 ########################################################################################
@@ -94,7 +88,6 @@ def multiprocessing_function(text_data):
     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
         with multiprocessing.Pool(processes=6) as pool:
-            st.write("working 1")
             res = pool.starmap(utils.task, enumerate(text_data)) 
     except Exception as e:
         print("exception in worker process", e)
@@ -192,10 +185,10 @@ def reddit_data(time_wanted, headers):
                 with col22:
                     st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
                 time1 = time.time()
-                try:
-                    df.text = multiprocessing_function(df.text)
-                except:
-                    pass
+                # try:
+                #     df.text = multiprocessing_function(df.text)
+                # except:
+                #     pass
                 time2 = time.time()
                 col33, col44 = st.columns([3,2])
                 with col33:
