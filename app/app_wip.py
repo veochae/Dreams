@@ -223,6 +223,7 @@ def summarize_dream(api_key, prompt):
     try:
         return output[0]['summary_text']
     except Exception as e:
+        summarize_dream(api_key, prompt)
         st.write(e)
 
 
