@@ -82,7 +82,7 @@ warnings.filterwarnings('ignore')
 
 ##########profanity filter
 def multiprocessing_function(text_data):
-    st.write("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
+    st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
         manager = multiprocessing.Manager()
         counter = manager.Value('i', 0)
@@ -185,10 +185,10 @@ def reddit_data(time_wanted, headers):
                 with col22:
                     st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
                 time1 = time.time()
-                try:
-                    df.text = multiprocessing_function(df.text)
-                except:
-                    pass
+                # try:
+                #     df.text = multiprocessing_function(df.text)
+                # except:
+                #     pass
                 time2 = time.time()
                 col33, col44 = st.columns([3,2])
                 with col33:
