@@ -32,8 +32,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import io
-from PIL import Image
 from wordcloud import WordCloud #,STOPWORDS
 import nltk
 
@@ -241,6 +239,9 @@ def exapnd_dream(prompt):
 
 
 def text_to_image(api_key, artist, prompt, emotion):
+    import io
+    from PIL import Image
+    
     API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
     headers = {"Authorization": f"Bearer {api_key}"}
 
