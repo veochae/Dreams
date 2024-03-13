@@ -21,8 +21,7 @@ import multiprocessing
 import os
 # import glob
 import sys
-# st.write(os.getcwd())
-sys.path.append("./app/")
+sys.path.append("./app")
 sys.path.append("./app/pages")
 
 # import json
@@ -76,10 +75,6 @@ import torch
 import utils
 import concurrent.futures
 
-st.write(os.getcwd())
-st.write(os.listdir())
-st.write(os.listdir("./app/"))
-
 ########################################################################################
 #############################       required UDFs     #############################
 ########################################################################################
@@ -90,7 +85,7 @@ def multiprocessing_function(text_data):
     
     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
-        with multiprocessing.Pool(processes=6) as pool:
+        with multiprocessing.Pool(processes=8) as pool:
             res = pool.starmap(utils.task, enumerate(text_data)) 
     except Exception as e:
         print("exception in worker process", e)
