@@ -192,10 +192,10 @@ def reddit_data(time_wanted, headers):
                 with col22:
                     st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
                 time1 = time.time()
-                # try:
-                #     df.text = multiprocessing_function(df.text)
-                # except:
-                #     pass
+                try:
+                    df.text = multiprocessing_function(df.text)
+                except:
+                    pass
                 time2 = time.time()
                 col33, col44 = st.columns([3,2])
                 with col33:
