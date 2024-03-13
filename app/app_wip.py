@@ -72,7 +72,10 @@ from transformers import pipeline, set_seed
 import torchvision
 import torch
 
-# import utils
+import utils
+modulename = 'utils'
+if modulename not in sys.modules:
+    print("utils not impiorted")
 import concurrent.futures
 
 ########################################################################################
@@ -526,10 +529,14 @@ def data_cleaning():
                     my_bar.progress(100, "TF-IDF Calculation Complete. Exporting...")
 
                     return pd.DataFrame(tf_idf_li), wordcloud_words
-                
-                st.session_state['tf_idf_df'],st.session_state['wordcloud_words'] = main(corpus, tokenized)
 
-                wordcloud(st.session_state['wordcloud_words'], lim=100)
+                try:                
+                    st.session_state['tf_idf_df'],st.session_state['wordcloud_words'] = main(corpus, tokenized)
+
+                    wordcloud(st.session_state['wordcloud_words'], lim=100)
+                except Exception as e:
+                    print(e)
+
             
             st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
 
