@@ -75,7 +75,9 @@ import torch
 import utils
 modulename = 'utils'
 if modulename not in sys.modules:
-    print("utils not impiorted")
+    st.write("utils not impiorted")
+else:
+    st.write("success")
 
 st.write(os.getcwd())
 st.write(os.listdir())
