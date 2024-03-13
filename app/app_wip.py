@@ -12,66 +12,58 @@
 #############################       Package Requirements   #############################
 ########################################################################################
 #python native packages
+import requests
+import re
+import math
+import time
+import warnings
+import multiprocessing
+# import glob
+
+# import json
+
+#streamlit
+import spacy_streamlit
 import streamlit as st
+
+#common add ons
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud #,STOPWORDS
+import nltk
+
 @st.cache_resource
-def importing():
-    import requests
-    import re
-    import math
-    import time
-    import warnings
-    import multiprocessing
-    # import glob
+def nltk_downloads():
+    nltk.download('stopwords')
+    nltk.download('omw-1.4')
+    nltk.download('wordnet')
+    nltk.download("punkt")
+    nltk.download('averaged_perceptron_tagger')
+    nltk.download('brown')    
 
-    # import json
+nltk_downloads()
+import spacy
+from spacy import displacy
+from datetime import datetime #, date
+from sklearn.feature_extraction.text import CountVectorizer
 
-    #streamlit
-    import spacy_streamlit
-    import streamlit as st
+#plotly
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+import plotly.express as px
 
-    #common add ons
-    import pandas as pd
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from wordcloud import WordCloud #,STOPWORDS
-    import nltk
+# #huggingface
+from transformers import pipeline, set_seed
 
-    @st.cache_resource
-    def nltk_downloads():
-        nltk.download('stopwords')
-        nltk.download('omw-1.4')
-        nltk.download('wordnet')
-        nltk.download("punkt")
-        nltk.download('averaged_perceptron_tagger')
-        nltk.download('brown')    
+#openai
+#import openai
 
-    nltk_downloads()
-    import spacy
-    from spacy import displacy
-    from datetime import datetime #, date
-    from sklearn.feature_extraction.text import CountVectorizer
+#tensorflow
+import torchvision
+import torch
 
-    #plotly
-    from plotly.subplots import make_subplots
-    import plotly.graph_objects as go
-    import plotly.express as px
-
-    # #other pacakges
-    from better_profanity import profanity
-
-    # #huggingface
-    from transformers import pipeline, set_seed
-
-    #openai
-    #import openai
-
-    #tensorflow
-    import torchvision
-    import torch
-
-    import utils
-
-importing()
+import utils
 
 ########################################################################################
 #############################       required UDFs     #############################
@@ -84,7 +76,9 @@ def multiprocessing_function(text_data):
     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
     try:
         with multiprocessing.Pool(processes=6) as pool:
+            st.write("here")
             res = pool.starmap(utils.task, enumerate(text_data.tolist())) 
+            st.write("here2")
     except Exception as e:
         print("exception in worker process", e)
         return text_data
@@ -181,10 +175,10 @@ def reddit_data(time_wanted, headers):
                 with col22:
                     st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
                 time1 = time.time()
-                # try:
-                #     df.text = multiprocessing_function(df.text)
-                # except:
-                #     pass
+                try:
+                    df.text = multiprocessing_function(df.text)
+                except:
+                    pass
                 time2 = time.time()
                 col33, col44 = st.columns([3,2])
                 with col33:
