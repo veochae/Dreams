@@ -529,7 +529,7 @@ def data_cleaning():
 
                     wordcloud(st.session_state['wordcloud_words'], lim=100)
                 except Exception as e:
-                    print(e)
+                    st.write(e)
 
             
             st.info("Next click on the next tab on the left to move on to the Part of Speech Tagging Section!" ,icon="ℹ️")
