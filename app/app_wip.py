@@ -112,10 +112,12 @@ def load_nlp():
 def wordcloud(x, lim):
     text = " ".join(x)
     cloud = WordCloud(collocations = False, max_words = lim, min_word_length = 3).generate(text)
-    fig, ax = plt.subplots(figsize = (12, 8))
-    ax.imshow(cloud, interpolation='bilinear')
-    plt.axis("off")
-    fig.show()
+    image = cloud.to_image()
+    image.show()
+    # fig, ax = plt.subplots(figsize = (12, 8))
+    # ax.imshow(cloud, interpolation='bilinear')
+    # plt.axis("off")
+    # fig.show()
 
 ###################### dataframe to csv conversion
 def convert_df(df):
