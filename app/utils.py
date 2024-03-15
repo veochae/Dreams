@@ -3,7 +3,6 @@ from better_profanity import profanity
 
 
 def task(index, xx):
-    st.write("here3")
     return index, profanity.censor(xx, "*")
 
 ##########profanity filter
