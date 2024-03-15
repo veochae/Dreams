@@ -111,7 +111,7 @@ def load_nlp():
 ##########wordcloud
 def wordcloud(x, lim):
     text = " ".join(x)
-    cloud = WordCloud().generate(text)
+    cloud = WordCloud(collocations = False, max_words = lim, min_word_length = 3).generate(text)
     image = cloud.to_image()
     image.show()
     # fig, ax = plt.subplots(figsize = (12, 8))
@@ -241,7 +241,7 @@ def text_to_image(api_key, artist, prompt, emotion):
     headers = {"Authorization": f"Bearer {api_key}"}
 
     image_bytes = query_image({
-        "inputs": f"In style of {artist} depicting emotion of {emotion} paint:[{prompt}]",
+        "inputs": f"In style of {artist} paint:[With {emotion}: {prompt}]",
     }, API_URL, headers)
     # You can access the image with PIL.Image for example
 
