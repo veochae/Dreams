@@ -115,7 +115,7 @@ def wordcloud(x, lim):
     fig, ax = plt.subplots(figsize = (12, 8))
     ax.imshow(cloud, interpolation='bilinear')
     plt.axis("off")
-    plt.show()
+    fig.show()
 
 ###################### dataframe to csv conversion
 def convert_df(df):
