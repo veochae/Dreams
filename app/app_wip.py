@@ -111,7 +111,7 @@ def load_nlp():
 ##########wordcloud
 def wordcloud(x, lim):
     text = " ".join(x)
-    cloud = WordCloud(collocations = False, max_words = lim, min_word_length = 3).generate(text)
+    cloud = WordCloud().generate(text)
     image = cloud.to_image()
     image.show()
     # fig, ax = plt.subplots(figsize = (12, 8))
