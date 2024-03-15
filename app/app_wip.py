@@ -198,9 +198,9 @@ def reddit_data(time_wanted, headers):
 #     response = requests.post(API_URL, headers, json=payload)
 #     return response.json()
 
-def query_image(payload, API_URL, headers):
-    response = requests.post(API_URL, headers, json=payload)
-    return response.content
+# def query_image(payload, API_URL, headers):
+#     response = requests.post(API_URL, headers, json=payload)
+#     return response.content
 
 def summarize_dream(api_key, prompt):
     def query(payload):
@@ -240,12 +240,14 @@ def text_to_image(api_key, artist, prompt, emotion):
     API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
     headers = {"Authorization": f"Bearer {api_key}"}
 
-    image_bytes = query_image({
+    def query(payload):
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.content
+    image_bytes = query({
         "inputs": f"In style of {artist} paint:[With {emotion}: {prompt}]",
-    }, API_URL, headers)
-    # You can access the image with PIL.Image for example
+    })
 
-    image = Image.open(io.BytesIO(image_bytes)) 
+    image = Image.open(io.BytesIO(image_bytes))
 
     return image   
 
