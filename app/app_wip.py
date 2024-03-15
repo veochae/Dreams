@@ -221,7 +221,7 @@ def exapnd_dream(prompt):
     generator = pipeline('text-generation', model='openai-gpt')
     set_seed(42)
     length = len(prompt)//5
-    end = generator(prompt, max_length=length*2, num_return_sequences=1, temperature=0.7)
+    end = generator(prompt, max_length=length*2, num_return_sequences=1, temperature=0.3)
     return end[0]['generated_text']
 
 
