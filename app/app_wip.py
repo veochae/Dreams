@@ -194,14 +194,6 @@ def reddit_data(time_wanted, headers):
         return df
 
 ############### hugging face incorporated function
-# def query(payload, API_URL, headers):
-#     response = requests.post(API_URL, headers, json=payload)
-#     return response.json()
-
-# def query_image(payload, API_URL, headers):
-#     response = requests.post(API_URL, headers, json=payload)
-#     return response.content
-
 def summarize_dream(api_key, prompt):
     def query(payload):
         try:
@@ -228,8 +220,8 @@ def summarize_dream(api_key, prompt):
 def exapnd_dream(prompt):
     generator = pipeline('text-generation', model='openai-gpt')
     set_seed(42)
-    length = len(prompt)//4
-    end = generator(prompt, max_length=length*2, num_return_sequences=1)
+    length = len(prompt)//5
+    end = generator(prompt, max_length=length*2, num_return_sequences=1, temperature=0.7)
     return end[0]['generated_text']
 
 
@@ -1238,7 +1230,7 @@ page_names_to_funcs = {
     "Part of Speech Tagging": part_of_speech_tag,
     "Named Entity Recognition": named_entity_recognition,
     "TF-IDF": tf_idf,
-    "OpenAI API Setup": set_up_openai,
+    "Hugging Face API Setup": set_up_openai,
     "Sentiment Analysis": sentiment_analysis,
     "Dream Summary and Continuation": summary_continue,
     "Data Download": data_download,
