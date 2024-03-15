@@ -113,7 +113,7 @@ def wordcloud(x, lim):
     text = " ".join(x)
     cloud = WordCloud(collocations = False, max_words = lim, min_word_length = 3).generate(text)
     image = cloud.to_image()
-    image.show()
+    st.image(image, caption='Word Cloud', use_column_width=True)
     # fig, ax = plt.subplots(figsize = (12, 8))
     # ax.imshow(cloud, interpolation='bilinear')
     # plt.axis("off")
