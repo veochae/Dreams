@@ -1074,8 +1074,8 @@ def sentiment_analysis():
                     "inputs": text,
                 })
 
-                emotion = [x['label'] for x in output[0][0]]
-                score = [y['score'] for y in output[0][0]]
+                emotion = [x['label'] for x in output[0]]
+                score = [y['score'] for y in output[0]]
 
                 st.session_state['emotion'] = emotion[score.index(np.max(score))]
 
