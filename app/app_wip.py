@@ -523,7 +523,7 @@ def data_cleaning():
                     st.session_state['tf_idf_df'],st.session_state['wordcloud_words'] = main(corpus, tokenized)
                     st.write(st.session_state['wordcloud_words'][:10])
 
-                    wordcloud(st.session_state['wordcloud_words'], lim=100)
+                    wordcloud(st.session_state['wordcloud_words'])
                 except Exception as e:
                     st.write(e)
 
