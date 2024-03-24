@@ -236,7 +236,7 @@ def text_to_image(api_key, artist, prompt, emotion):
         response = requests.post(API_URL, headers=headers, json=payload)
         return response.content
     image_bytes = query({
-        "inputs": f"In style of {artist} paint:[With {emotion}: {prompt}]",
+        "inputs": f"{artist} style painting:[With {emotion}: {prompt}]",
     })
 
     image = Image.open(io.BytesIO(image_bytes))
