@@ -217,7 +217,7 @@ def summarize_dream(api_key, prompt):
             time.sleep(10)
 
 
-def exapnd_dream(token, prompt):
+def expand_dream(token, prompt):
     def query(payload):
         try:
             response = requests.post(API_URL, headers=headers, json=payload)
@@ -1158,10 +1158,7 @@ def summary_continue():
             st.write(st.session_state['summary'])
 
             st.header("Dream Continuation")
-            try:
-                continuation = exapnd_dream(st.session_state['hugging_face_key'],st.session_state['summary'])
-            except Exception as e:
-                print(e)
+            continuation = expand_dream(st.session_state['hugging_face_key'],st.session_state['summary'])
             start_point = len(st.session_state['summary'])
             # st.session_state['continuation'] = st.session_state['continuation'][start_point+1:]
             st.write(continuation)
