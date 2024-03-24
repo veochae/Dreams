@@ -18,6 +18,8 @@ import math
 import time
 import warnings
 import multiprocessing
+import io
+from PIL import Image, ImageDraw
 # import glob
 
 # import json
@@ -110,11 +112,12 @@ def load_nlp():
 
 ##########wordcloud
 def wordcloud(x, lim):
+    img = Image.new('RGB', (1, 1), color = (255, 255, 255))
+    draw = ImageDraw.Draw(img)
     text = " ".join(x)
     cloud = WordCloud(collocations = False, max_words = lim, min_word_length = 3)
     cloud.generate_from_text(text)
-    fig, ax = plt.subplots(figsize = (12, 8))
-    ax.imshow(cloud, interpolation='bilinear')
+    plt.imshow(cloud, interpolation='bilinear')
     plt.axis("off")
     plt.show()
 
@@ -225,9 +228,6 @@ def exapnd_dream(prompt):
 
 
 def text_to_image(api_key, artist, prompt, emotion):
-    import io
-    from PIL import Image
-
     API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
     headers = {"Authorization": f"Bearer {api_key}"}
 
