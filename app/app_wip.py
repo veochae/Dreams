@@ -217,13 +217,19 @@ def summarize_dream(api_key, prompt):
             time.sleep(10)
 
 
-def exapnd_dream(prompt):
-    generator = pipeline('text-generation', model='openai-gpt')
-    set_seed(42)
-    length = len(prompt)//5
-    end = generator(prompt, max_length=length*2, num_return_sequences=1, temperature=0.4)
-    return end[0]['generated_text']
+def exapnd_dream(token, prompt):
+    API_URL = "https://api-inference.huggingface.co/models/openai-community/openai-gpt"
+    headers = {"Authorization": f"Bearer {token}"}
 
+    def query(payload):
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.json()
+        
+    output = query({
+        "inputs": prompt,
+    })
+
+    return output[0]['generated_text']
 
 def text_to_image(api_key, artist, prompt, emotion):
     import io
@@ -1144,7 +1150,7 @@ def summary_continue():
             st.write(st.session_state['summary'])
 
             st.header("Dream Continuation")
-            st.session_state['continuation'] = exapnd_dream(st.session_state['summary'])
+            st.session_state['continuation'] = exapnd_dream(st.session_state['hugging_face_key'],st.session_state['summary'])
             start_point = len(st.session_state['summary'])
             st.session_state['continuation'] = st.session_state['continuation'][start_point+1:]
             st.write(st.session_state['continuation'])
