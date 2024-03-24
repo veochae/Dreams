@@ -217,27 +217,13 @@ def summarize_dream(api_key, prompt):
             time.sleep(10)
 
 
-def expand_dream(token, prompt):
-    def query(payload):
-        try:
-            response = requests.post(API_URL, headers=headers, json=payload)
-            response.raise_for_status()  # Raise an exception for 4xx/5xx status codes
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            print(f"Error during API request: {e}")
-            return None
+def exapnd_dream(prompt):
+    generator = pipeline('text-generation', model='openai-gpt')
+    set_seed(42)
+    length = len(prompt)//5
+    end = generator(prompt, max_length=length*2, num_return_sequences=1, temperature=0.4)
+    return end[0]['generated_text']
 
-    API_URL = "https://api-inference.huggingface.co/models/openai-community/openai-gpt"
-    headers = {"Authorization": f"Bearer {token}"}
-
-    while True:
-        output = query({"inputs": prompt})
-
-        if output and "generated_text" in output[0].keys():
-            return output[0]['generated_text']
-        else:
-            print("generated_text text not found in output, retrying in 10 seconds...")
-            time.sleep(10)
 
 def text_to_image(api_key, artist, prompt, emotion):
     import io
@@ -1158,10 +1144,10 @@ def summary_continue():
             st.write(st.session_state['summary'])
 
             st.header("Dream Continuation")
-            continuation = expand_dream(st.session_state['hugging_face_key'],st.session_state['summary'])
+            st.session_state['continuation'] = exapnd_dream(st.session_state['summary'])
             start_point = len(st.session_state['summary'])
-            # st.session_state['continuation'] = st.session_state['continuation'][start_point+1:]
-            st.write(continuation)
+            st.session_state['continuation'] = st.session_state['continuation'][start_point+1:]
+            st.write(st.session_state['continuation'])
 
             st.header("Dream Visualization")
 
