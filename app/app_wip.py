@@ -113,15 +113,8 @@ def load_nlp():
 ##########wordcloud
 def wordcloud(text, lim=100):
     text = " ".join(text)
-    cloud = WordCloud(collocations=False, max_words=lim, min_word_length=3)
+    cloud = WordCloud(collocations=False, max_words=lim, min_word_length=3, font_path = None)
     cloud.generate_from_text(text)
-    
-    # Create a new image for drawing
-    img = Image.new('RGB', (1, 1), color='white')
-    draw = ImageDraw.Draw(img)
-
-    # Calculate the size of the text using a default font
-    text_size = draw.textsize(text)
     
     # Display the word cloud
     plt.figure(figsize=(8, 8))
