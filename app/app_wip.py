@@ -20,6 +20,7 @@ import warnings
 import multiprocessing
 import io
 from PIL import Image, ImageDraw
+import stylecloud
 # import glob
 
 # import json
@@ -111,16 +112,17 @@ def load_nlp():
     return spacy.load('en_core_web_sm')
 
 ##########wordcloud
-def wordcloud(text, lim=100):
+def wordcloud(text):
     text = " ".join(text)
-    cloud = WordCloud(collocations=False, max_words=lim, min_word_length=3, font_path = None)
-    cloud.generate_from_text(text)
+    # cloud = WordCloud(collocations=False, max_words=lim, min_word_length=3, font_path = None)
+    # cloud.generate_from_text(text)
     
-    # Display the word cloud
-    plt.figure(figsize=(8, 8))
-    plt.imshow(cloud, interpolation='bilinear')
-    plt.axis("off")
-    plt.show()
+    # # Display the word cloud
+    # plt.figure(figsize=(8, 8))
+    # plt.imshow(cloud, interpolation='bilinear')
+    # plt.axis("off")
+    # plt.show()
+    stylecloud.gen_stylecloud(text , icon_name= "fas fa-comment")
 
 ###################### dataframe to csv conversion
 def convert_df(df):
