@@ -1152,7 +1152,7 @@ def summary_continue():
             st.header("Dream Continuation")
             st.session_state['continuation'] = exapnd_dream(st.session_state['hugging_face_key'],st.session_state['summary'])
             start_point = len(st.session_state['summary'])
-            st.session_state['continuation'] = st.session_state['continuation'][start_point+1:]
+            # st.session_state['continuation'] = st.session_state['continuation'][start_point+1:]
             st.write(st.session_state['continuation'])
 
             st.header("Dream Visualization")
