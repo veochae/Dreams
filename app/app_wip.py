@@ -1150,7 +1150,10 @@ def summary_continue():
             st.write(st.session_state['summary'])
 
             st.header("Dream Continuation")
-            continuation = exapnd_dream(st.session_state['hugging_face_key'],st.session_state['summary'])
+            try:
+                continuation = exapnd_dream(st.session_state['hugging_face_key'],st.session_state['summary'])
+            except Exception as e:
+                print(e)
             start_point = len(st.session_state['summary'])
             # st.session_state['continuation'] = st.session_state['continuation'][start_point+1:]
             st.write(continuation)
