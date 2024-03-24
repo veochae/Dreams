@@ -218,18 +218,26 @@ def summarize_dream(api_key, prompt):
 
 
 def exapnd_dream(token, prompt):
+    def query(payload):
+        try:
+            response = requests.post(API_URL, headers=headers, json=payload)
+            response.raise_for_status()  # Raise an exception for 4xx/5xx status codes
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"Error during API request: {e}")
+            return None
+
     API_URL = "https://api-inference.huggingface.co/models/openai-community/openai-gpt"
     headers = {"Authorization": f"Bearer {token}"}
 
-    def query(payload):
-        response = requests.post(API_URL, headers=headers, json=payload)
-        return response.json()
-        
-    output = query({
-        "inputs": prompt,
-    })
+    while True:
+        output = query({"inputs": prompt})
 
-    return output[0]['generated_text']
+        if output and "generated_text" in output[0].keys():
+            return output[0]['generated_text']
+        else:
+            print("generated_text text not found in output, retrying in 10 seconds...")
+            time.sleep(10)
 
 def text_to_image(api_key, artist, prompt, emotion):
     import io
