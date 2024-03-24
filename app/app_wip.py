@@ -73,7 +73,7 @@ warnings.filterwarnings('ignore')
 ##########profanity filter
 def multiprocessing_function(text_data):
     
-    st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
+    st.info("**Data Filtering in Progress**: This Process would take about 3-4 Minutes!")
     try:
         with multiprocessing.Pool(processes=6) as pool:
             res = pool.starmap(utils.task, enumerate(text_data.tolist())) 
@@ -1062,12 +1062,32 @@ def sentiment_analysis():
             except Exception as e:
                 st.warning("This Error is either: 1. The model has not been loaded yet 2. Not the correct API Key")
 
-            classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
-            prediction = classifier(summary)
-            emotion = [x['label'] for x in prediction[0]]
-            score = [y['score'] for y in prediction[0]]
+            def emotion_extraction(token, text):
+                API_URL = "https://api-inference.huggingface.co/models/bhadresh-savani/distilbert-base-uncased-emotion"
+                headers = {"Authorization": f"Bearer {token}"}
 
-            st.session_state['emotion'] = emotion[score.index(np.max(score))]
+                def query(payload):
+                    response = requests.post(API_URL, headers=headers, json=payload)
+                    return response.json()
+                    
+                output = query({
+                    "inputs": text,
+                })
+
+                emotion = [x['label'] for x in output[0][0]]
+                score = [y['score'] for y in output[0][0]]
+
+                st.session_state['emotion'] = emotion[score.index(np.max(score))]
+
+                return emotion, score
+            # classifier = pipeline("text-classification",model='bhadresh-savani/distilbert-base-uncased-emotion', top_k = None)
+            # prediction = classifier(summary)
+            # emotion = [x['label'] for x in prediction[0]]
+            # score = [y['score'] for y in prediction[0]]
+
+            # st.session_state['emotion'] = emotion[score.index(np.max(score))]
+
+            emotion, score = emotion_extraction(st.session_state['hugging_face_key'], st.session_state['summary'])
 
             fig10 = make_subplots(rows=1, cols=1)
 
