@@ -21,6 +21,7 @@ import multiprocessing
 import io
 from PIL import Image, ImageDraw
 import stylecloud
+import os
 # import glob
 
 # import json
@@ -123,6 +124,8 @@ def wordcloud(text):
     # plt.axis("off")
     # plt.show()
     stylecloud.gen_stylecloud(text , icon_name= "fas fa-comment")
+    st.write(os.listdir())
+
 
 ###################### dataframe to csv conversion
 def convert_df(df):
