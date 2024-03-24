@@ -114,6 +114,7 @@ def load_nlp():
 def wordcloud(x, lim):
     img = Image.new('RGB', (1, 1), color = (255, 255, 255))
     draw = ImageDraw.Draw(img)
+    text_size = draw.textsize(text)
     text = " ".join(x)
     cloud = WordCloud(collocations = False, max_words = lim, min_word_length = 3)
     cloud.generate_from_text(text)
