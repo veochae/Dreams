@@ -124,7 +124,7 @@ def wordcloud(text):
     # plt.axis("off")
     # plt.show()
     stylecloud.gen_stylecloud(text , icon_name= "fas fa-comment")
-    st.write(os.listdir())
+    # st.write(os.listdir())
     st.image("./stylecloud.png")
 
 
@@ -522,7 +522,6 @@ def data_cleaning():
 
                 try:                
                     st.session_state['tf_idf_df'],st.session_state['wordcloud_words'] = main(corpus, tokenized)
-                    st.write(st.session_state['wordcloud_words'][:10])
 
                     wordcloud(st.session_state['wordcloud_words'])
                 except Exception as e:
