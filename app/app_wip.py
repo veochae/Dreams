@@ -125,6 +125,7 @@ def wordcloud(text):
     # plt.show()
     stylecloud.gen_stylecloud(text , icon_name= "fas fa-comment")
     st.write(os.listdir())
+    st.image("./stylecloud.png")
 
 
 ###################### dataframe to csv conversion
