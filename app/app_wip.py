@@ -219,15 +219,9 @@ def data_collection():
     st.write("Now that you have gained access to the Reddit developer's account, you are ready to use the Reddit API in order to gather dreams that will then be used as the data for NLP. The subreddit to be used is r/Dreams, which can be easily searched on search engines for viewing purposes. In the below text boxes, please input your Reddit information in order to collect the dreams. ")
 
     st.write("Note that the raw data collected from Reddit are in JSON (JavaScript Object Notation) format. For clarity, a JSON file has a nested format, where information is stored like a hierarchical tree (not a dataframe!). As an important pre-processing step the necessary portions of that JSON data will be selected and put into a dataframe. But worry not – that is going to be done for you automatically in the back end of this app (to keep you awake, after all!) One last detail: after the raw data gets pulled from Reddit, there will be an initial data cleaning step to drop the Null values and perform profanity checks before displaying the data. ")
-    st.write("Ready? Go!")
 
-    with st.form("reddit_cred"):
-        client_id = st.text_input("Reddit Client Id")
-        secret_key = st.text_input("Reddit Secret Key")
-        username = st.text_input("Reddit User Name")
-        password = st.text_input("Reddit Password")
-    
-        submitted = st.form_submit_button("Submit")
+    with st.form("Are You Ready?"):    
+        submitted = st.form_submit_button("Yes!")
 
     if submitted:
         try:
@@ -243,8 +237,6 @@ def data_collection():
             my_bar.progress(40, "Dropping Empty Observations") 
             st.session_state['reddit'] = st.session_state['reddit'].dropna()
 
-            # reddit_data['text'] = reddit_data['text'].apply(apply_censor)
-            # reddit['text'] = [profanity.censor(i) for i in reddit['text']]
             time.sleep(3)
             my_bar.progress(80, "Converting pandas dataframe to CSV")
 
