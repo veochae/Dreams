@@ -23,7 +23,7 @@ import stylecloud
 import os
 # import glob
 
-# import json
+import json
 
 #streamlit
 import spacy_streamlit
@@ -231,9 +231,11 @@ def data_collection():
 
     if submitted:
         try:
-            st.write(os.listdir())
-            # st.session_state['reddit']
-            # st.session_state['json_file'] = reddit_data(time_wanted, headers)
+            
+            st.session_state['reddit'] = pd.read_csv("./data/automated_data/raw_data.csv")
+
+            f = open('./data/automated_data/data_json.json')
+            st.session_state['json_file'] = json.load(f) 
 
             my_bar = st.progress(0, text="Initiating Data Preprocessing")
             time.sleep(3)
