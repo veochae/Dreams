@@ -17,7 +17,6 @@ import re
 import math
 import time
 import warnings
-import multiprocessing
 import io
 from PIL import Image, ImageDraw
 import stylecloud
@@ -67,45 +66,11 @@ from transformers import pipeline, set_seed
 import torchvision
 import torch
 
-import utils
 
 ########################################################################################
 #############################       required UDFs     #############################
 ########################################################################################
 warnings.filterwarnings('ignore')
-
-##########profanity filter
-def multiprocessing_function(text_data):
-    
-    st.info("**Data Filtering in Progress**: This Process would take about 3-4 Minutes!")
-    try:
-        with multiprocessing.Pool(processes=6) as pool:
-            res = pool.starmap(utils.task, enumerate(text_data.tolist())) 
-    except Exception as e:
-        print("exception in worker process", e)
-        return text_data
-
-    res.sort(key=lambda x: x[0])
-    final_results = [result[1] for result in res]
-    return final_results
-
-# def multiprocessing_function(text_data):
-#     st.info("**Data Filtering in Progress**: This Process would take about 2-3 Minutes!")
-
-#     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
-#         futures = [executor.submit(utils.task, index, text) for index, text in enumerate(text_data.tolist())]
-
-#     try:
-#         results = [future.result() for future in concurrent.futures.as_completed(futures)]
-#     except Exception as e:
-#         print("exception in worker process", e)
-#         return text_data
-
-#     # Sort the results based on the original index
-#     results.sort(key=lambda x: x[0])
-#     final_results = [result[1] for result in results]
-#     return final_results
-        
 
 ##########en-core-sm preload
 @st.cache_resource
@@ -131,76 +96,6 @@ def wordcloud(text):
 ###################### dataframe to csv conversion
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
-
-###################### reddit data extraction
-def reddit_data(time_wanted, headers):
-    progress_text = "Validating the Credentials, Please wait."
-    my_bar = st.progress(0, text=progress_text)
-
-    #initial set collection
-    res = requests.get('https://oauth.reddit.com/r/Dreams/new',
-                    headers = headers, params={'limit': '100', 'no_profanity':True})
-
-    df = pd.DataFrame()
-
-    for post in res.json()['data']['children']:
-        df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
-                                                    'title': post['data']['title'],
-                                                    'text': post['data']['selftext'],
-                                                    'date': post['data']['created']},index=[0])],ignore_index=True )
-    
-    #further back collection
-    latest_key = post['kind'] + '_' + post['data']['id']
-
-    my_bar.progress(3, text = "Credentials Validated!")
-    my_bar.progress(5, text = "Initizlizing Data Collection From Reddit")
-    while df.tail(1)['date'][df.tail(1)['date'].index[0]] > datetime.timestamp(time_wanted):
-        for req in range(100):
-        
-            res = requests.get('https://oauth.reddit.com/r/Dreams/new',
-                                headers = headers, 
-                                params={'limit': '100', 'after': latest_key, 'no_profanity':True})
-            
-            for post in res.json()['data']['children']:
-                df = pd.concat([df,pd.DataFrame({'subreddit': post['data']['subreddit'],
-                                                    'title': post['data']['title'],
-                                                    'text': post['data']['selftext'],
-                                                    'date': post['data']['created']},index=[0])], ignore_index= True)
-
-            latest_key = post['kind'] + '_' + post['data']['id']
-
-            if req * 15 <= 100:    
-                my_bar.progress(req *15, text = f"{df.shape[0]} Dreams Collected")
-            else:
-                my_bar.progress(100, text = f"{df.shape[0]} Dreams Collected")
-
-            if len(df) >= 985:
-                latest = df.tail(1)['date'][df.tail(1)['date'].index[0]]
-                st.success("Data Collection Completed!")
-                col11, col22 = st.columns([2,4])
-                df.date = [datetime.fromtimestamp(d) for d in df.date] 
-                with col11:
-                    st.success(f'**Data Count**: {len(df)} Dreams')
-                with col22:
-                    st.success(f'**Earliest Dream Upload Date**: {datetime.fromtimestamp(latest)}')
-                time1 = time.time()
-                try:
-                    df.text = multiprocessing_function(df.text)
-                except:
-                    pass
-                time2 = time.time()
-                col33, col44 = st.columns([3,2])
-                with col33:
-                    st.success(f'**Data Filtering Complete!**')
-                with col44:
-                    st.success(f'**Time Consumed**: {round((time2-time1)/60,2)} minutes')
-                return df, res.json()['data']['children'][1]
-
-    else: 
-        st.success("Data Collection Completed!")
-        st.success(f'**Data Count**:{len(df)}')
-        st.success(f'**Last Dream Upload Date**: {datetime.fromtimestamp(latest)}')
-        return df
 
 ############### hugging face incorporated function
 def summarize_dream(api_key, prompt):
@@ -335,30 +230,10 @@ def data_collection():
         submitted = st.form_submit_button("Submit")
 
     if submitted:
-        time_wanted = datetime(2023, 1, 20, 00, 00, 00, 342380)
-
         try:
-            client_id = client_id
-            secret_key = secret_key
-
-            auth = requests.auth.HTTPBasicAuth(client_id, secret_key)
-            data = {
-                'grant_type': 'password',
-                'username': username,
-                'password': password
-            }
-
-            headers = {'User-Agent': 'MyAPI/0.0.1'}
-
-            res = requests.post('https://www.reddit.com/api/v1/access_token', 
-                                auth = auth, 
-                                data = data,
-                                headers = headers)
-            token = res.json()['access_token']
-
-            headers['Authorization'] = f'bearer {token}'    
-
-            st.session_state['reddit'], st.session_state['json_file'] = reddit_data(time_wanted, headers)
+            st.write(os.listdir())
+            # st.session_state['reddit']
+            # st.session_state['json_file'] = reddit_data(time_wanted, headers)
 
             my_bar = st.progress(0, text="Initiating Data Preprocessing")
             time.sleep(3)
